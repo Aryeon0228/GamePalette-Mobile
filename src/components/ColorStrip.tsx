@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { usePaletteStore } from '../store/paletteStore';
 
 interface ColorStripProps {
   colors: string[];

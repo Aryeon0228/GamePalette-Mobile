@@ -8,8 +8,14 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  Modal,
+  TextInput,
+  Platform,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import * as Clipboard from 'expo-clipboard';
+import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
 import { getColors } from 'react-native-image-colors';
 import { Ionicons } from '@expo/vector-icons';
 import { usePaletteStore } from '../store/paletteStore';
@@ -22,6 +28,8 @@ interface HomeScreenProps {
 
 export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
   const [isExtracting, setIsExtracting] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [paletteName, setPaletteName] = useState('');
 
   const {
     currentColors,
@@ -103,23 +111,15 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
       Alert.alert('No Colors', 'Please extract colors from an image first.');
       return;
     }
+    setPaletteName(`Palette ${new Date().toLocaleDateString()}`);
+    setShowSaveModal(true);
+  };
 
-    Alert.prompt?.(
-      'Save Palette',
-      'Enter a name for this palette:',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Save',
-          onPress: (name) => {
-            savePalette(name || `Palette ${Date.now()}`);
-            Alert.alert('Saved!', 'Palette saved to library.');
-          },
-        },
-      ],
-      'plain-text',
-      `Palette ${Date.now()}`
-    ) || savePalette(`Palette ${Date.now()}`);
+  const confirmSave = () => {
+    savePalette(paletteName || `Palette ${Date.now()}`);
+    setShowSaveModal(false);
+    setPaletteName('');
+    Alert.alert('Saved!', 'Palette saved to library.');
   };
 
   const handleExport = () => {
@@ -128,11 +128,38 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
       return;
     }
 
-    const exportText = currentColors.join('\n');
+    const hexColors = currentColors.map(c => c.toUpperCase()).join('\n');
+
     Alert.alert(
       'Export Colors',
-      exportText,
-      [{ text: 'OK' }]
+      'Choose export format:',
+      [
+        {
+          text: 'Copy to Clipboard',
+          onPress: async () => {
+            await Clipboard.setStringAsync(hexColors);
+            Alert.alert('Copied!', 'Colors copied to clipboard.');
+          },
+        },
+        {
+          text: 'Share as File',
+          onPress: async () => {
+            try {
+              const fileUri = FileSystem.cacheDirectory + 'palette.txt';
+              await FileSystem.writeAsStringAsync(fileUri, hexColors);
+
+              if (await Sharing.isAvailableAsync()) {
+                await Sharing.shareAsync(fileUri);
+              } else {
+                Alert.alert('Error', 'Sharing is not available on this device.');
+              }
+            } catch (error) {
+              Alert.alert('Error', 'Failed to share palette.');
+            }
+          },
+        },
+        { text: 'Cancel', style: 'cancel' },
+      ]
     );
   };
 
@@ -232,6 +259,42 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
           <Text style={styles.actionButtonText}>Export</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Save Modal */}
+      <Modal
+        visible={showSaveModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowSaveModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Save Palette</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={paletteName}
+              onChangeText={setPaletteName}
+              placeholder="Enter palette name"
+              placeholderTextColor="#666"
+              autoFocus
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={() => setShowSaveModal(false)}
+              >
+                <Text style={styles.modalButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalButtonPrimary]}
+                onPress={confirmSave}
+              >
+                <Text style={[styles.modalButtonText, styles.modalButtonTextPrimary]}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -346,5 +409,55 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 12,
     marginTop: 4,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#1a1a2e',
+    borderRadius: 16,
+    padding: 24,
+    width: '85%',
+    maxWidth: 340,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  modalInput: {
+    backgroundColor: '#0d0d1a',
+    borderRadius: 10,
+    padding: 14,
+    fontSize: 16,
+    color: '#fff',
+    marginBottom: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 10,
+    backgroundColor: '#3a3a5c',
+    alignItems: 'center',
+  },
+  modalButtonPrimary: {
+    backgroundColor: '#4a6a4a',
+  },
+  modalButtonText: {
+    color: '#aaa',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  modalButtonTextPrimary: {
+    color: '#fff',
   },
 });
