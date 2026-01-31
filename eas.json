@@ -3,7 +3,7 @@
     "version": ">= 5.0.0"
   },
   "build": {
-    "development": {
+    "development-simulator": {
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
