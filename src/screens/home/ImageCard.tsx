@@ -46,11 +46,12 @@ export default function ImageCard({
     left?: number;
     opacity?: number;
   }> = [
-    { symbol: String.fromCodePoint(0xFFFB4), color: '#fbbf24', size: 14, top: 14, left: 20, opacity: 0.58 }, // mood_heart
-    { symbol: String.fromCodePoint(0xF292), color: '#f472b6', size: 13, top: 28, right: 28, opacity: 0.5 }, // heart_smile
-    { symbol: String.fromCodePoint(0xF527), color: '#60a5fa', size: 13, bottom: 42, left: 30, opacity: 0.52 }, // family_star
-    { symbol: String.fromCodePoint(0xFFFB4), color: '#34d399', size: 14, top: 50, right: 50, opacity: 0.44 }, // mood_heart
-    { symbol: String.fromCodePoint(0xF292), color: '#a78bfa', size: 12, bottom: 22, right: 20, opacity: 0.56 }, // heart_smile
+    { symbol: String.fromCodePoint(0xF526), color: '#fbbf24', size: 14, top: 14, left: 18, opacity: 0.58 }, // kid_star
+    { symbol: String.fromCodePoint(0xF527), color: '#60a5fa', size: 14, top: 16, right: 24, opacity: 0.54 }, // family_star
+    { symbol: String.fromCodePoint(0xF526), color: '#f472b6', size: 13, top: 64, left: 30, opacity: 0.46 }, // kid_star
+    { symbol: String.fromCodePoint(0xF527), color: '#34d399', size: 13, top: 68, right: 38, opacity: 0.42 }, // family_star
+    { symbol: String.fromCodePoint(0xF526), color: '#a78bfa', size: 12, bottom: 34, left: 24, opacity: 0.5 }, // kid_star
+    { symbol: String.fromCodePoint(0xF527), color: '#fb923c', size: 12, bottom: 26, right: 22, opacity: 0.52 }, // family_star
   ];
 
   if (currentImageUri) {
@@ -115,7 +116,7 @@ export default function ImageCard({
   return (
     <View style={[styles.imageCardEmpty, { backgroundColor: theme.backgroundSecondary, borderColor: theme.borderLight }]}
     >
-      {/* Decorative markers: Material Symbols (mood_heart, heart_smile, family_star) */}
+      {/* Decorative markers: Material Symbols (kid_star + family_star) */}
       <View style={styles.emptyDecoContainer}>
         {emptyDecoSymbols.map((icon, index) => (
           <Text
