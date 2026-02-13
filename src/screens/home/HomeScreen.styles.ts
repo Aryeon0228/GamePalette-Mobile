@@ -1938,7 +1938,12 @@ export const styles = StyleSheet.create({
   advancedPresetInline: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 6,
+  },
+  advancedPresetLabelWrap: {
+    width: 60,
+    alignItems: 'flex-start',
   },
   advancedPresetText: {
     fontSize: 11,

@@ -980,9 +980,14 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
                       size={14}
                       color={styleFilter === filter ? '#fff' : STYLE_PRESETS[filter].color}
                     />
-                    <Text style={[styles.advancedPresetText, { color: styleFilter === filter ? '#fff' : STYLE_PRESETS[filter].color }]}>
-                      {STYLE_PRESETS[filter].name}
-                    </Text>
+                    <View style={styles.advancedPresetLabelWrap}>
+                      <Text
+                        numberOfLines={1}
+                        style={[styles.advancedPresetText, { color: styleFilter === filter ? '#fff' : STYLE_PRESETS[filter].color }]}
+                      >
+                        {STYLE_PRESETS[filter].name}
+                      </Text>
+                    </View>
                   </View>
                 </TouchableOpacity>
               ))}
