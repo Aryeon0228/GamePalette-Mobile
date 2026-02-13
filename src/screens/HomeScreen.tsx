@@ -56,6 +56,7 @@ import {
   UNIFIED_EMPHASIS,
 } from '../constants/uiEmphasis';
 import { styles } from './home/HomeScreen.styles';
+import { getHomeLocalization } from './home/homeLocalization';
 import HomeHeader from './home/HomeHeader';
 import ImageCard from './home/ImageCard';
 import ActionBar from './home/ActionBar';
@@ -332,112 +333,50 @@ export default function HomeScreen({
   const styleChipColor = STYLE_PRESETS[styleFilter].color;
   const methodChipColor = extractionMethod === 'histogram' ? '#38bdf8' : kmeansAccentColor;
   const countChipColor = '#a78bfa';
-  const stylePresetChipLabels: Record<StyleFilter, string> = isKorean
-    ? {
-      original: '원본',
-      hypercasual: '하이퍼',
-      stylized: '스타일',
-      realistic: '실사',
-    }
-    : {
-      original: 'Original',
-      hypercasual: 'Hyper',
-      stylized: 'Stylized',
-      realistic: 'Realistic',
-    };
-  const stylePresetButtonLabels: Record<StyleFilter, string> = isKorean
-    ? {
-      original: '원본',
-      hypercasual: '하이퍼\n캐주얼',
-      stylized: '스타일\n라이즈드',
-      realistic: '실사',
-    }
-    : {
-      original: 'Original',
-      hypercasual: 'Hyper',
-      stylized: 'Stylized',
-      realistic: 'Realistic',
-    };
-  const stylePresetButtonLines: Record<StyleFilter, number> = isKorean
-    ? {
-      original: 1,
-      hypercasual: 2,
-      stylized: 2,
-      realistic: 1,
-    }
-    : {
-      original: 1,
-      hypercasual: 1,
-      stylized: 1,
-      realistic: 1,
-    };
-  const extractionMethodLabels: Record<ExtractionMethod, string> = isKorean
-    ? {
-      histogram: '휴 히스토그램',
-      kmeans: '케이-민스',
-    }
-    : {
-      histogram: 'Hue Histogram',
-      kmeans: 'K-Means',
-    };
-  const methodDescriptions: Record<ExtractionMethod, string> = isKorean
-    ? {
-      histogram: '색과 밝기의 전체 분포값 추출',
-      kmeans: '대표색 기준 추출',
-    }
-    : {
-      histogram: 'Distribution-based dominant colors',
-      kmeans: 'K dominant colors extraction',
-    };
-  const actionSheetLabels = isKorean
-    ? {
-      cancel: '취소',
-      takePhoto: '사진 촬영',
-      chooseFromLibrary: '앨범에서 선택',
-    }
-    : {
-      cancel: 'Cancel',
-      takePhoto: 'Take Photo',
-      chooseFromLibrary: 'Choose from Library',
-    };
-  const imageSourceDialogTitle = isKorean ? '이미지 선택' : 'Select Image';
-  const imageSourceDialogMessage = isKorean ? '이미지 가져올 방식을 선택하세요' : 'Choose image source';
-  const permissionTitle = isKorean ? '권한 필요' : 'Permission Required';
-  const cameraPermissionMessage = isKorean ? '카메라 접근 권한을 허용해 주세요.' : 'Please allow camera access.';
-  const galleryPermissionMessage = isKorean ? '사진 라이브러리 접근 권한을 허용해 주세요.' : 'Please allow access to your photo library.';
-  const errorTitle = isKorean ? '오류' : 'Error';
-  const cameraErrorMessage = isKorean ? '사진을 촬영하지 못했습니다.' : 'Failed to take photo.';
-  const galleryErrorMessage = isKorean ? '사진 라이브러리를 열지 못했습니다.' : 'Failed to open photo library.';
-  const cropErrorMessage = isKorean ? '이미지를 자르지 못했습니다.' : 'Failed to crop image.';
-  const extractErrorMessage = isKorean ? '이미지에서 색상을 추출하지 못했습니다.' : 'Failed to extract colors from image.';
-  const noColorsTitle = isKorean ? '색상 없음' : 'No Colors';
-  const noColorsMessage = isKorean ? '먼저 이미지에서 색상을 추출해 주세요.' : 'Please extract colors from an image first.';
-  const savedTitle = isKorean ? '저장 완료!' : 'Saved!';
-  const savedMessage = isKorean ? '팔레트가 보관함에 저장되었습니다.' : 'Palette saved to library.';
-  const shareDialogTitle = isKorean ? '팔레트 공유' : 'Share Palette';
-  const exportErrorMessage = isKorean ? '팔레트를 내보내지 못했습니다.' : 'Failed to export palette.';
-  const exportPngErrorMessage = isKorean ? 'PNG로 내보내지 못했습니다.' : 'Failed to export as PNG.';
-  const untitledPaletteLabel = isKorean ? '이름 없는 팔레트' : 'Untitled Palette';
-  const copiedPrefix = isKorean ? '복사됨' : 'Copied';
-  const settingLabel = isKorean ? '설정' : 'Setting';
-  const stylePresetLabel = isKorean ? '색감 프리셋' : 'Style Preset';
-  const extractionMethodLabel = isKorean ? '추출 방식' : 'Extraction Method';
-  const colorCountLabel = isKorean ? '색상 개수' : 'Color Count';
-  const colorVisionLabel = isKorean ? '색각 모드' : 'Color Vision';
-  const copyButtonLabel = isKorean ? '복사' : 'Copy';
-  const variationsLabel = isKorean ? '색상 변형' : 'Variations';
-  const lightnessLabel = isKorean ? '명도' : 'Lightness';
-  const hueShiftLabel = isKorean ? '색상 이동' : 'Hue Shift';
-  const harmonyLabel = isKorean ? '조화' : 'Harmony';
-  const histogramTitle = isKorean ? '명도 분포' : 'LUMINOSITY';
-  const histogramContrastLabel = isKorean ? '대비' : 'contrast';
-  const histogramDarkLabel = isKorean ? '어둠' : 'Dark';
-  const histogramMidLabel = isKorean ? '중간' : 'Mid';
-  const histogramBrightLabel = isKorean ? '밝음' : 'Bright';
-  const histogramAverageLabel = isKorean ? '평균' : 'Avg';
-  const swatchHintSubtitle = isKorean
-    ? '상세값, 색상 변형, 조화 팔레트가 바로 열려요.'
-    : 'Open details, variations, and harmony instantly.';
+  const {
+    stylePresetChipLabels,
+    stylePresetButtonLabels,
+    stylePresetButtonLines,
+    extractionMethodLabels,
+    methodDescriptions,
+    actionSheetLabels,
+    imageSourceDialogTitle,
+    imageSourceDialogMessage,
+    permissionTitle,
+    cameraPermissionMessage,
+    galleryPermissionMessage,
+    errorTitle,
+    cameraErrorMessage,
+    galleryErrorMessage,
+    cropErrorMessage,
+    extractErrorMessage,
+    noColorsTitle,
+    noColorsMessage,
+    savedTitle,
+    savedMessage,
+    shareDialogTitle,
+    exportErrorMessage,
+    exportPngErrorMessage,
+    untitledPaletteLabel,
+    copiedPrefix,
+    settingLabel,
+    stylePresetLabel,
+    extractionMethodLabel,
+    colorCountLabel,
+    colorVisionLabel,
+    copyButtonLabel,
+    variationsLabel,
+    lightnessLabel,
+    hueShiftLabel,
+    harmonyLabel,
+    histogramTitle,
+    histogramContrastLabel,
+    histogramDarkLabel,
+    histogramMidLabel,
+    histogramBrightLabel,
+    histogramAverageLabel,
+    swatchHintSubtitle,
+  } = getHomeLocalization(appLanguage);
 
   const getFormattedColor = (info: ColorInfo, format: 'HEX' | 'RGB' | 'HSL'): string => {
     switch (format) {

@@ -2049,7 +2049,7 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
   },
   advancedCvdCard: {
-    width: '48%' as any,
+    width: '48%',
     flexGrow: 1,
     paddingVertical: 8,
     paddingHorizontal: 9,
