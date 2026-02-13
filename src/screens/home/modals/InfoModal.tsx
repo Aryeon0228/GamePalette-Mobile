@@ -28,7 +28,7 @@ export default function InfoModal({
   const languageLabel = language === 'ko' ? '언어' : 'Language';
   const closeLabel = language === 'ko' ? '닫기' : 'Close';
   const feedbackLabel = language === 'ko' ? '피드백 보내기' : 'Send Feedback';
-  const subtitleLabel = language === 'ko' ? '게임 아트 컬러 추출기' : 'Game Art Color Extractor';
+  const subtitleLabel = language === 'ko' ? '간편한 컬러 추출기' : 'Simple Color Extractor';
   const footerLabel = language === 'ko'
     ? 'Studio Aryeon 제작\nCodex 및 Claude Code와 함께'
     : 'Built by Studio Aryeon\nwith Codex and Claude Code';
