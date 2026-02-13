@@ -10,6 +10,7 @@
     "web": "expo start --web",
     "test": "jest",
     "test:watch": "jest --watch",
+    "bump:ios-build": "node scripts/bump-ios-build-number.mjs",
     "check:ios-release": "node scripts/check-ios-release.mjs",
     "check:localization": "node scripts/check-localization-keys.mjs",
     "check:release": "node scripts/check-release.mjs",

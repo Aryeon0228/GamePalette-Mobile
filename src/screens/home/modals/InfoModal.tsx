@@ -6,6 +6,7 @@ import Constants from 'expo-constants';
 import { styles } from '../HomeScreen.styles';
 import { ThemeColors } from '../../../store/themeStore';
 import { type AppLanguage } from '../../../lib/colorUtils';
+import { buildRuntimeErrorReport } from '../../../lib/runtimeErrorLogger';
 
 interface InfoModalProps {
   visible: boolean;
@@ -32,6 +33,17 @@ export default function InfoModal({
   const footerLabel = language === 'ko'
     ? 'Studio Aryeon 제작\nCodex 및 Claude Code와 함께'
     : 'Built by Studio Aryeon\nwith Codex and Claude Code';
+  const handleFeedbackPress = async () => {
+    onHapticLight();
+    const report = await buildRuntimeErrorReport(5);
+    const bodyPrefix = language === 'ko'
+      ? '안녕하세요! 피드백을 보냅니다.\n\n[Runtime Error Logs]\n'
+      : 'Hi! Sending feedback.\n\n[Runtime Error Logs]\n';
+    const url = `mailto:studio.aryeon@gmail.com?subject=Pixel Paw Feedback&body=${encodeURIComponent(
+      `${bodyPrefix}${report}`
+    )}`;
+    void Linking.openURL(url);
+  };
 
   return (
     <Modal
@@ -58,8 +70,7 @@ export default function InfoModal({
           <TouchableOpacity
             style={[styles.infoModalButton, { backgroundColor: theme.backgroundTertiary }]}
             onPress={() => {
-              onHapticLight();
-              Linking.openURL('mailto:studio.aryeon@gmail.com?subject=Pixel Paw Feedback');
+              void handleFeedbackPress();
             }}
           >
             <Ionicons name="mail-outline" size={20} color={theme.accent} />
