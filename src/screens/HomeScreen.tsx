@@ -20,12 +20,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { usePaletteStore } from '../store/paletteStore';
 import { useThemeStore } from '../store/themeStore';
 import {
-  extractColorsFromImage,
-  ExtractionMethod,
-  analyzeLuminosityHistogram,
-  LuminosityHistogram,
-} from '../lib/colorExtractor';
-import {
   hexToRgb,
   rgbToHsl,
   rgbToHex,
@@ -50,6 +44,7 @@ import {
 } from '../constants/uiEmphasis';
 import { styles } from './home/HomeScreen.styles';
 import { getHomeLocalization } from './home/homeLocalization';
+import { useColorExtraction } from './home/hooks/useColorExtraction';
 import { useImageImportAndCrop } from './home/hooks/useImageImportAndCrop';
 import { usePaletteExport } from './home/hooks/usePaletteExport';
 import HomeHeader from './home/HomeHeader';
@@ -82,7 +77,6 @@ export default function HomeScreen({
   onAppLanguageChange,
 }: HomeScreenProps) {
   // UI State
-  const [isExtracting, setIsExtracting] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showColorDetail, setShowColorDetail] = useState(false);
@@ -102,12 +96,6 @@ export default function HomeScreen({
   const [variationHueShift, setVariationHueShift] = useState(true);
   const [selectedHarmony, setSelectedHarmony] = useState<HarmonyType>('complementary');
   const [colorBlindMode, setColorBlindMode] = useState<ColorBlindnessType>('none');
-
-  // Histogram State
-  const [histogram, setHistogram] = useState<LuminosityHistogram | null>(null);
-
-
-  // Export State
   // SNS Card State
   const [snsCardType, setSnsCardType] = useState<'instagram' | 'twitter'>('instagram');
   const [cardShowHex, setCardShowHex] = useState(true);
@@ -126,8 +114,6 @@ export default function HomeScreen({
   // Toast State
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const extractRequestRef = useRef(0);
-  const histogramRequestRef = useRef(0);
   const [hasSeenColorTapHint, setHasSeenColorTapHint] = useState(false);
 
   // Theme & Store
@@ -249,7 +235,30 @@ export default function HomeScreen({
     histogramBrightLabel,
     histogramAverageLabel,
     swatchHintSubtitle,
+    swatchHintTitle,
+    emptyGuideTitle,
+    emptyGuideAddImage,
+    emptyGuideExpandSettings,
+    emptyGuideTapSwatch,
   } = getHomeLocalization(appLanguage);
+
+  const {
+    isExtracting,
+    histogram,
+    extractColors,
+    handleMethodChange,
+    handleReExtract,
+    reExtractWithCount,
+  } = useColorExtraction({
+    colorCount,
+    extractionMethod,
+    currentImageUri,
+    setCurrentColors,
+    setCurrentImageUri,
+    setExtractionMethod,
+    errorTitle,
+    extractErrorMessage,
+  });
 
   const getFormattedColor = (info: ColorInfo, format: 'HEX' | 'RGB' | 'HSL'): string => {
     switch (format) {
@@ -381,55 +390,6 @@ export default function HomeScreen({
     }
   };
 
-  // ============================================
-  // COLOR EXTRACTION
-  // ============================================
-
-  const doExtract = async (
-    imageUri: string,
-    count: number,
-    method: ExtractionMethod
-  ) => {
-    const requestId = ++extractRequestRef.current;
-    setIsExtracting(true);
-    try {
-      const colors = await extractColorsFromImage(imageUri, count, method);
-      if (requestId !== extractRequestRef.current) return;
-      setCurrentColors(colors);
-    } catch (error) {
-      if (requestId === extractRequestRef.current) {
-        console.error('Error extracting colors:', error);
-        Alert.alert(errorTitle, extractErrorMessage);
-      }
-    } finally {
-      if (requestId === extractRequestRef.current) {
-        setIsExtracting(false);
-      }
-    }
-  };
-
-  const extractColors = async (imageUri: string) => {
-    setCurrentImageUri(imageUri);
-    setHistogram(null);
-    await doExtract(imageUri, colorCount, extractionMethod);
-    // Run histogram analysis in background (non-blocking)
-    analyzeHistogram(imageUri);
-  };
-
-  const analyzeHistogram = async (imageUri: string) => {
-    const requestId = ++histogramRequestRef.current;
-    try {
-      const histogramData = await analyzeLuminosityHistogram(imageUri);
-      if (requestId !== histogramRequestRef.current) return;
-      setHistogram(histogramData);
-    } catch (error) {
-      if (requestId === histogramRequestRef.current) {
-        console.error('Histogram analysis error:', error);
-        setHistogram(null);
-      }
-    }
-  };
-
   const {
     showCropModal,
     cropSourceAsset,
@@ -447,27 +407,13 @@ export default function HomeScreen({
     cropErrorMessage,
   });
 
-  const handleMethodChange = async (method: ExtractionMethod) => {
-    setExtractionMethod(method);
-    if (currentImageUri) {
-      await doExtract(currentImageUri, colorCount, method);
-    }
-  };
-
   const handleColorCountStep = (direction: 'down' | 'up') => {
     hapticLight();
     const newCount = direction === 'down'
       ? (colorCount <= 3 ? 8 : colorCount - 1)
       : (colorCount >= 8 ? 3 : colorCount + 1);
     setColorCount(newCount);
-    if (currentImageUri) {
-      void doExtract(currentImageUri, newCount, extractionMethod);
-    }
-  };
-
-  const handleReExtract = async () => {
-    if (!currentImageUri) return;
-    await doExtract(currentImageUri, colorCount, extractionMethod);
+    reExtractWithCount(newCount);
   };
 
   // ============================================
@@ -653,7 +599,7 @@ export default function HomeScreen({
             </View>
             <View style={styles.swatchHintTextWrap}>
               <Text style={[styles.swatchHintTitle, { color: theme.textPrimary }]}>
-                {isKorean ? '팔레트 색상을 탭해보세요' : 'Tap a palette swatch'}
+                {swatchHintTitle}
               </Text>
               <Text style={[styles.swatchHintSubtitle, { color: theme.textMuted }]}>
                 {swatchHintSubtitle}
@@ -747,25 +693,25 @@ export default function HomeScreen({
         {!currentImageUri && processedColors.length === 0 && (
           <View style={[styles.emptyGuideCard, { backgroundColor: theme.backgroundCard, borderColor: theme.borderLight }]}>
             <Text style={[styles.emptyGuideTitle, { color: theme.textPrimary }]}>
-              {isKorean ? '메인 화면 가이드' : 'Main Screen Guide'}
+              {emptyGuideTitle}
             </Text>
             <View style={styles.emptyGuideRows}>
               <View style={styles.emptyGuideRow}>
                 <Ionicons name="image-outline" size={14} color={theme.accent} />
                 <Text style={[styles.emptyGuideText, { color: theme.textMuted }]}>
-                  {isKorean ? '카메라/갤러리로 이미지를 추가하세요.' : 'Add artwork from camera or gallery.'}
+                  {emptyGuideAddImage}
                 </Text>
               </View>
               <View style={styles.emptyGuideRow}>
                 <Ionicons name="options-outline" size={14} color={theme.accent} />
                 <Text style={[styles.emptyGuideText, { color: theme.textMuted }]}>
-                  {isKorean ? '요약 바 우측 버튼으로 설정을 펼칠 수 있어요.' : 'Use the right summary button to expand settings.'}
+                  {emptyGuideExpandSettings}
                 </Text>
               </View>
               <View style={styles.emptyGuideRow}>
                 <Ionicons name="hand-left-outline" size={14} color={theme.accent} />
                 <Text style={[styles.emptyGuideText, { color: theme.textMuted }]}>
-                  {isKorean ? '추출된 색상 칩은 탭하면 상세 설명이 열립니다.' : 'Tap extracted swatches to open detailed info.'}
+                  {emptyGuideTapSwatch}
                 </Text>
               </View>
             </View>
