@@ -9,12 +9,10 @@ import {
   ActionSheetIOS,
   Platform,
   SafeAreaView,
-  Animated,
-  Easing,
 } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraView } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 
 import { usePaletteStore } from '../store/paletteStore';
@@ -47,6 +45,8 @@ import { getHomeLocalization } from './home/homeLocalization';
 import { useColorExtraction } from './home/hooks/useColorExtraction';
 import { useImageImportAndCrop } from './home/hooks/useImageImportAndCrop';
 import { usePaletteExport } from './home/hooks/usePaletteExport';
+import { useAdvancedPanel } from './home/hooks/useAdvancedPanel';
+import { useCameraCapture } from './home/hooks/useCameraCapture';
 import HomeHeader from './home/HomeHeader';
 import ImageCard from './home/ImageCard';
 import ActionBar from './home/ActionBar';
@@ -80,12 +80,7 @@ export default function HomeScreen({
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showColorDetail, setShowColorDetail] = useState(false);
-  const [showCamera, setShowCamera] = useState(false);
   const [paletteName, setPaletteName] = useState('');
-
-  // Camera
-  const [cameraPermission, requestCameraPermission] = useCameraPermissions();
-  const cameraRef = useRef<CameraView>(null);
 
   // Color Format State
   const [colorFormat, setColorFormat] = useState<'HEX' | 'RGB' | 'HSL'>('HEX');
@@ -104,12 +99,6 @@ export default function HomeScreen({
 
   // Info Modal State
   const [showInfo, setShowInfo] = useState(false);
-
-  // Advanced Settings Sheet State
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [isAdvancedMounted, setIsAdvancedMounted] = useState(false);
-  const advancedPanelAnim = useRef(new Animated.Value(0)).current;
-  const advancedPanelAnimationRef = useRef<Animated.CompositeAnimation | null>(null);
 
   // Toast State
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -276,6 +265,31 @@ export default function HomeScreen({
   const hapticMedium = () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   const hapticSuccess = () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
+  const {
+    showAdvanced,
+    isAdvancedMounted,
+    advancedPanelAnim,
+    closeAdvancedPanel,
+    toggleAdvancedPanel,
+  } = useAdvancedPanel();
+
+  const { showCamera, cameraRef, openCamera, closeCamera, takePicture } = useCameraCapture({
+    onImageCaptured: extractColors,
+    onPermissionDenied: () => Alert.alert(permissionTitle, cameraPermissionMessage),
+    onCaptureError: () => Alert.alert(errorTitle, cameraErrorMessage),
+    onBeforeCapture: hapticMedium,
+    onCaptureSuccess: hapticSuccess,
+  });
+
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+        toastTimeoutRef.current = null;
+      }
+    };
+  }, []);
+
   // ============================================
   // IMAGE HANDLING
   // ============================================
@@ -303,90 +317,6 @@ export default function HomeScreen({
           { text: actionSheetLabels.chooseFromLibrary, onPress: pickFromGallery },
         ]
       );
-    }
-  };
-
-  const openCamera = async () => {
-    if (!cameraPermission?.granted) {
-      const permission = await requestCameraPermission();
-      if (!permission.granted) {
-        Alert.alert(permissionTitle, cameraPermissionMessage);
-        return;
-      }
-    }
-    setShowCamera(true);
-  };
-
-  const animateAdvancedPanel = (toValue: 0 | 1, onComplete?: () => void) => {
-    advancedPanelAnimationRef.current?.stop();
-    const animation = Animated.timing(advancedPanelAnim, {
-      toValue,
-      duration: toValue === 1 ? 220 : 170,
-      easing: toValue === 1 ? Easing.out(Easing.cubic) : Easing.in(Easing.cubic),
-      useNativeDriver: true,
-    });
-    advancedPanelAnimationRef.current = animation;
-    animation.start(({ finished }) => {
-      if (advancedPanelAnimationRef.current === animation) {
-        advancedPanelAnimationRef.current = null;
-      }
-      if (finished && onComplete) {
-        onComplete();
-      }
-    });
-  };
-
-  const openAdvancedPanel = () => {
-    if (showAdvanced && isAdvancedMounted) return;
-    setIsAdvancedMounted(true);
-    setShowAdvanced(true);
-    requestAnimationFrame(() => {
-      animateAdvancedPanel(1);
-    });
-  };
-
-  const closeAdvancedPanel = () => {
-    if (!isAdvancedMounted) return;
-    setShowAdvanced(false);
-    animateAdvancedPanel(0, () => {
-      setIsAdvancedMounted(false);
-    });
-  };
-
-  const toggleAdvancedPanel = () => {
-    if (showAdvanced) {
-      closeAdvancedPanel();
-      return;
-    }
-    openAdvancedPanel();
-  };
-
-  useEffect(() => {
-    return () => {
-      advancedPanelAnimationRef.current?.stop();
-      if (toastTimeoutRef.current) {
-        clearTimeout(toastTimeoutRef.current);
-        toastTimeoutRef.current = null;
-      }
-    };
-  }, []);
-
-  const takePicture = async () => {
-    if (cameraRef.current) {
-      hapticMedium();
-      try {
-        const photo = await cameraRef.current.takePictureAsync({
-          quality: 0.8,
-        });
-        setShowCamera(false);
-        if (photo?.uri) {
-          await extractColors(photo.uri);
-          hapticSuccess();
-        }
-      } catch (error) {
-        console.error('Camera error:', error);
-        Alert.alert(errorTitle, cameraErrorMessage);
-      }
     }
   };
 
@@ -1106,7 +1036,7 @@ export default function HomeScreen({
       <Modal
         visible={showCamera}
         animationType="slide"
-        onRequestClose={() => setShowCamera(false)}
+        onRequestClose={closeCamera}
       >
         <View style={styles.cameraContainer}>
           <CameraView
@@ -1119,7 +1049,7 @@ export default function HomeScreen({
               style={styles.cameraCloseButton}
               onPress={() => {
                 hapticLight();
-                setShowCamera(false);
+                closeCamera();
               }}
             >
               <Ionicons name="close" size={28} color="#fff" />
