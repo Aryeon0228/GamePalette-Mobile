@@ -24,14 +24,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
-        run: npm test -- --runInBand
-
-      - name: Type check
-        run: npx tsc --noEmit
-
-      - name: Expo doctor
-        run: npx expo-doctor
-
-      - name: iOS release guard
-        run: npm run check:ios-release
+      - name: Release checks
+        run: npm run check:release

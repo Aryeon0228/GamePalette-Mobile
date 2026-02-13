@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Alert, Image as RNImage } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -160,7 +160,7 @@ export function useImageImportAndCrop({
   const [cropSourceAsset, setCropSourceAsset] = useState<CropSourceAsset | null>(null);
   const [isApplyingCrop, setIsApplyingCrop] = useState(false);
 
-  const pickFromGallery = async () => {
+  const pickFromGallery = useCallback(async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permissionResult.granted) {
@@ -189,14 +189,14 @@ export function useImageImportAndCrop({
       console.error('Gallery error:', error);
       Alert.alert(errorTitle, galleryErrorMessage);
     }
-  };
+  }, [errorTitle, galleryErrorMessage, galleryPermissionMessage, permissionTitle]);
 
-  const handleCropCancel = () => {
+  const handleCropCancel = useCallback(() => {
     setShowCropModal(false);
     setCropSourceAsset(null);
-  };
+  }, []);
 
-  const handleCropConfirm = async (selection: CropSelectionPayload) => {
+  const handleCropConfirm = useCallback(async (selection: CropSelectionPayload) => {
     if (!cropSourceAsset) return;
     setIsApplyingCrop(true);
     try {
@@ -222,7 +222,7 @@ export function useImageImportAndCrop({
     } finally {
       setIsApplyingCrop(false);
     }
-  };
+  }, [cropErrorMessage, cropSourceAsset, errorTitle, onCropSuccess, onImageReady]);
 
   return {
     showCropModal,

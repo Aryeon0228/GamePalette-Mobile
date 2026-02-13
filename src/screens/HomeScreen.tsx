@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useEffect } from 'react';
+import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
 import { CameraView } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
+import { shallow } from 'zustand/shallow';
 
 import { usePaletteStore } from '../store/paletteStore';
 import { useThemeStore } from '../store/themeStore';
@@ -106,7 +107,7 @@ export default function HomeScreen({
   const [hasSeenColorTapHint, setHasSeenColorTapHint] = useState(false);
 
   // Theme & Store
-  const { colors: theme } = useThemeStore();
+  const theme = useThemeStore((state) => state.colors);
   const {
     currentColors,
     currentImageUri,
@@ -119,7 +120,22 @@ export default function HomeScreen({
     setColorCount,
     setExtractionMethod,
     savePalette,
-  } = usePaletteStore();
+  } = usePaletteStore(
+    (state) => ({
+      currentColors: state.currentColors,
+      currentImageUri: state.currentImageUri,
+      selectedColorIndex: state.selectedColorIndex,
+      colorCount: state.colorCount,
+      extractionMethod: state.extractionMethod,
+      setCurrentColors: state.setCurrentColors,
+      setCurrentImageUri: state.setCurrentImageUri,
+      setSelectedColorIndex: state.setSelectedColorIndex,
+      setColorCount: state.setColorCount,
+      setExtractionMethod: state.setExtractionMethod,
+      savePalette: state.savePalette,
+    }),
+    shallow
+  );
 
   // ============================================
   // COMPUTED VALUES
@@ -249,21 +265,30 @@ export default function HomeScreen({
     extractErrorMessage,
   });
 
-  const getFormattedColor = (info: ColorInfo, format: 'HEX' | 'RGB' | 'HSL'): string => {
+  const getFormattedColor = useCallback((info: ColorInfo, format: 'HEX' | 'RGB' | 'HSL'): string => {
     switch (format) {
       case 'HEX': return info.hex.toUpperCase();
       case 'RGB': return `RGB(${info.rgb.r}, ${info.rgb.g}, ${info.rgb.b})`;
       case 'HSL': return `HSL(${info.hsl.h}, ${info.hsl.s}%, ${info.hsl.l}%)`;
     }
-  };
+  }, []);
 
   // ============================================
   // HAPTIC FEEDBACK
   // ============================================
 
-  const hapticLight = () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  const hapticMedium = () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-  const hapticSuccess = () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  const hapticLight = useCallback(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light), []);
+  const hapticMedium = useCallback(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium), []);
+  const hapticSuccess = useCallback(
+    () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
+    []
+  );
+  const handleCameraPermissionDenied = useCallback(() => {
+    Alert.alert(permissionTitle, cameraPermissionMessage);
+  }, [cameraPermissionMessage, permissionTitle]);
+  const handleCameraCaptureError = useCallback(() => {
+    Alert.alert(errorTitle, cameraErrorMessage);
+  }, [cameraErrorMessage, errorTitle]);
 
   const {
     showAdvanced,
@@ -275,8 +300,8 @@ export default function HomeScreen({
 
   const { showCamera, cameraRef, openCamera, closeCamera, takePicture } = useCameraCapture({
     onImageCaptured: extractColors,
-    onPermissionDenied: () => Alert.alert(permissionTitle, cameraPermissionMessage),
-    onCaptureError: () => Alert.alert(errorTitle, cameraErrorMessage),
+    onPermissionDenied: handleCameraPermissionDenied,
+    onCaptureError: handleCameraCaptureError,
     onBeforeCapture: hapticMedium,
     onCaptureSuccess: hapticSuccess,
   });
@@ -293,32 +318,6 @@ export default function HomeScreen({
   // ============================================
   // IMAGE HANDLING
   // ============================================
-
-  const showImageSourceOptions = () => {
-    hapticLight();
-    if (Platform.OS === 'ios') {
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options: [actionSheetLabels.cancel, actionSheetLabels.takePhoto, actionSheetLabels.chooseFromLibrary],
-          cancelButtonIndex: 0,
-        },
-        (buttonIndex) => {
-          if (buttonIndex === 1) openCamera();
-          else if (buttonIndex === 2) pickFromGallery();
-        }
-      );
-    } else {
-      Alert.alert(
-        imageSourceDialogTitle,
-        imageSourceDialogMessage,
-        [
-          { text: actionSheetLabels.cancel, style: 'cancel' },
-          { text: actionSheetLabels.takePhoto, onPress: openCamera },
-          { text: actionSheetLabels.chooseFromLibrary, onPress: pickFromGallery },
-        ]
-      );
-    }
-  };
 
   const {
     showCropModal,
@@ -337,20 +336,58 @@ export default function HomeScreen({
     cropErrorMessage,
   });
 
-  const handleColorCountStep = (direction: 'down' | 'up') => {
+  const showImageSourceOptions = useCallback(() => {
+    hapticLight();
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: [actionSheetLabels.cancel, actionSheetLabels.takePhoto, actionSheetLabels.chooseFromLibrary],
+          cancelButtonIndex: 0,
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 1) {
+            void openCamera();
+          } else if (buttonIndex === 2) {
+            void pickFromGallery();
+          }
+        }
+      );
+    } else {
+      Alert.alert(
+        imageSourceDialogTitle,
+        imageSourceDialogMessage,
+        [
+          { text: actionSheetLabels.cancel, style: 'cancel' },
+          { text: actionSheetLabels.takePhoto, onPress: () => void openCamera() },
+          { text: actionSheetLabels.chooseFromLibrary, onPress: () => void pickFromGallery() },
+        ]
+      );
+    }
+  }, [
+    actionSheetLabels.cancel,
+    actionSheetLabels.chooseFromLibrary,
+    actionSheetLabels.takePhoto,
+    hapticLight,
+    imageSourceDialogMessage,
+    imageSourceDialogTitle,
+    openCamera,
+    pickFromGallery,
+  ]);
+
+  const handleColorCountStep = useCallback((direction: 'down' | 'up') => {
     hapticLight();
     const newCount = direction === 'down'
       ? (colorCount <= 3 ? 8 : colorCount - 1)
       : (colorCount >= 8 ? 3 : colorCount + 1);
     setColorCount(newCount);
     reExtractWithCount(newCount);
-  };
+  }, [colorCount, hapticLight, reExtractWithCount, setColorCount]);
 
   // ============================================
   // COLOR INTERACTION
   // ============================================
 
-  const handleColorPress = (index: number) => {
+  const handleColorPress = useCallback((index: number) => {
     hapticLight();
     setHasSeenColorTapHint(true);
     if (isAdvancedMounted) {
@@ -362,19 +399,21 @@ export default function HomeScreen({
     } else {
       setSelectedColorIndex(index);
     }
-  };
+  }, [closeAdvancedPanel, hapticLight, isAdvancedMounted, selectedColorIndex, setSelectedColorIndex]);
 
-  const showToast = (message: string) => {
+  const showToast = useCallback((message: string) => {
     if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
     setToastMessage(message);
     toastTimeoutRef.current = setTimeout(() => setToastMessage(null), 1800);
-  };
+  }, []);
 
-  const copyColor = async (value: string, label?: string) => {
+  const copyColor = useCallback(async (value: string, label?: string) => {
     await Clipboard.setStringAsync(value);
     hapticSuccess();
     showToast(isKorean ? `${copiedPrefix}: ${label || value}` : `${copiedPrefix} ${label || value}`);
-  };
+  }, [copiedPrefix, hapticSuccess, isKorean, showToast]);
+
+  const handleCloseExportModal = useCallback(() => setShowExportModal(false), []);
 
   const {
     exportFormat,
@@ -395,14 +434,14 @@ export default function HomeScreen({
     isKorean,
     onHapticSuccess: hapticSuccess,
     onShowToast: showToast,
-    onCloseModal: () => setShowExportModal(false),
+    onCloseModal: handleCloseExportModal,
   });
 
   // ============================================
   // SAVE & EXPORT
   // ============================================
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     if (processedColors.length === 0) {
       Alert.alert(noColorsTitle, noColorsMessage);
       return;
@@ -410,9 +449,9 @@ export default function HomeScreen({
     // Set empty string to use auto-generated name
     setPaletteName('');
     setShowSaveModal(true);
-  };
+  }, [noColorsMessage, noColorsTitle, processedColors.length]);
 
-  const confirmSave = () => {
+  const confirmSave = useCallback(() => {
     const originalColors = currentColors;
     setCurrentColors(processedColors);
     // Pass empty string for auto-generated name, or user's custom name
@@ -421,15 +460,52 @@ export default function HomeScreen({
     setShowSaveModal(false);
     setPaletteName('');
     Alert.alert(savedTitle, savedMessage);
-  };
+  }, [
+    currentColors,
+    paletteName,
+    processedColors,
+    savePalette,
+    savedMessage,
+    savedTitle,
+    setCurrentColors,
+  ]);
 
-  const handleExport = () => {
+  const handleExport = useCallback(() => {
     if (processedColors.length === 0) {
       Alert.alert(noColorsTitle, noColorsMessage);
       return;
     }
     setShowExportModal(true);
-  };
+  }, [noColorsMessage, noColorsTitle, processedColors.length]);
+
+  const handleShowInfo = useCallback(() => {
+    setShowInfo(true);
+  }, []);
+
+  const handleToggleGrayscale = useCallback(() => {
+    hapticLight();
+    setShowGrayscale((prev) => !prev);
+  }, [hapticLight]);
+
+  const handleReExtractPress = useCallback(() => {
+    hapticLight();
+    void handleReExtract();
+  }, [handleReExtract, hapticLight]);
+
+  const handleOpenCameraPress = useCallback(() => {
+    hapticLight();
+    void openCamera();
+  }, [hapticLight, openCamera]);
+
+  const handlePickFromGalleryPress = useCallback(() => {
+    hapticLight();
+    void pickFromGallery();
+  }, [hapticLight, pickFromGallery]);
+
+  const handleToggleAdvancedPanel = useCallback(() => {
+    hapticLight();
+    toggleAdvancedPanel();
+  }, [hapticLight, toggleAdvancedPanel]);
 
   // ============================================
   // RENDER
@@ -440,7 +516,7 @@ export default function HomeScreen({
       <HomeHeader
         theme={theme}
         language={appLanguage}
-        onShowInfo={() => setShowInfo(true)}
+        onShowInfo={handleShowInfo}
         onHapticLight={hapticLight}
       />
 
@@ -457,22 +533,10 @@ export default function HomeScreen({
           theme={theme}
           isExtracting={isExtracting}
           onImagePress={showImageSourceOptions}
-          onToggleGrayscale={() => {
-            hapticLight();
-            setShowGrayscale((prev) => !prev);
-          }}
-          onReExtractPress={() => {
-            hapticLight();
-            handleReExtract();
-          }}
-          onOpenCamera={() => {
-            hapticLight();
-            openCamera();
-          }}
-          onPickFromGallery={() => {
-            hapticLight();
-            pickFromGallery();
-          }}
+          onToggleGrayscale={handleToggleGrayscale}
+          onReExtractPress={handleReExtractPress}
+          onOpenCamera={handleOpenCameraPress}
+          onPickFromGallery={handlePickFromGalleryPress}
         />
 
         {/* ── Settings Summary Bar ── */}
@@ -508,10 +572,7 @@ export default function HomeScreen({
               styles.summaryEditButton,
               { backgroundColor: isAdvancedMounted ? theme.accent + '22' : theme.backgroundTertiary },
             ]}
-            onPress={() => {
-              hapticLight();
-              toggleAdvancedPanel();
-            }}
+            onPress={handleToggleAdvancedPanel}
           >
             <Ionicons
               name={isAdvancedMounted ? 'close-outline' : 'options-outline'}

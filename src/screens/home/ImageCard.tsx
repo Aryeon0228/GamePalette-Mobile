@@ -22,7 +22,7 @@ interface ImageCardProps {
   onPickFromGallery: () => void;
 }
 
-export default function ImageCard({
+function ImageCard({
   currentImageUri,
   showGrayscale,
   language,
@@ -181,3 +181,5 @@ export default function ImageCard({
     </View>
   );
 }
+
+export default React.memo(ImageCard);
