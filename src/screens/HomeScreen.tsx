@@ -371,7 +371,7 @@ export default function HomeScreen({
     };
   const extractionMethodLabels: Record<ExtractionMethod, string> = isKorean
     ? {
-      histogram: '히스토그램',
+      histogram: '휴 히스토그램',
       kmeans: '케이-민스',
     }
     : {
