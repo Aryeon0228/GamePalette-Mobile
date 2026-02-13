@@ -9,20 +9,13 @@ import {
   ActionSheetIOS,
   Platform,
   SafeAreaView,
-  Image as RNImage,
   Animated,
   Easing,
 } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
 import * as Clipboard from 'expo-clipboard';
-import * as Sharing from 'expo-sharing';
-import * as FileSystem from 'expo-file-system/legacy';
 import * as Haptics from 'expo-haptics';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
-import type ViewShot from 'react-native-view-shot';
-import UPNG from 'upng-js';
 
 import { usePaletteStore } from '../store/paletteStore';
 import { useThemeStore } from '../store/themeStore';
@@ -57,6 +50,8 @@ import {
 } from '../constants/uiEmphasis';
 import { styles } from './home/HomeScreen.styles';
 import { getHomeLocalization } from './home/homeLocalization';
+import { useImageImportAndCrop } from './home/hooks/useImageImportAndCrop';
+import { usePaletteExport } from './home/hooks/usePaletteExport';
 import HomeHeader from './home/HomeHeader';
 import ImageCard from './home/ImageCard';
 import ActionBar from './home/ActionBar';
@@ -65,10 +60,7 @@ import ColorDetailModal from './home/modals/ColorDetailModal';
 import SavePaletteModal from './home/modals/SavePaletteModal';
 import ExportModal from './home/modals/ExportModal';
 import InfoModal from './home/modals/InfoModal';
-import ImageCropModal, {
-  type CropSelectionPayload,
-  type NormalizedPoint,
-} from './home/modals/ImageCropModal';
+import ImageCropModal from './home/modals/ImageCropModal';
 
 // ============================================
 // TYPES
@@ -79,119 +71,6 @@ interface HomeScreenProps {
   appLanguage: AppLanguage;
   onAppLanguageChange: (language: AppLanguage) => void;
 }
-
-interface CropSourceAsset {
-  uri: string;
-  width: number;
-  height: number;
-}
-
-const clamp01 = (value: number): number => Math.min(Math.max(value, 0), 1);
-
-const base64ToBytes = (base64: string): Uint8Array => {
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return bytes;
-};
-
-const bytesToBase64 = (bytes: Uint8Array): string => {
-  const CHUNK_SIZE = 8192;
-  let binary = '';
-  for (let i = 0; i < bytes.length; i += CHUNK_SIZE) {
-    const end = Math.min(i + CHUNK_SIZE, bytes.length);
-    let chunk = '';
-    for (let j = i; j < end; j++) {
-      chunk += String.fromCharCode(bytes[j]);
-    }
-    binary += chunk;
-  }
-  return btoa(binary);
-};
-
-const pointInPolygon = (x: number, y: number, polygon: NormalizedPoint[]): boolean => {
-  let inside = false;
-  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-    const xi = polygon[i].x;
-    const yi = polygon[i].y;
-    const xj = polygon[j].x;
-    const yj = polygon[j].y;
-
-    const intersects = ((yi > y) !== (yj > y)) &&
-      (x < ((xj - xi) * (y - yi)) / ((yj - yi) || Number.EPSILON) + xi);
-    if (intersects) inside = !inside;
-  }
-  return inside;
-};
-
-const createLassoMaskedImage = async (
-  imageUri: string,
-  normalizedPath: NormalizedPoint[]
-): Promise<string> => {
-  if (normalizedPath.length < 3) return imageUri;
-
-  const maxMaskDimension = 1400;
-  const { width: sourceWidth, height: sourceHeight } = await new Promise<{ width: number; height: number }>(
-    (resolve, reject) => {
-      RNImage.getSize(
-        imageUri,
-        (width, height) => resolve({ width, height }),
-        reject
-      );
-    }
-  );
-  const shouldResize = sourceWidth > maxMaskDimension || sourceHeight > maxMaskDimension;
-  const resizeActions = shouldResize
-    ? [{ resize: sourceWidth >= sourceHeight ? { width: maxMaskDimension } : { height: maxMaskDimension } }]
-    : [];
-
-  const pngImage = await ImageManipulator.manipulateAsync(
-    imageUri,
-    resizeActions,
-    {
-      compress: 1,
-      format: ImageManipulator.SaveFormat.PNG,
-      base64: true,
-    }
-  );
-
-  if (!pngImage.base64) {
-    return imageUri;
-  }
-
-  const bytes = base64ToBytes(pngImage.base64);
-  const decoded = UPNG.decode(bytes.buffer as ArrayBuffer);
-  const width = decoded.width;
-  const height = decoded.height;
-  const rgbaData = new Uint8Array(UPNG.toRGBA8(decoded)[0]);
-
-  const polygon = normalizedPath.map((point) => ({
-    x: clamp01(point.x) * Math.max(width - 1, 1),
-    y: clamp01(point.y) * Math.max(height - 1, 1),
-  }));
-
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      if (!pointInPolygon(x + 0.5, y + 0.5, polygon)) {
-        rgbaData[(y * width + x) * 4 + 3] = 0;
-      }
-    }
-  }
-
-  const encoded = UPNG.encode([rgbaData.buffer], width, height, 0);
-  const encodedBytes = new Uint8Array(encoded as ArrayBuffer);
-  const encodedBase64 = bytesToBase64(encodedBytes);
-  if (!FileSystem.cacheDirectory) {
-    throw new Error('Cache directory is unavailable');
-  }
-  const maskedUri = `${FileSystem.cacheDirectory}lasso-mask-${Date.now()}.png`;
-  await FileSystem.writeAsStringAsync(maskedUri, encodedBase64, {
-    encoding: FileSystem.EncodingType.Base64,
-  });
-  return maskedUri;
-};
 
 // ============================================
 // MAIN COMPONENT
@@ -208,9 +87,6 @@ export default function HomeScreen({
   const [showExportModal, setShowExportModal] = useState(false);
   const [showColorDetail, setShowColorDetail] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
-  const [showCropModal, setShowCropModal] = useState(false);
-  const [cropSourceAsset, setCropSourceAsset] = useState<CropSourceAsset | null>(null);
-  const [isApplyingCrop, setIsApplyingCrop] = useState(false);
   const [paletteName, setPaletteName] = useState('');
 
   // Camera
@@ -232,10 +108,6 @@ export default function HomeScreen({
 
 
   // Export State
-  const [exportFormat, setExportFormat] = useState<'png' | 'json' | 'css'>('png');
-  const [isExporting, setIsExporting] = useState(false);
-  const paletteCardRef = useRef<ViewShot>(null);
-
   // SNS Card State
   const [snsCardType, setSnsCardType] = useState<'instagram' | 'twitter'>('instagram');
   const [cardShowHex, setCardShowHex] = useState(true);
@@ -490,23 +362,6 @@ export default function HomeScreen({
     };
   }, []);
 
-  const resolveImageSize = async (
-    uri: string,
-    width?: number,
-    height?: number
-  ): Promise<{ width: number; height: number }> => {
-    if (width && height) {
-      return { width, height };
-    }
-    return new Promise((resolve, reject) => {
-      RNImage.getSize(
-        uri,
-        (resolvedWidth, resolvedHeight) => resolve({ width: resolvedWidth, height: resolvedHeight }),
-        reject
-      );
-    });
-  };
-
   const takePicture = async () => {
     if (cameraRef.current) {
       hapticMedium();
@@ -523,70 +378,6 @@ export default function HomeScreen({
         console.error('Camera error:', error);
         Alert.alert(errorTitle, cameraErrorMessage);
       }
-    }
-  };
-
-  const pickFromGallery = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (!permissionResult.granted) {
-      Alert.alert(permissionTitle, galleryPermissionMessage);
-      return;
-    }
-
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'],
-        allowsEditing: false,
-        quality: 1,
-      });
-
-      if (!result.canceled && result.assets[0]) {
-        const asset = result.assets[0];
-        const { width, height } = await resolveImageSize(asset.uri, asset.width, asset.height);
-        setCropSourceAsset({
-          uri: asset.uri,
-          width,
-          height,
-        });
-        setShowCropModal(true);
-      }
-    } catch (error) {
-      console.error('Gallery error:', error);
-      Alert.alert(errorTitle, galleryErrorMessage);
-    }
-  };
-
-  const handleCropCancel = () => {
-    setShowCropModal(false);
-    setCropSourceAsset(null);
-  };
-
-  const handleCropConfirm = async (selection: CropSelectionPayload) => {
-    if (!cropSourceAsset) return;
-    setIsApplyingCrop(true);
-    try {
-      const cropped = await ImageManipulator.manipulateAsync(
-        cropSourceAsset.uri,
-        [{ crop: selection.cropArea }],
-        {
-          compress: 1,
-          format: selection.mode === 'lasso' ? ImageManipulator.SaveFormat.PNG : ImageManipulator.SaveFormat.JPEG,
-        }
-      );
-      let processedUri = cropped.uri;
-      if (selection.mode === 'lasso' && selection.normalizedPath && selection.normalizedPath.length >= 3) {
-        processedUri = await createLassoMaskedImage(cropped.uri, selection.normalizedPath);
-      }
-      setShowCropModal(false);
-      setCropSourceAsset(null);
-      await extractColors(processedUri);
-      hapticSuccess();
-    } catch (error) {
-      console.error('Crop error:', error);
-      Alert.alert(errorTitle, cropErrorMessage);
-    } finally {
-      setIsApplyingCrop(false);
     }
   };
 
@@ -638,6 +429,23 @@ export default function HomeScreen({
       }
     }
   };
+
+  const {
+    showCropModal,
+    cropSourceAsset,
+    isApplyingCrop,
+    pickFromGallery,
+    handleCropCancel,
+    handleCropConfirm,
+  } = useImageImportAndCrop({
+    onImageReady: extractColors,
+    onCropSuccess: hapticSuccess,
+    permissionTitle,
+    galleryPermissionMessage,
+    errorTitle,
+    galleryErrorMessage,
+    cropErrorMessage,
+  });
 
   const handleMethodChange = async (method: ExtractionMethod) => {
     setExtractionMethod(method);
@@ -692,6 +500,28 @@ export default function HomeScreen({
     showToast(isKorean ? `${copiedPrefix}: ${label || value}` : `${copiedPrefix} ${label || value}`);
   };
 
+  const {
+    exportFormat,
+    setExportFormat,
+    isExporting,
+    paletteCardRef,
+    handleExportConfirm,
+    copyToClipboard,
+  } = usePaletteExport({
+    processedColors,
+    paletteName,
+    untitledPaletteLabel,
+    shareDialogTitle,
+    errorTitle,
+    exportPngErrorMessage,
+    exportErrorMessage,
+    copiedPrefix,
+    isKorean,
+    onHapticSuccess: hapticSuccess,
+    onShowToast: showToast,
+    onCloseModal: () => setShowExportModal(false),
+  });
+
   // ============================================
   // SAVE & EXPORT
   // ============================================
@@ -723,111 +553,6 @@ export default function HomeScreen({
       return;
     }
     setShowExportModal(true);
-  };
-
-  const exportAsPng = async () => {
-    if (!paletteCardRef.current) return;
-
-    setIsExporting(true);
-    try {
-      const uri = await paletteCardRef.current.capture?.();
-      if (uri && (await Sharing.isAvailableAsync())) {
-        await Sharing.shareAsync(uri, {
-          mimeType: 'image/png',
-          dialogTitle: shareDialogTitle,
-        });
-      }
-    } catch (error) {
-      console.error('PNG export error:', error);
-      Alert.alert(errorTitle, exportPngErrorMessage);
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
-  const exportAsText = async (format: string) => {
-    let content = '';
-    let filename = 'palette';
-    let fileUri: string | null = null;
-    const colors = processedColors;
-
-    switch (format) {
-      case 'json':
-        content = JSON.stringify(
-          {
-            name: paletteName || untitledPaletteLabel,
-            colors: colors.map((hex, i) => ({
-              index: i,
-              hex,
-              rgb: hexToRgb(hex),
-              hsl: (() => {
-                const rgb = hexToRgb(hex);
-                return rgbToHsl(rgb.r, rgb.g, rgb.b);
-              })(),
-            })),
-            exportedAt: new Date().toISOString(),
-          },
-          null,
-          2
-        );
-        filename = 'palette.json';
-        break;
-      case 'css':
-        content = `:root {\n${colors
-          .map((hex, i) => `  --color-${i + 1}: ${hex};`)
-          .join('\n')}\n}`;
-        filename = 'palette.css';
-        break;
-      default:
-        content = colors.join('\n');
-        filename = 'palette.txt';
-    }
-
-    setIsExporting(true);
-    try {
-      fileUri = FileSystem.cacheDirectory + filename;
-      await FileSystem.writeAsStringAsync(fileUri, content);
-      if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(fileUri);
-      }
-    } catch (error) {
-      Alert.alert(errorTitle, exportErrorMessage);
-    } finally {
-      if (fileUri) {
-        FileSystem.deleteAsync(fileUri, { idempotent: true }).catch(() => undefined);
-      }
-      setIsExporting(false);
-    }
-  };
-
-  const handleExportConfirm = async () => {
-    if (exportFormat === 'png') {
-      await exportAsPng();
-    } else {
-      await exportAsText(exportFormat);
-    }
-    setShowExportModal(false);
-  };
-
-  const copyToClipboard = async (format: 'text' | 'json' | 'css') => {
-    let content = '';
-    const colors = processedColors;
-
-    switch (format) {
-      case 'json':
-        content = JSON.stringify(colors);
-        break;
-      case 'css':
-        content = colors.map((hex, i) => `--color-${i + 1}: ${hex};`).join('\n');
-        break;
-      default:
-        content = colors.join('\n');
-    }
-
-    await Clipboard.setStringAsync(content);
-    hapticSuccess();
-    showToast(isKorean ? `${copiedPrefix}: ${format.toUpperCase()}` : `${copiedPrefix} ${format.toUpperCase()}`);
-    setShowExportModal(false);
   };
 
   // ============================================
