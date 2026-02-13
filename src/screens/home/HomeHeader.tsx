@@ -19,7 +19,7 @@ export default function HomeHeader({
   onShowInfo,
   onHapticLight,
 }: HomeHeaderProps) {
-  const subtitle = language === 'ko' ? '컬러 추출기' : 'Color Extractor';
+  const subtitle = language === 'ko' ? '간편한 컬러 추출기' : 'Simple Color Extractor';
 
   return (
     <View style={styles.header}>
