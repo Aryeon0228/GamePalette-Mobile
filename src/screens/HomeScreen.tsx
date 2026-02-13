@@ -375,7 +375,7 @@ export default function HomeScreen({
       kmeans: '케이-민스',
     }
     : {
-      histogram: 'Histogram',
+      histogram: 'Hue Histogram',
       kmeans: 'K-Means',
     };
   const methodDescriptions: Record<ExtractionMethod, string> = isKorean
