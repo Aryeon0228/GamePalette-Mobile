@@ -332,7 +332,7 @@ export default function HomeScreen({
   const countChipColor = '#a78bfa';
   const stylePresetLabels: Record<StyleFilter, string> = isKorean
     ? {
-      original: '오리지널',
+      original: '원본',
       hypercasual: '하이퍼',
       stylized: '스타일',
       realistic: '리얼',
@@ -346,7 +346,7 @@ export default function HomeScreen({
   const extractionMethodLabels: Record<ExtractionMethod, string> = isKorean
     ? {
       histogram: '히스토그램',
-      kmeans: 'K-평균',
+      kmeans: '케이-민스',
     }
     : {
       histogram: 'Histogram',
@@ -354,8 +354,8 @@ export default function HomeScreen({
     };
   const methodDescriptions: Record<ExtractionMethod, string> = isKorean
     ? {
-      histogram: '색/밝기 분포 기반 대표색 추출',
-      kmeans: '대표색 K개 추출',
+      histogram: '색과 밝기의 전체 분포값 추출',
+      kmeans: '대표색 기준 추출',
     }
     : {
       histogram: 'Distribution-based dominant colors',
@@ -1059,6 +1059,8 @@ export default function HomeScreen({
                     <View style={styles.advancedPresetLabelWrap}>
                       <Text
                         numberOfLines={1}
+                        adjustsFontSizeToFit
+                        minimumFontScale={0.82}
                         style={[styles.advancedPresetText, { color: styleFilter === filter ? '#fff' : STYLE_PRESETS[filter].color }]}
                       >
                         {stylePresetLabels[filter]}

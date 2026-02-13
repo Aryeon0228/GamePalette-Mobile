@@ -1940,14 +1940,18 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
+    width: '100%',
+    paddingHorizontal: 2,
   },
   advancedPresetLabelWrap: {
-    width: 60,
-    alignItems: 'flex-start',
+    flex: 1,
+    minWidth: 0,
+    alignItems: 'center',
   },
   advancedPresetText: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: '700',
+    textAlign: 'center',
   },
   advancedMethodRow: {
     flexDirection: 'row',
