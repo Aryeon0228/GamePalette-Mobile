@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { Grayscale } from 'react-native-color-matrix-image-filters';
 
@@ -36,8 +36,7 @@ export default function ImageCard({
 }: ImageCardProps) {
   const isKorean = language === 'ko';
   const cameraAccent = COLOR_TOKENS.info;
-  const emptyDecoIcons: Array<{
-    name: string;
+  const emptyDecoStars: Array<{
     color: string;
     size: number;
     top?: number;
@@ -46,11 +45,11 @@ export default function ImageCard({
     left?: number;
     opacity?: number;
   }> = [
-    { name: 'auto-awesome', color: '#fbbf24', size: 13, top: 14, left: 20, opacity: 0.58 },
-    { name: 'stars', color: '#f472b6', size: 12, top: 28, right: 28, opacity: 0.5 },
-    { name: 'auto-awesome-motion', color: '#60a5fa', size: 12, bottom: 42, left: 30, opacity: 0.52 },
-    { name: 'auto-awesome', color: '#34d399', size: 13, top: 50, right: 50, opacity: 0.44 },
-    { name: 'stars', color: '#a78bfa', size: 11, bottom: 22, right: 20, opacity: 0.56 },
+    { color: '#fbbf24', size: 14, top: 14, left: 20, opacity: 0.58 },
+    { color: '#f472b6', size: 13, top: 28, right: 28, opacity: 0.5 },
+    { color: '#60a5fa', size: 13, bottom: 42, left: 30, opacity: 0.52 },
+    { color: '#34d399', size: 14, top: 50, right: 50, opacity: 0.44 },
+    { color: '#a78bfa', size: 12, bottom: 22, right: 20, opacity: 0.56 },
   ];
 
   if (currentImageUri) {
@@ -117,23 +116,27 @@ export default function ImageCard({
     >
       {/* Decorative markers: cute rounded stars (Google Material icon set) */}
       <View style={styles.emptyDecoContainer}>
-        {emptyDecoIcons.map((icon, index) => (
-          <MaterialIcons
-            key={`${icon.name}-${index}`}
-            name={icon.name as any}
-            size={icon.size}
-            color={icon.color}
+        {emptyDecoStars.map((star, index) => (
+          <Text
+            key={`kid-star-${index}`}
             style={[
               styles.emptyDecoIcon,
               {
-                top: icon.top,
-                right: icon.right,
-                bottom: icon.bottom,
-                left: icon.left,
-                opacity: icon.opacity ?? 0.5,
+                top: star.top,
+                right: star.right,
+                bottom: star.bottom,
+                left: star.left,
+                opacity: star.opacity ?? 0.5,
+                color: star.color,
+                fontSize: star.size,
+                lineHeight: Math.round(star.size * 1.05),
+                fontFamily: 'MaterialSymbolsOutlined_400Regular',
+                includeFontPadding: false,
               },
             ]}
-          />
+          >
+            {'kid_star'}
+          </Text>
         ))}
       </View>
 
