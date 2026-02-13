@@ -50,7 +50,12 @@ export interface HomeLocalization {
   histogramMidLabel: string;
   histogramBrightLabel: string;
   histogramAverageLabel: string;
+  swatchHintTitle: string;
   swatchHintSubtitle: string;
+  emptyGuideTitle: string;
+  emptyGuideAddImage: string;
+  emptyGuideExpandSettings: string;
+  emptyGuideTapSwatch: string;
 }
 
 const KO_LOCALIZATION: HomeLocalization = {
@@ -120,7 +125,12 @@ const KO_LOCALIZATION: HomeLocalization = {
   histogramMidLabel: '중간',
   histogramBrightLabel: '밝음',
   histogramAverageLabel: '평균',
+  swatchHintTitle: '팔레트 색상을 탭해보세요',
   swatchHintSubtitle: '상세값, 색상 변형, 조화 팔레트가 바로 열려요.',
+  emptyGuideTitle: '메인 화면 가이드',
+  emptyGuideAddImage: '카메라/갤러리로 이미지를 추가하세요.',
+  emptyGuideExpandSettings: '요약 바 우측 버튼으로 설정을 펼칠 수 있어요.',
+  emptyGuideTapSwatch: '추출된 색상 칩은 탭하면 상세 설명이 열립니다.',
 };
 
 const EN_LOCALIZATION: HomeLocalization = {
@@ -190,7 +200,12 @@ const EN_LOCALIZATION: HomeLocalization = {
   histogramMidLabel: 'Mid',
   histogramBrightLabel: 'Bright',
   histogramAverageLabel: 'Avg',
+  swatchHintTitle: 'Tap a palette swatch',
   swatchHintSubtitle: 'Open details, variations, and harmony instantly.',
+  emptyGuideTitle: 'Main Screen Guide',
+  emptyGuideAddImage: 'Add artwork from camera or gallery.',
+  emptyGuideExpandSettings: 'Use the right summary button to expand settings.',
+  emptyGuideTapSwatch: 'Tap extracted swatches to open detailed info.',
 };
 
 export const getHomeLocalization = (language: AppLanguage): HomeLocalization => {
