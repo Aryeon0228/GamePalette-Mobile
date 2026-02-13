@@ -36,7 +36,8 @@ export default function ImageCard({
 }: ImageCardProps) {
   const isKorean = language === 'ko';
   const cameraAccent = COLOR_TOKENS.info;
-  const emptyDecoStars: Array<{
+  const emptyDecoSymbols: Array<{
+    symbol: string;
     color: string;
     size: number;
     top?: number;
@@ -45,11 +46,11 @@ export default function ImageCard({
     left?: number;
     opacity?: number;
   }> = [
-    { color: '#fbbf24', size: 14, top: 14, left: 20, opacity: 0.58 },
-    { color: '#f472b6', size: 13, top: 28, right: 28, opacity: 0.5 },
-    { color: '#60a5fa', size: 13, bottom: 42, left: 30, opacity: 0.52 },
-    { color: '#34d399', size: 14, top: 50, right: 50, opacity: 0.44 },
-    { color: '#a78bfa', size: 12, bottom: 22, right: 20, opacity: 0.56 },
+    { symbol: String.fromCodePoint(0xFFFB4), color: '#fbbf24', size: 14, top: 14, left: 20, opacity: 0.58 }, // mood_heart
+    { symbol: String.fromCodePoint(0xF292), color: '#f472b6', size: 13, top: 28, right: 28, opacity: 0.5 }, // heart_smile
+    { symbol: String.fromCodePoint(0xF527), color: '#60a5fa', size: 13, bottom: 42, left: 30, opacity: 0.52 }, // family_star
+    { symbol: String.fromCodePoint(0xFFFB4), color: '#34d399', size: 14, top: 50, right: 50, opacity: 0.44 }, // mood_heart
+    { symbol: String.fromCodePoint(0xF292), color: '#a78bfa', size: 12, bottom: 22, right: 20, opacity: 0.56 }, // heart_smile
   ];
 
   if (currentImageUri) {
@@ -114,28 +115,28 @@ export default function ImageCard({
   return (
     <View style={[styles.imageCardEmpty, { backgroundColor: theme.backgroundSecondary, borderColor: theme.borderLight }]}
     >
-      {/* Decorative markers: cute rounded stars (Google Material icon set) */}
+      {/* Decorative markers: Material Symbols (mood_heart, heart_smile, family_star) */}
       <View style={styles.emptyDecoContainer}>
-        {emptyDecoStars.map((star, index) => (
+        {emptyDecoSymbols.map((icon, index) => (
           <Text
-            key={`kid-star-${index}`}
+            key={`deco-symbol-${index}`}
             style={[
               styles.emptyDecoIcon,
               {
-                top: star.top,
-                right: star.right,
-                bottom: star.bottom,
-                left: star.left,
-                opacity: star.opacity ?? 0.5,
-                color: star.color,
-                fontSize: star.size,
-                lineHeight: Math.round(star.size * 1.05),
+                top: icon.top,
+                right: icon.right,
+                bottom: icon.bottom,
+                left: icon.left,
+                opacity: icon.opacity ?? 0.5,
+                color: icon.color,
+                fontSize: icon.size,
+                lineHeight: Math.round(icon.size * 1.05),
                 fontFamily: 'MaterialSymbolsOutlined_400Regular',
                 includeFontPadding: false,
               },
             ]}
           >
-            {'kid_star'}
+            {icon.symbol}
           </Text>
         ))}
       </View>
