@@ -1935,6 +1935,9 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     gap: 4,
   },
+  advancedPresetButtonCompact: {
+    paddingVertical: 8,
+  },
   advancedPresetInline: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1947,11 +1950,19 @@ export const styles = StyleSheet.create({
     minWidth: 0,
     alignItems: 'flex-start',
   },
+  advancedPresetLabelWrapCompact: {
+    alignItems: 'center',
+  },
   advancedPresetText: {
     fontSize: 10,
     lineHeight: 11.5,
     fontWeight: '700',
     textAlign: 'left',
+  },
+  advancedPresetTextCompact: {
+    fontSize: 9.5,
+    lineHeight: 10.5,
+    textAlign: 'center',
   },
   advancedMethodRow: {
     flexDirection: 'row',

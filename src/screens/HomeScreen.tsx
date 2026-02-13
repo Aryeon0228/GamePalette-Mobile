@@ -1067,6 +1067,7 @@ export default function HomeScreen({
                   key={filter}
                   style={[
                     styles.advancedPresetButton,
+                    isKorean && styles.advancedPresetButtonCompact,
                     {
                       backgroundColor: styleFilter === filter ? STYLE_PRESETS[filter].color : theme.backgroundTertiary,
                     },
@@ -1082,10 +1083,14 @@ export default function HomeScreen({
                       size={14}
                       color={styleFilter === filter ? '#fff' : STYLE_PRESETS[filter].color}
                     />
-                    <View style={styles.advancedPresetLabelWrap}>
+                    <View style={[styles.advancedPresetLabelWrap, isKorean && styles.advancedPresetLabelWrapCompact]}>
                       <Text
                         numberOfLines={stylePresetButtonLines[filter]}
-                        style={[styles.advancedPresetText, { color: styleFilter === filter ? '#fff' : STYLE_PRESETS[filter].color }]}
+                        style={[
+                          styles.advancedPresetText,
+                          isKorean && styles.advancedPresetTextCompact,
+                          { color: styleFilter === filter ? '#fff' : STYLE_PRESETS[filter].color },
+                        ]}
                       >
                         {stylePresetButtonLabels[filter]}
                       </Text>
