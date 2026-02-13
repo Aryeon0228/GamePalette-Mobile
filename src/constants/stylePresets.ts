@@ -4,12 +4,13 @@
  */
 
 export type StyleFilter = 'original' | 'hypercasual' | 'stylized' | 'realistic';
+export type StylePresetIcon = 'heart' | 'sparkles-outline' | 'brush-outline' | 'eye-outline';
 
 export interface StylePreset {
   name: string;
   saturation: number;
   brightness: number;
-  icon: string;
+  icon: StylePresetIcon;
   color: string;
 }
 

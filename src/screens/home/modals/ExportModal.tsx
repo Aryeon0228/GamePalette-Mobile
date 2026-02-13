@@ -9,6 +9,10 @@ import { ThemeColors } from '../../../store/themeStore';
 import { LuminosityHistogram } from '../../../lib/colorExtractor';
 import { getLuminance, type AppLanguage } from '../../../lib/colorUtils';
 
+type ExportFormat = 'png' | 'json' | 'css';
+type ExportCopyFormat = 'text' | 'json' | 'css';
+type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
+
 interface ExportModalProps {
   visible: boolean;
   theme: ThemeColors;
@@ -25,14 +29,26 @@ interface ExportModalProps {
   processedColors: string[];
   currentImageUri: string | null;
   histogram: LuminosityHistogram | null;
-  exportFormat: 'png' | 'json' | 'css';
-  onExportFormatChange: (value: 'png' | 'json' | 'css') => void;
+  exportFormat: ExportFormat;
+  onExportFormatChange: (value: ExportFormat) => void;
   isExporting: boolean;
   onExportConfirm: () => void;
-  onCopyToClipboard: (format: string) => void;
+  onCopyToClipboard: (format: ExportCopyFormat) => void;
   onClose: () => void;
   onHapticLight: () => void;
 }
+
+interface ExportFormatOption {
+  id: ExportFormat;
+  label: string;
+  icon: IoniconName;
+}
+
+const EXPORT_FORMAT_OPTIONS: ExportFormatOption[] = [
+  { id: 'png', label: 'PNG', icon: 'image-outline' },
+  { id: 'json', label: 'JSON', icon: 'code-slash-outline' },
+  { id: 'css', label: 'CSS', icon: 'logo-css3' },
+];
 
 function normalizeHexLabel(hex: string): string {
   const cleaned = hex.trim().replace(/^#/, '').toUpperCase();
@@ -469,25 +485,21 @@ export default function ExportModal({
             <View style={styles.formatSection}>
               <Text style={[styles.formatSectionTitle, { color: theme.textSecondary }]}>{formatSectionTitle}</Text>
               <View style={styles.formatOptions}>
-                {[
-                  { id: 'png', label: 'PNG', icon: 'image-outline' },
-                  { id: 'json', label: 'JSON', icon: 'code-slash-outline' },
-                  { id: 'css', label: 'CSS', icon: 'logo-css3' },
-                ].map((format) => (
+                {EXPORT_FORMAT_OPTIONS.map((format) => (
                   <TouchableOpacity
                     key={format.id}
                     style={[
                       styles.formatOption,
                       {
                         backgroundColor: exportFormat === format.id
-                          ? exportFormatColors[format.id as 'png' | 'json' | 'css']
+                          ? exportFormatColors[format.id]
                           : theme.backgroundTertiary,
                       },
                     ]}
-                    onPress={() => onExportFormatChange(format.id as 'png' | 'json' | 'css')}
+                    onPress={() => onExportFormatChange(format.id)}
                   >
                     <Ionicons
-                      name={format.icon as any}
+                      name={format.icon}
                       size={18}
                       color={exportFormat === format.id ? '#fff' : theme.textSecondary}
                     />
