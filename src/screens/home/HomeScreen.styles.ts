@@ -1384,11 +1384,12 @@ export const styles = StyleSheet.create({
   snsCardWatermark: {
     alignItems: 'center',
     marginTop: 8,
+    transform: [{ translateY: 2 }],
   },
   snsCardWatermarkText: {
     fontSize: 11,
     color: 'rgba(255, 255, 255, 0.4)',
-    fontFamily: 'SpaceGrotesk_500Medium',
+    fontFamily: 'SpaceGrotesk_700Bold',
     letterSpacing: 0.25,
   },
 

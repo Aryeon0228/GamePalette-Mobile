@@ -40,7 +40,7 @@ export default function AdvancedSettingsModal({
   onHapticLight,
 }: AdvancedSettingsModalProps) {
   const presetIcons: Record<StyleFilter, string> = {
-    original: 'ellipse-outline',
+    original: 'heart',
     hypercasual: 'sparkles-outline',
     stylized: 'brush-outline',
     realistic: 'eye-outline',
