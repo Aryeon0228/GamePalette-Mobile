@@ -1939,7 +1939,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 4,
+    gap: 3,
     maxWidth: '100%',
   },
   advancedPresetLabelWrap: {
@@ -1948,7 +1948,8 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   advancedPresetText: {
-    fontSize: 10.5,
+    fontSize: 10,
+    lineHeight: 11.5,
     fontWeight: '700',
     textAlign: 'left',
   },

@@ -330,7 +330,7 @@ export default function HomeScreen({
   const styleChipColor = STYLE_PRESETS[styleFilter].color;
   const methodChipColor = extractionMethod === 'histogram' ? '#38bdf8' : kmeansAccentColor;
   const countChipColor = '#a78bfa';
-  const stylePresetLabels: Record<StyleFilter, string> = isKorean
+  const stylePresetChipLabels: Record<StyleFilter, string> = isKorean
     ? {
       original: '원본',
       hypercasual: '하이퍼',
@@ -342,6 +342,32 @@ export default function HomeScreen({
       hypercasual: 'Hyper',
       stylized: 'Stylized',
       realistic: 'Realistic',
+    };
+  const stylePresetButtonLabels: Record<StyleFilter, string> = isKorean
+    ? {
+      original: '원본',
+      hypercasual: '하이퍼\n캐주얼',
+      stylized: '스타일\n라이즈드',
+      realistic: '실사',
+    }
+    : {
+      original: 'Original',
+      hypercasual: 'Hyper',
+      stylized: 'Stylized',
+      realistic: 'Realistic',
+    };
+  const stylePresetButtonLines: Record<StyleFilter, number> = isKorean
+    ? {
+      original: 1,
+      hypercasual: 2,
+      stylized: 2,
+      realistic: 1,
+    }
+    : {
+      original: 1,
+      hypercasual: 1,
+      stylized: 1,
+      realistic: 1,
     };
   const extractionMethodLabels: Record<ExtractionMethod, string> = isKorean
     ? {
@@ -392,7 +418,7 @@ export default function HomeScreen({
   const untitledPaletteLabel = isKorean ? '이름 없는 팔레트' : 'Untitled Palette';
   const copiedPrefix = isKorean ? '복사됨' : 'Copied';
   const settingLabel = isKorean ? '설정' : 'Setting';
-  const stylePresetLabel = isKorean ? '스타일 프리셋' : 'Style Preset';
+  const stylePresetLabel = isKorean ? '색감 프리셋' : 'Style Preset';
   const extractionMethodLabel = isKorean ? '추출 방식' : 'Extraction Method';
   const colorCountLabel = isKorean ? '색상 개수' : 'Color Count';
   const colorVisionLabel = isKorean ? '색각 모드' : 'Color Vision';
@@ -885,7 +911,7 @@ export default function HomeScreen({
           >
             <View style={[styles.summaryChip, { backgroundColor: styleChipColor + UNIFIED_EMPHASIS.chipBgAlpha, borderColor: styleChipColor + UNIFIED_EMPHASIS.chipBorderAlpha, borderWidth: 1 }]}>
               <Ionicons name={STYLE_PRESETS[styleFilter].icon as any} size={13} color={styleChipColor} />
-              <Text style={[styles.summaryChipText, { color: styleChipColor }]}>{stylePresetLabels[styleFilter]}</Text>
+              <Text style={[styles.summaryChipText, { color: styleChipColor }]}>{stylePresetChipLabels[styleFilter]}</Text>
             </View>
             <View style={[styles.summaryChip, { backgroundColor: methodChipColor + UNIFIED_EMPHASIS.chipBgAlpha, borderColor: methodChipColor + UNIFIED_EMPHASIS.chipBorderAlpha, borderWidth: 1 }]}>
               <Ionicons name="flask-outline" size={13} color={methodChipColor} />
@@ -1058,12 +1084,10 @@ export default function HomeScreen({
                     />
                     <View style={styles.advancedPresetLabelWrap}>
                       <Text
-                        numberOfLines={1}
-                        adjustsFontSizeToFit
-                        minimumFontScale={0.82}
+                        numberOfLines={stylePresetButtonLines[filter]}
                         style={[styles.advancedPresetText, { color: styleFilter === filter ? '#fff' : STYLE_PRESETS[filter].color }]}
                       >
-                        {stylePresetLabels[filter]}
+                        {stylePresetButtonLabels[filter]}
                       </Text>
                     </View>
                   </View>

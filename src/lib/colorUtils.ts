@@ -486,7 +486,7 @@ const COLOR_BLINDNESS_LABELS: Record<AppLanguage, Record<ColorBlindnessType, Col
     tritanopia: { label: 'Tritan', shortLabel: 'T', description: 'Blue-weak' },
   },
   ko: {
-    none: { label: '정상', shortLabel: '끔', description: '정상 시야' },
+    none: { label: '기본', shortLabel: '기본', description: '시뮬레이션 없음' },
     protanopia: { label: '적색약', shortLabel: 'P', description: '적색 약화' },
     deuteranopia: { label: '녹색약', shortLabel: 'D', description: '녹색 약화' },
     tritanopia: { label: '청색약', shortLabel: 'T', description: '청색 약화' },
