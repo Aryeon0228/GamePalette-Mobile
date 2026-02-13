@@ -3,10 +3,12 @@ import { View, Text, TouchableOpacity, Modal, TextInput } from 'react-native';
 
 import { styles } from '../HomeScreen.styles';
 import { ThemeColors } from '../../../store/themeStore';
+import { type AppLanguage } from '../../../lib/colorUtils';
 
 interface SavePaletteModalProps {
   visible: boolean;
   theme: ThemeColors;
+  language: AppLanguage;
   paletteName: string;
   onPaletteNameChange: (value: string) => void;
   onClose: () => void;
@@ -16,11 +18,14 @@ interface SavePaletteModalProps {
 export default function SavePaletteModal({
   visible,
   theme,
+  language,
   paletteName,
   onPaletteNameChange,
   onClose,
   onConfirm,
 }: SavePaletteModalProps) {
+  const isKorean = language === 'ko';
+
   return (
     <Modal
       visible={visible}
@@ -30,7 +35,9 @@ export default function SavePaletteModal({
     >
       <View style={[styles.modalOverlay, { backgroundColor: theme.modalOverlay }]}>
         <View style={[styles.modalContent, { backgroundColor: theme.backgroundSecondary }]}>
-          <Text style={[styles.modalTitle, { color: theme.textPrimary }]}>Save Palette</Text>
+          <Text style={[styles.modalTitle, { color: theme.textPrimary }]}>
+            {isKorean ? '팔레트 저장' : 'Save Palette'}
+          </Text>
           <TextInput
             style={[
               styles.modalInput,
@@ -38,7 +45,7 @@ export default function SavePaletteModal({
             ]}
             value={paletteName}
             onChangeText={onPaletteNameChange}
-            placeholder="Auto: Palette YYYY-MM-DD_001"
+            placeholder={isKorean ? '자동: 팔레트 YYYY-MM-DD_001' : 'Auto: Palette YYYY-MM-DD_001'}
             placeholderTextColor={theme.textMuted}
             autoFocus
           />
@@ -47,14 +54,16 @@ export default function SavePaletteModal({
               style={[styles.modalButton, { backgroundColor: theme.buttonBg }]}
               onPress={onClose}
             >
-              <Text style={[styles.modalButtonText, { color: theme.textSecondary }]}>Cancel</Text>
+              <Text style={[styles.modalButtonText, { color: theme.textSecondary }]}>
+                {isKorean ? '취소' : 'Cancel'}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.modalButton, styles.modalButtonPrimary]}
               onPress={onConfirm}
             >
               <Text style={[styles.modalButtonText, styles.modalButtonTextPrimary]}>
-                Save
+                {isKorean ? '저장' : 'Save'}
               </Text>
             </TouchableOpacity>
           </View>

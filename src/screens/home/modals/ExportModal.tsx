@@ -7,11 +7,12 @@ import ViewShot from 'react-native-view-shot';
 import { styles } from '../HomeScreen.styles';
 import { ThemeColors } from '../../../store/themeStore';
 import { LuminosityHistogram } from '../../../lib/colorExtractor';
-import { getLuminance } from '../../../lib/colorUtils';
+import { getLuminance, type AppLanguage } from '../../../lib/colorUtils';
 
 interface ExportModalProps {
   visible: boolean;
   theme: ThemeColors;
+  language: AppLanguage;
   snsCardType: 'instagram' | 'twitter';
   onSnsCardTypeChange: (value: 'instagram' | 'twitter') => void;
   cardShowHex: boolean;
@@ -99,6 +100,7 @@ function buildHistogramFromPalette(colors: string[]): LuminosityHistogram | null
 export default function ExportModal({
   visible,
   theme,
+  language,
   snsCardType,
   onSnsCardTypeChange,
   cardShowHex,
@@ -119,6 +121,7 @@ export default function ExportModal({
   onClose,
   onHapticLight,
 }: ExportModalProps) {
+  const isKorean = language === 'ko';
   const snsAccentColors: Record<'instagram' | 'twitter', string> = {
     instagram: '#c7587f',
     twitter: '#1d9bf0',
@@ -139,6 +142,22 @@ export default function ExportModal({
     [histogram, processedColors]
   );
   const isDensePalette = processedColors.length >= 7;
+  const exportTitle = isKorean ? '팔레트 내보내기' : 'Export Palette';
+  const statsLabel = isKorean ? '통계' : 'Stats';
+  const histogramLabel = isKorean ? '히스토그램' : 'Histogram';
+  const contrastLabel = isKorean ? '대비' : 'Contrast';
+  const colorsLabel = isKorean ? '색상 수' : 'Colors';
+  const avgLumLabel = isKorean ? '평균 명도' : 'Avg Lum';
+  const darkLabel = isKorean ? '어둠' : 'Dark';
+  const midLabel = isKorean ? '중간' : 'Mid';
+  const brightLabel = isKorean ? '밝음' : 'Bright';
+  const darkInitial = isKorean ? '어' : 'D';
+  const midInitial = isKorean ? '중' : 'M';
+  const brightInitial = isKorean ? '밝' : 'B';
+  const formatSectionTitle = isKorean ? '내보내기 형식' : 'Export Format';
+  const quickCopyTitle = isKorean ? '빠른 복사' : 'Quick Copy';
+  const shareTarget = snsCardType === 'instagram' ? 'Instagram' : 'Twitter';
+  const shareButtonText = isKorean ? `${shareTarget}로 공유` : `Share to ${shareTarget}`;
 
   return (
     <Modal
@@ -157,7 +176,7 @@ export default function ExportModal({
         >
           <View style={[styles.exportModalHandle, { backgroundColor: theme.border }]} />
           <View style={styles.exportModalHeader}>
-            <Text style={[styles.exportModalTitle, { color: theme.textPrimary }]}>Export Palette</Text>
+            <Text style={[styles.exportModalTitle, { color: theme.textPrimary }]}>{exportTitle}</Text>
             <TouchableOpacity onPress={onClose}>
               <Ionicons name="close" size={24} color={theme.textSecondary} />
             </TouchableOpacity>
@@ -256,7 +275,7 @@ export default function ExportModal({
                 onPress={() => onCardShowStatsChange(!cardShowStats)}
               >
                 <Text style={[styles.cardOptionText, { color: cardShowStats ? '#fff' : theme.textSecondary }]}>
-                  Stats
+                  {statsLabel}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -267,7 +286,7 @@ export default function ExportModal({
                 onPress={() => onCardShowHistogramChange(!cardShowHistogram)}
               >
                 <Text style={[styles.cardOptionText, { color: cardShowHistogram ? '#fff' : theme.textSecondary }]}>
-                  Histogram
+                  {histogramLabel}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -331,9 +350,9 @@ export default function ExportModal({
                             ))}
                           </View>
                           <View style={styles.twitterUnifiedHistogramLabels}>
-                            <Text style={styles.snsCardHistogramLabel}>{effectiveHistogram.darkPercent}%D</Text>
-                            <Text style={styles.snsCardHistogramLabel}>{effectiveHistogram.midPercent}%M</Text>
-                            <Text style={styles.snsCardHistogramLabel}>{effectiveHistogram.brightPercent}%B</Text>
+                            <Text style={styles.snsCardHistogramLabel}>{effectiveHistogram.darkPercent}%{darkInitial}</Text>
+                            <Text style={styles.snsCardHistogramLabel}>{effectiveHistogram.midPercent}%{midInitial}</Text>
+                            <Text style={styles.snsCardHistogramLabel}>{effectiveHistogram.brightPercent}%{brightInitial}</Text>
                           </View>
                         </View>
                       )}
@@ -341,17 +360,17 @@ export default function ExportModal({
                         <View style={[styles.twitterUnifiedStats, !cardShowHistogram && { flex: 1, justifyContent: 'center' }]}>
                           <View style={styles.twitterUnifiedStatItem}>
                             <Text style={styles.twitterUnifiedStatValue}>{effectiveHistogram.contrast}%</Text>
-                            <Text style={styles.twitterUnifiedStatLabel}>Contrast</Text>
+                            <Text style={styles.twitterUnifiedStatLabel}>{contrastLabel}</Text>
                           </View>
                           <View style={[styles.snsCardStatDivider, { height: 16 }]} />
                           <View style={styles.twitterUnifiedStatItem}>
                             <Text style={styles.twitterUnifiedStatValue}>{processedColors.length}</Text>
-                            <Text style={styles.twitterUnifiedStatLabel}>Colors</Text>
+                            <Text style={styles.twitterUnifiedStatLabel}>{colorsLabel}</Text>
                           </View>
                           <View style={[styles.snsCardStatDivider, { height: 16 }]} />
                           <View style={styles.twitterUnifiedStatItem}>
                             <Text style={styles.twitterUnifiedStatValue}>{effectiveHistogram.average}</Text>
-                            <Text style={styles.twitterUnifiedStatLabel}>Avg Lum</Text>
+                            <Text style={styles.twitterUnifiedStatLabel}>{avgLumLabel}</Text>
                           </View>
                         </View>
                       )}
@@ -415,9 +434,9 @@ export default function ExportModal({
                         ))}
                       </View>
                       <View style={styles.snsCardHistogramLabels}>
-                        <Text style={styles.snsCardHistogramLabel}>{effectiveHistogram.darkPercent}% Dark</Text>
-                        <Text style={styles.snsCardHistogramLabel}>{effectiveHistogram.midPercent}% Mid</Text>
-                        <Text style={styles.snsCardHistogramLabel}>{effectiveHistogram.brightPercent}% Bright</Text>
+                        <Text style={styles.snsCardHistogramLabel}>{effectiveHistogram.darkPercent}% {darkLabel}</Text>
+                        <Text style={styles.snsCardHistogramLabel}>{effectiveHistogram.midPercent}% {midLabel}</Text>
+                        <Text style={styles.snsCardHistogramLabel}>{effectiveHistogram.brightPercent}% {brightLabel}</Text>
                       </View>
                     </View>
                   )}
@@ -425,17 +444,17 @@ export default function ExportModal({
                     <View style={styles.snsCardStats}>
                       <View style={styles.snsCardStatItem}>
                         <Text style={styles.snsCardStatValue}>{effectiveHistogram.contrast}%</Text>
-                        <Text style={styles.snsCardStatLabel}>Contrast</Text>
+                        <Text style={styles.snsCardStatLabel}>{contrastLabel}</Text>
                       </View>
                       <View style={styles.snsCardStatDivider} />
                       <View style={styles.snsCardStatItem}>
                         <Text style={styles.snsCardStatValue}>{processedColors.length}</Text>
-                        <Text style={styles.snsCardStatLabel}>Colors</Text>
+                        <Text style={styles.snsCardStatLabel}>{colorsLabel}</Text>
                       </View>
                       <View style={styles.snsCardStatDivider} />
                       <View style={styles.snsCardStatItem}>
                         <Text style={styles.snsCardStatValue}>{effectiveHistogram.average}</Text>
-                        <Text style={styles.snsCardStatLabel}>Avg Lum</Text>
+                        <Text style={styles.snsCardStatLabel}>{avgLumLabel}</Text>
                       </View>
                     </View>
                   )}
@@ -448,7 +467,7 @@ export default function ExportModal({
 
             {/* Format Selection */}
             <View style={styles.formatSection}>
-              <Text style={[styles.formatSectionTitle, { color: theme.textSecondary }]}>Export Format</Text>
+              <Text style={[styles.formatSectionTitle, { color: theme.textSecondary }]}>{formatSectionTitle}</Text>
               <View style={styles.formatOptions}>
                 {[
                   { id: 'png', label: 'PNG', icon: 'image-outline' },
@@ -497,7 +516,7 @@ export default function ExportModal({
                 <>
                   <Ionicons name="share-outline" size={20} color="#fff" />
                   <Text style={styles.exportConfirmButtonText}>
-                    {`Share to ${snsCardType === 'instagram' ? 'Instagram' : 'Twitter'}`}
+                    {shareButtonText}
                   </Text>
                 </>
               )}
@@ -505,7 +524,7 @@ export default function ExportModal({
 
             {/* Quick Copy Options */}
             <View style={styles.quickCopySection}>
-              <Text style={[styles.quickCopyTitle, { color: theme.textSecondary }]}>Quick Copy</Text>
+              <Text style={[styles.quickCopyTitle, { color: theme.textSecondary }]}>{quickCopyTitle}</Text>
               <View style={styles.quickCopyButtons}>
                 <TouchableOpacity
                   style={[styles.quickCopyButton, { backgroundColor: theme.backgroundTertiary }]}

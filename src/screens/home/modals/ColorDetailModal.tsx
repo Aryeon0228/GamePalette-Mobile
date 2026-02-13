@@ -51,6 +51,13 @@ export default function ColorDetailModal({
   language,
   onHapticLight,
 }: ColorDetailModalProps) {
+  const isKorean = language === 'ko';
+  const copyLabel = isKorean ? '복사' : 'Copy';
+  const variationsLabel = isKorean ? '색상 변형' : 'Variations';
+  const lightnessLabel = isKorean ? '명도' : 'Lightness';
+  const hueShiftLabel = isKorean ? '색상 이동' : 'Hue Shift';
+  const harmonyLabel = isKorean ? '조화' : 'Harmony';
+
   return (
     <Modal
       visible={visible}
@@ -85,7 +92,7 @@ export default function ColorDetailModal({
                     onPress={() => copyColor(getFormattedColor(colorInfo, colorFormat), colorFormat)}
                   >
                     <Ionicons name="copy-outline" size={18} color="#fff" />
-                    <Text style={styles.modalColorCopyText}>Copy</Text>
+                    <Text style={styles.modalColorCopyText}>{copyLabel}</Text>
                   </TouchableOpacity>
                 </View>
 
@@ -116,7 +123,7 @@ export default function ColorDetailModal({
                 {/* Variations */}
                 <View style={[styles.variationsSection, { backgroundColor: theme.backgroundTertiary }]}>
                   <View style={styles.variationsHeader}>
-                    <Text style={[styles.variationsSectionTitle, { color: theme.textPrimary }]}>Variations</Text>
+                    <Text style={[styles.variationsSectionTitle, { color: theme.textPrimary }]}>{variationsLabel}</Text>
                     <View style={[styles.hueShiftToggle, { backgroundColor: theme.backgroundSecondary }]}
                     >
                       <TouchableOpacity
@@ -132,7 +139,7 @@ export default function ColorDetailModal({
                             { color: !variationHueShift ? '#fff' : theme.textMuted },
                           ]}
                         >
-                          Lightness
+                          {lightnessLabel}
                         </Text>
                       </TouchableOpacity>
                       <TouchableOpacity
@@ -148,7 +155,7 @@ export default function ColorDetailModal({
                             { color: variationHueShift ? '#fff' : theme.textMuted },
                           ]}
                         >
-                          Hue Shift
+                          {hueShiftLabel}
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -173,7 +180,7 @@ export default function ColorDetailModal({
 
                 {/* Color Harmony */}
                 <View style={[styles.harmonySection, { backgroundColor: theme.backgroundTertiary }]}>
-                  <Text style={[styles.harmonySectionTitle, { color: theme.textPrimary }]}>Harmony</Text>
+                  <Text style={[styles.harmonySectionTitle, { color: theme.textPrimary }]}>{harmonyLabel}</Text>
 
                   <ScrollView
                     horizontal
@@ -232,7 +239,7 @@ export default function ColorDetailModal({
                                 style={[
                                   styles.harmonyColorSwatch,
                                   { backgroundColor: color.hex },
-                                  color.name === 'Base' && styles.harmonyColorSwatchBase,
+                                  color.angle === 0 && styles.harmonyColorSwatchBase,
                                 ]}
                               />
                               <Text style={[styles.harmonyColorHex, { color: theme.textMuted }]}>{color.hex}</Text>

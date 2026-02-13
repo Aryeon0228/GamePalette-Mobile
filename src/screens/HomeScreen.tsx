@@ -74,6 +74,8 @@ import ImageCropModal, {
 
 interface HomeScreenProps {
   onNavigateToLibrary: () => void;
+  appLanguage: AppLanguage;
+  onAppLanguageChange: (language: AppLanguage) => void;
 }
 
 interface CropSourceAsset {
@@ -193,7 +195,11 @@ const createLassoMaskedImage = async (
 // MAIN COMPONENT
 // ============================================
 
-export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
+export default function HomeScreen({
+  onNavigateToLibrary,
+  appLanguage,
+  onAppLanguageChange,
+}: HomeScreenProps) {
   // UI State
   const [isExtracting, setIsExtracting] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
@@ -218,7 +224,6 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
   const [variationHueShift, setVariationHueShift] = useState(true);
   const [selectedHarmony, setSelectedHarmony] = useState<HarmonyType>('complementary');
   const [colorBlindMode, setColorBlindMode] = useState<ColorBlindnessType>('none');
-  const [appLanguage, setAppLanguage] = useState<AppLanguage>('ko');
 
   // Histogram State
   const [histogram, setHistogram] = useState<LuminosityHistogram | null>(null);
@@ -325,6 +330,28 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
   const styleChipColor = STYLE_PRESETS[styleFilter].color;
   const methodChipColor = extractionMethod === 'histogram' ? '#38bdf8' : kmeansAccentColor;
   const countChipColor = '#a78bfa';
+  const stylePresetLabels: Record<StyleFilter, string> = isKorean
+    ? {
+      original: '오리지널',
+      hypercasual: '하이퍼',
+      stylized: '스타일',
+      realistic: '리얼',
+    }
+    : {
+      original: 'Original',
+      hypercasual: 'Hyper',
+      stylized: 'Stylized',
+      realistic: 'Realistic',
+    };
+  const extractionMethodLabels: Record<ExtractionMethod, string> = isKorean
+    ? {
+      histogram: '히스토그램',
+      kmeans: 'K-평균',
+    }
+    : {
+      histogram: 'Histogram',
+      kmeans: 'K-Means',
+    };
   const methodDescriptions: Record<ExtractionMethod, string> = isKorean
     ? {
       histogram: '색/밝기 분포 기반 대표색 추출',
@@ -334,6 +361,55 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
       histogram: 'Distribution-based dominant colors',
       kmeans: 'K dominant colors extraction',
     };
+  const actionSheetLabels = isKorean
+    ? {
+      cancel: '취소',
+      takePhoto: '사진 촬영',
+      chooseFromLibrary: '앨범에서 선택',
+    }
+    : {
+      cancel: 'Cancel',
+      takePhoto: 'Take Photo',
+      chooseFromLibrary: 'Choose from Library',
+    };
+  const imageSourceDialogTitle = isKorean ? '이미지 선택' : 'Select Image';
+  const imageSourceDialogMessage = isKorean ? '이미지 가져올 방식을 선택하세요' : 'Choose image source';
+  const permissionTitle = isKorean ? '권한 필요' : 'Permission Required';
+  const cameraPermissionMessage = isKorean ? '카메라 접근 권한을 허용해 주세요.' : 'Please allow camera access.';
+  const galleryPermissionMessage = isKorean ? '사진 라이브러리 접근 권한을 허용해 주세요.' : 'Please allow access to your photo library.';
+  const errorTitle = isKorean ? '오류' : 'Error';
+  const cameraErrorMessage = isKorean ? '사진을 촬영하지 못했습니다.' : 'Failed to take photo.';
+  const galleryErrorMessage = isKorean ? '사진 라이브러리를 열지 못했습니다.' : 'Failed to open photo library.';
+  const cropErrorMessage = isKorean ? '이미지를 자르지 못했습니다.' : 'Failed to crop image.';
+  const extractErrorMessage = isKorean ? '이미지에서 색상을 추출하지 못했습니다.' : 'Failed to extract colors from image.';
+  const noColorsTitle = isKorean ? '색상 없음' : 'No Colors';
+  const noColorsMessage = isKorean ? '먼저 이미지에서 색상을 추출해 주세요.' : 'Please extract colors from an image first.';
+  const savedTitle = isKorean ? '저장 완료!' : 'Saved!';
+  const savedMessage = isKorean ? '팔레트가 보관함에 저장되었습니다.' : 'Palette saved to library.';
+  const shareDialogTitle = isKorean ? '팔레트 공유' : 'Share Palette';
+  const exportErrorMessage = isKorean ? '팔레트를 내보내지 못했습니다.' : 'Failed to export palette.';
+  const exportPngErrorMessage = isKorean ? 'PNG로 내보내지 못했습니다.' : 'Failed to export as PNG.';
+  const untitledPaletteLabel = isKorean ? '이름 없는 팔레트' : 'Untitled Palette';
+  const copiedPrefix = isKorean ? '복사됨' : 'Copied';
+  const settingLabel = isKorean ? '설정' : 'Setting';
+  const stylePresetLabel = isKorean ? '스타일 프리셋' : 'Style Preset';
+  const extractionMethodLabel = isKorean ? '추출 방식' : 'Extraction Method';
+  const colorCountLabel = isKorean ? '색상 개수' : 'Color Count';
+  const colorVisionLabel = isKorean ? '색각 모드' : 'Color Vision';
+  const copyButtonLabel = isKorean ? '복사' : 'Copy';
+  const variationsLabel = isKorean ? '색상 변형' : 'Variations';
+  const lightnessLabel = isKorean ? '명도' : 'Lightness';
+  const hueShiftLabel = isKorean ? '색상 이동' : 'Hue Shift';
+  const harmonyLabel = isKorean ? '조화' : 'Harmony';
+  const histogramTitle = isKorean ? '명도 분포' : 'LUMINOSITY';
+  const histogramContrastLabel = isKorean ? '대비' : 'contrast';
+  const histogramDarkLabel = isKorean ? '어둠' : 'Dark';
+  const histogramMidLabel = isKorean ? '중간' : 'Mid';
+  const histogramBrightLabel = isKorean ? '밝음' : 'Bright';
+  const histogramAverageLabel = isKorean ? '평균' : 'Avg';
+  const swatchHintSubtitle = isKorean
+    ? '상세값, 색상 변형, 조화 팔레트가 바로 열려요.'
+    : 'Open details, variations, and harmony instantly.';
 
   const getFormattedColor = (info: ColorInfo, format: 'HEX' | 'RGB' | 'HSL'): string => {
     switch (format) {
@@ -360,7 +436,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
     if (Platform.OS === 'ios') {
       ActionSheetIOS.showActionSheetWithOptions(
         {
-          options: ['Cancel', 'Take Photo', 'Choose from Library'],
+          options: [actionSheetLabels.cancel, actionSheetLabels.takePhoto, actionSheetLabels.chooseFromLibrary],
           cancelButtonIndex: 0,
         },
         (buttonIndex) => {
@@ -370,12 +446,12 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
       );
     } else {
       Alert.alert(
-        'Select Image',
-        'Choose image source',
+        imageSourceDialogTitle,
+        imageSourceDialogMessage,
         [
-          { text: 'Cancel', style: 'cancel' },
-          { text: 'Take Photo', onPress: openCamera },
-          { text: 'Choose from Library', onPress: pickFromGallery },
+          { text: actionSheetLabels.cancel, style: 'cancel' },
+          { text: actionSheetLabels.takePhoto, onPress: openCamera },
+          { text: actionSheetLabels.chooseFromLibrary, onPress: pickFromGallery },
         ]
       );
     }
@@ -385,7 +461,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
     if (!cameraPermission?.granted) {
       const permission = await requestCameraPermission();
       if (!permission.granted) {
-        Alert.alert('Permission Required', 'Please allow camera access.');
+        Alert.alert(permissionTitle, cameraPermissionMessage);
         return;
       }
     }
@@ -473,7 +549,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
         }
       } catch (error) {
         console.error('Camera error:', error);
-        Alert.alert('Error', 'Failed to take photo.');
+        Alert.alert(errorTitle, cameraErrorMessage);
       }
     }
   };
@@ -482,7 +558,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permissionResult.granted) {
-      Alert.alert('Permission Required', 'Please allow access to your photo library.');
+      Alert.alert(permissionTitle, galleryPermissionMessage);
       return;
     }
 
@@ -505,7 +581,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
       }
     } catch (error) {
       console.error('Gallery error:', error);
-      Alert.alert('Error', 'Failed to open photo library.');
+      Alert.alert(errorTitle, galleryErrorMessage);
     }
   };
 
@@ -536,7 +612,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
       hapticSuccess();
     } catch (error) {
       console.error('Crop error:', error);
-      Alert.alert('Error', 'Failed to crop image.');
+      Alert.alert(errorTitle, cropErrorMessage);
     } finally {
       setIsApplyingCrop(false);
     }
@@ -557,7 +633,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
       setCurrentColors(colors);
     } catch (error) {
       console.error('Error extracting colors:', error);
-      Alert.alert('Error', 'Failed to extract colors from image.');
+      Alert.alert(errorTitle, extractErrorMessage);
     } finally {
       setIsExtracting(false);
     }
@@ -619,7 +695,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
   const copyColor = async (value: string, label?: string) => {
     await Clipboard.setStringAsync(value);
     hapticSuccess();
-    showToast(`Copied ${label || value}`);
+    showToast(isKorean ? `${copiedPrefix}: ${label || value}` : `${copiedPrefix} ${label || value}`);
   };
 
   // ============================================
@@ -628,7 +704,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
 
   const handleSave = () => {
     if (processedColors.length === 0) {
-      Alert.alert('No Colors', 'Please extract colors from an image first.');
+      Alert.alert(noColorsTitle, noColorsMessage);
       return;
     }
     // Set empty string to use auto-generated name
@@ -644,12 +720,12 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
     setCurrentColors(originalColors);
     setShowSaveModal(false);
     setPaletteName('');
-    Alert.alert('Saved!', 'Palette saved to library.');
+    Alert.alert(savedTitle, savedMessage);
   };
 
   const handleExport = () => {
     if (processedColors.length === 0) {
-      Alert.alert('No Colors', 'Please extract colors from an image first.');
+      Alert.alert(noColorsTitle, noColorsMessage);
       return;
     }
     setShowExportModal(true);
@@ -664,12 +740,12 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
       if (uri && (await Sharing.isAvailableAsync())) {
         await Sharing.shareAsync(uri, {
           mimeType: 'image/png',
-          dialogTitle: 'Share Palette',
+          dialogTitle: shareDialogTitle,
         });
       }
     } catch (error) {
       console.error('PNG export error:', error);
-      Alert.alert('Error', 'Failed to export as PNG.');
+      Alert.alert(errorTitle, exportPngErrorMessage);
     } finally {
       setIsExporting(false);
     }
@@ -684,7 +760,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
       case 'json':
         content = JSON.stringify(
           {
-            name: paletteName || 'Untitled Palette',
+            name: paletteName || untitledPaletteLabel,
             colors: colors.map((hex, i) => ({
               index: i,
               hex,
@@ -720,7 +796,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
         await Sharing.shareAsync(fileUri);
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to export palette.');
+      Alert.alert(errorTitle, exportErrorMessage);
     } finally {
       setIsExporting(false);
     }
@@ -752,7 +828,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
 
     await Clipboard.setStringAsync(content);
     hapticSuccess();
-    showToast(`Copied ${format.toUpperCase()}`);
+    showToast(isKorean ? `${copiedPrefix}: ${format.toUpperCase()}` : `${copiedPrefix} ${format.toUpperCase()}`);
     setShowExportModal(false);
   };
 
@@ -764,6 +840,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <HomeHeader
         theme={theme}
+        language={appLanguage}
         onShowInfo={() => setShowInfo(true)}
         onHapticLight={hapticLight}
       />
@@ -777,6 +854,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
         <ImageCard
           currentImageUri={currentImageUri}
           showGrayscale={showGrayscale}
+          language={appLanguage}
           theme={theme}
           isExtracting={isExtracting}
           onImagePress={showImageSourceOptions}
@@ -807,12 +885,12 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
           >
             <View style={[styles.summaryChip, { backgroundColor: styleChipColor + UNIFIED_EMPHASIS.chipBgAlpha, borderColor: styleChipColor + UNIFIED_EMPHASIS.chipBorderAlpha, borderWidth: 1 }]}>
               <Ionicons name={STYLE_PRESETS[styleFilter].icon as any} size={13} color={styleChipColor} />
-              <Text style={[styles.summaryChipText, { color: styleChipColor }]}>{STYLE_PRESETS[styleFilter].name}</Text>
+              <Text style={[styles.summaryChipText, { color: styleChipColor }]}>{stylePresetLabels[styleFilter]}</Text>
             </View>
             <View style={[styles.summaryChip, { backgroundColor: methodChipColor + UNIFIED_EMPHASIS.chipBgAlpha, borderColor: methodChipColor + UNIFIED_EMPHASIS.chipBorderAlpha, borderWidth: 1 }]}>
               <Ionicons name="flask-outline" size={13} color={methodChipColor} />
               <Text style={[styles.summaryChipText, { color: methodChipColor }]}>
-                {extractionMethod === 'histogram' ? 'Histogram' : 'K-Means'}
+                {extractionMethodLabels[extractionMethod]}
               </Text>
             </View>
             <View style={[styles.summaryChip, { backgroundColor: countChipColor + UNIFIED_EMPHASIS.chipBgAlpha, borderColor: countChipColor + UNIFIED_EMPHASIS.chipBorderAlpha, borderWidth: 1 }]}>
@@ -855,9 +933,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
                 {isKorean ? '팔레트 색상을 탭해보세요' : 'Tap a palette swatch'}
               </Text>
               <Text style={[styles.swatchHintSubtitle, { color: theme.textMuted }]}>
-                {isKorean
-                  ? '상세값, Variations, Harmony가 바로 열려요.'
-                  : 'Open details, variations, and harmony instantly.'}
+                {swatchHintSubtitle}
               </Text>
             </View>
           </View>
@@ -943,7 +1019,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
           >
             <View style={styles.inlineSettingsHeaderRow}>
               <View>
-                <Text style={[styles.inlineSettingsTitle, { color: theme.textPrimary }]}>Setting</Text>
+                <Text style={[styles.inlineSettingsTitle, { color: theme.textPrimary }]}>{settingLabel}</Text>
               </View>
               <TouchableOpacity
                 style={[styles.inlineSettingsCloseBtn, { backgroundColor: theme.backgroundTertiary }]}
@@ -957,7 +1033,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
             </View>
 
             <Text style={[styles.advancedSectionLabel, { color: theme.textMuted }]}>
-              Style Preset
+              {stylePresetLabel}
             </Text>
             <View style={styles.advancedPresetRow}>
               {STYLE_FILTER_KEYS.map((filter) => (
@@ -985,7 +1061,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
                         numberOfLines={1}
                         style={[styles.advancedPresetText, { color: styleFilter === filter ? '#fff' : STYLE_PRESETS[filter].color }]}
                       >
-                        {STYLE_PRESETS[filter].name}
+                        {stylePresetLabels[filter]}
                       </Text>
                     </View>
                   </View>
@@ -994,7 +1070,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
             </View>
 
             <Text style={[styles.advancedSectionLabel, { color: theme.textMuted }]}>
-              Extraction Method
+              {extractionMethodLabel}
             </Text>
             <View style={styles.advancedMethodRow}>
               <TouchableOpacity
@@ -1008,7 +1084,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
                 }}
               >
                 <Text style={[styles.advancedMethodTitle, { color: extractionMethod === 'histogram' ? '#fff' : theme.textPrimary }]}>
-                  Histogram
+                  {extractionMethodLabels.histogram}
                 </Text>
                 <Text style={[styles.advancedMethodDesc, { color: extractionMethod === 'histogram' ? 'rgba(255,255,255,0.8)' : theme.textMuted }]}>
                   {methodDescriptions.histogram}
@@ -1025,7 +1101,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
                 }}
               >
                 <Text style={[styles.advancedMethodTitle, { color: extractionMethod === 'kmeans' ? '#fff' : theme.textPrimary }]}>
-                  K-Means
+                  {extractionMethodLabels.kmeans}
                 </Text>
                 <Text style={[styles.advancedMethodDesc, { color: extractionMethod === 'kmeans' ? 'rgba(255,255,255,0.8)' : theme.textMuted }]}>
                   {methodDescriptions.kmeans}
@@ -1034,7 +1110,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
             </View>
 
             <Text style={[styles.advancedSectionLabel, { color: theme.textMuted }]}>
-              Color Count
+              {colorCountLabel}
             </Text>
             <View style={[styles.advancedColorCount, { backgroundColor: theme.backgroundTertiary }]}>
               <TouchableOpacity
@@ -1065,7 +1141,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
             </View>
 
             <Text style={[styles.advancedSectionLabel, { color: theme.textMuted }]}>
-              Color Vision
+              {colorVisionLabel}
             </Text>
             <View style={styles.advancedCvdGrid}>
               {cvdOptions.map((cvd) => {
@@ -1177,7 +1253,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
                     onPress={() => copyColor(getFormattedColor(colorInfo, colorFormat), colorFormat)}
                   >
                     <Ionicons name="copy-outline" size={16} color={fgColor} />
-                    <Text style={[styles.inlineColorCopyText, { color: fgColor }]}>Copy</Text>
+                    <Text style={[styles.inlineColorCopyText, { color: fgColor }]}>{copyButtonLabel}</Text>
                   </TouchableOpacity>
                 </View>
 
@@ -1284,7 +1360,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
             {/* Inline Variations */}
             <View style={[styles.inlineVariationsSection, { backgroundColor: theme.backgroundTertiary }]}>
               <View style={styles.variationsHeader}>
-                <Text style={[styles.variationsSectionTitle, { color: theme.textPrimary }]}>Variations</Text>
+                <Text style={[styles.variationsSectionTitle, { color: theme.textPrimary }]}>{variationsLabel}</Text>
                 <View style={[styles.hueShiftToggle, { backgroundColor: theme.backgroundSecondary }]}>
                   <TouchableOpacity
                     style={[
@@ -1302,7 +1378,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
                         { color: !variationHueShift ? '#fff' : theme.textMuted },
                       ]}
                     >
-                      Lightness
+                      {lightnessLabel}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -1321,7 +1397,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
                         { color: variationHueShift ? '#fff' : theme.textMuted },
                       ]}
                     >
-                      Hue Shift
+                      {hueShiftLabel}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -1359,7 +1435,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
                   },
                 ]}
               >
-                <Text style={[styles.harmonySectionTitle, { color: theme.textPrimary }]}>Harmony</Text>
+                <Text style={[styles.harmonySectionTitle, { color: theme.textPrimary }]}>{harmonyLabel}</Text>
 
                 <ScrollView
                   horizontal
@@ -1412,7 +1488,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
                         style={[
                           styles.harmonyColorSwatch,
                           { backgroundColor: harmonyColor.hex },
-                          harmonyColor.name === 'Base' && styles.harmonyColorSwatchBase,
+                          harmonyColor.angle === 0 && styles.harmonyColorSwatchBase,
                         ]}
                       />
                       <Text style={[styles.harmonyColorHex, { color: theme.textMuted }]}>
@@ -1432,11 +1508,11 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
             <View style={styles.histogramHeader}>
               <View style={styles.histogramTitleRow}>
                 <Ionicons name="analytics-outline" size={14} color={theme.textMuted} />
-                <Text style={[styles.histogramTitle, { color: theme.textMuted }]}>LUMINOSITY</Text>
+                <Text style={[styles.histogramTitle, { color: theme.textMuted }]}>{histogramTitle}</Text>
               </View>
               <View style={styles.histogramStats}>
                 <Text style={[styles.histogramStatText, { color: theme.accent }]}>{histogram.contrast}%</Text>
-                <Text style={[styles.histogramContrastLabel, { color: theme.textMuted }]}>contrast</Text>
+                <Text style={[styles.histogramContrastLabel, { color: theme.textMuted }]}>{histogramContrastLabel}</Text>
               </View>
             </View>
 
@@ -1473,15 +1549,15 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
             <View style={styles.histogramStatsRow}>
               <View style={[styles.histogramStatItem, { backgroundColor: theme.backgroundTertiary, borderColor: theme.borderLight, borderWidth: 1 }]}>
                 <Text style={[styles.histogramStatValue, { color: theme.textPrimary }]}>{histogram.darkPercent}%</Text>
-                <Text style={[styles.histogramStatLabel, { color: theme.textSecondary }]}>Dark</Text>
+                <Text style={[styles.histogramStatLabel, { color: theme.textSecondary }]}>{histogramDarkLabel}</Text>
               </View>
               <View style={[styles.histogramStatItem, { backgroundColor: theme.backgroundTertiary, borderColor: theme.borderLight, borderWidth: 1 }]}>
                 <Text style={[styles.histogramStatValue, { color: theme.textPrimary }]}>{histogram.midPercent}%</Text>
-                <Text style={[styles.histogramStatLabel, { color: theme.textSecondary }]}>Mid</Text>
+                <Text style={[styles.histogramStatLabel, { color: theme.textSecondary }]}>{histogramMidLabel}</Text>
               </View>
               <View style={[styles.histogramStatItem, { backgroundColor: theme.backgroundTertiary, borderColor: theme.borderLight, borderWidth: 1 }]}>
                 <Text style={[styles.histogramStatValue, { color: theme.textPrimary }]}>{histogram.brightPercent}%</Text>
-                <Text style={[styles.histogramStatLabel, { color: theme.textSecondary }]}>Bright</Text>
+                <Text style={[styles.histogramStatLabel, { color: theme.textSecondary }]}>{histogramBrightLabel}</Text>
               </View>
               <View
                 style={[
@@ -1491,7 +1567,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
                 ]}
               >
                 <Text style={[styles.histogramStatValueAvg, { color: theme.accent }]}>{histogram.average}</Text>
-                <Text style={[styles.histogramStatLabel, { color: theme.textSecondary }]}>Avg</Text>
+                <Text style={[styles.histogramStatLabel, { color: theme.textSecondary }]}>{histogramAverageLabel}</Text>
               </View>
             </View>
           </View>
@@ -1502,6 +1578,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
 
       <ActionBar
         theme={theme}
+        language={appLanguage}
         onNavigateToLibrary={onNavigateToLibrary}
         onSave={handleSave}
         onExport={handleExport}
@@ -1576,6 +1653,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
       <SavePaletteModal
         visible={showSaveModal}
         theme={theme}
+        language={appLanguage}
         paletteName={paletteName}
         onPaletteNameChange={setPaletteName}
         onClose={() => setShowSaveModal(false)}
@@ -1585,6 +1663,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
       <ExportModal
         visible={showExportModal}
         theme={theme}
+        language={appLanguage}
         snsCardType={snsCardType}
         onSnsCardTypeChange={setSnsCardType}
         cardShowHex={cardShowHex}
@@ -1610,7 +1689,7 @@ export default function HomeScreen({ onNavigateToLibrary }: HomeScreenProps) {
         visible={showInfo}
         theme={theme}
         language={appLanguage}
-        onLanguageChange={setAppLanguage}
+        onLanguageChange={onAppLanguageChange}
         onClose={() => setShowInfo(false)}
         onHapticLight={hapticLight}
       />
