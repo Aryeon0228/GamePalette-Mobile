@@ -4,9 +4,11 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
+import { type AppLanguage } from '../../lib/colorUtils';
 
 interface ActionBarProps {
   theme: ThemeColors;
+  language: AppLanguage;
   onNavigateToLibrary: () => void;
   onSave: () => void;
   onExport: () => void;
@@ -15,11 +17,13 @@ interface ActionBarProps {
 
 export default function ActionBar({
   theme,
+  language,
   onNavigateToLibrary,
   onSave,
   onExport,
   onHapticLight,
 }: ActionBarProps) {
+  const isKorean = language === 'ko';
   const neutralButtonStyle = {
     backgroundColor: theme.backgroundTertiary,
     borderColor: theme.borderLight,
@@ -36,7 +40,9 @@ export default function ActionBar({
         }}
       >
         <Ionicons name="library-outline" size={22} color={theme.textSecondary} />
-        <Text style={[styles.actionButtonText, { color: theme.textSecondary }]}>Library</Text>
+        <Text style={[styles.actionButtonText, { color: theme.textSecondary }]}>
+          {isKorean ? '보관함' : 'Library'}
+        </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -47,7 +53,7 @@ export default function ActionBar({
         }}
       >
         <Ionicons name="download-outline" size={20} color="#fff" />
-        <Text style={styles.saveButtonText}>Save</Text>
+        <Text style={styles.saveButtonText}>{isKorean ? '저장' : 'Save'}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -58,7 +64,9 @@ export default function ActionBar({
         }}
       >
         <Ionicons name="share-outline" size={22} color={theme.accent} />
-        <Text style={[styles.exportButtonText, { color: theme.accent }]}>Export</Text>
+        <Text style={[styles.exportButtonText, { color: theme.accent }]}>
+          {isKorean ? '내보내기' : 'Export'}
+        </Text>
       </TouchableOpacity>
     </View>
   );

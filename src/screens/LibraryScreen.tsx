@@ -19,15 +19,18 @@ import ViewShot from 'react-native-view-shot';
 import { usePaletteStore, SavedPalette } from '../store/paletteStore';
 import { useThemeStore } from '../store/themeStore';
 import ExportModal from './home/modals/ExportModal';
+import { type AppLanguage } from '../lib/colorUtils';
 
 interface LibraryScreenProps {
   onNavigateBack: () => void;
+  language: AppLanguage;
 }
 
-export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
+export default function LibraryScreen({ onNavigateBack, language }: LibraryScreenProps) {
   const { savedPalettes, deletePalette, loadPalette } = usePaletteStore();
   const { colors: theme } = useThemeStore();
   const [searchQuery, setSearchQuery] = useState('');
+  const isKorean = language === 'ko';
 
   // Dynamic styles based on theme
   const dynamicStyles = {
@@ -47,6 +50,41 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
   const [exportFormat, setExportFormat] = useState<'png' | 'json' | 'css'>('png');
   const [isExporting, setIsExporting] = useState(false);
   const paletteCardRef = useRef<ViewShot>(null);
+  const t = {
+    copiedTitle: isKorean ? '복사됨!' : 'Copied!',
+    deletePaletteTitle: isKorean ? '팔레트 삭제' : 'Delete Palette',
+    deletePaletteMessage: (name: string) => (isKorean
+      ? `"${name}" 팔레트를 삭제할까요?`
+      : `Are you sure you want to delete "${name}"?`),
+    cancel: isKorean ? '취소' : 'Cancel',
+    delete: isKorean ? '삭제' : 'Delete',
+    jsonCopied: isKorean ? 'JSON이 클립보드에 복사되었습니다' : 'JSON copied to clipboard',
+    cssCopied: isKorean ? 'CSS 변수가 클립보드에 복사되었습니다' : 'CSS variables copied to clipboard',
+    hexCopied: isKorean ? 'HEX 값이 클립보드에 복사되었습니다' : 'HEX values copied to clipboard',
+    paletteSharedSuffix: isKorean ? 'Pixel Paw로 제작됨' : 'Created with Pixel Paw',
+    shareDialogTitle: isKorean ? '팔레트 공유' : 'Share Palette',
+    exportImageFailed: isKorean ? '팔레트 이미지를 내보내지 못했습니다.' : 'Failed to export palette image.',
+    exportFailed: isKorean ? '팔레트를 내보내지 못했습니다.' : 'Failed to export palette.',
+    copiedFormat: (format: string) => (isKorean
+      ? `${format.toUpperCase()}이(가) 클립보드에 복사되었습니다`
+      : `${format.toUpperCase()} copied to clipboard`),
+    paletteWord: isKorean ? '팔레트' : 'PALETTE',
+    colorsSuffix: isKorean ? '색상' : 'colors',
+    export: isKorean ? '내보내기' : 'Export',
+    title: isKorean ? '팔레트 보관함' : 'GamePalette',
+    searchPlaceholder: isKorean ? '팔레트, 색상 검색...' : 'Search palettes, colors...',
+    sectionTitle: isKorean ? '내 팔레트' : 'My Palettes',
+    itemSuffix: isKorean ? '개' : 'items',
+    noSavedTitle: isKorean ? '저장된 팔레트가 없어요' : 'No saved palettes',
+    noSavedSubtitle: isKorean
+      ? '이미지에서 색상을 추출하고 저장하면 여기에 표시됩니다'
+      : 'Extract colors from an image and save them to see them here',
+    noResultTitle: isKorean ? '검색 결과가 없어요' : 'No results found',
+    noResultSubtitle: isKorean ? '다른 검색어를 입력해 보세요' : 'Try a different search term',
+    open: isKorean ? '열기' : 'Open',
+    share: isKorean ? '공유' : 'Share',
+    exportPaletteTitle: isKorean ? '팔레트 내보내기' : 'Export Palette',
+  };
 
   // Filter palettes based on search
   const filteredPalettes = useMemo(() => {
@@ -67,12 +105,12 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
   const handleDeletePalette = (palette: SavedPalette) => {
     setMenuPalette(null);
     Alert.alert(
-      'Delete Palette',
-      `Are you sure you want to delete "${palette.name}"?`,
+      t.deletePaletteTitle,
+      t.deletePaletteMessage(palette.name),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t.cancel, style: 'cancel' },
         {
-          text: 'Delete',
+          text: t.delete,
           style: 'destructive',
           onPress: () => deletePalette(palette.id),
         },
@@ -82,7 +120,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
 
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString(isKorean ? 'ko-KR' : 'en-US', {
       month: 'short',
       day: 'numeric',
     });
@@ -100,7 +138,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
       2
     );
     await Clipboard.setStringAsync(json);
-    Alert.alert('Copied!', 'JSON copied to clipboard');
+    Alert.alert(t.copiedTitle, t.jsonCopied);
     setExportPalette(null);
   };
 
@@ -109,21 +147,21 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
       .map((c, i) => `  --color-${i + 1}: ${c};`)
       .join('\n')}\n}`;
     await Clipboard.setStringAsync(css);
-    Alert.alert('Copied!', 'CSS variables copied to clipboard');
+    Alert.alert(t.copiedTitle, t.cssCopied);
     setExportPalette(null);
   };
 
   const exportAsHEX = async (palette: SavedPalette) => {
     const hex = palette.colors.join('\n');
     await Clipboard.setStringAsync(hex);
-    Alert.alert('Copied!', 'HEX values copied to clipboard');
+    Alert.alert(t.copiedTitle, t.hexCopied);
     setExportPalette(null);
   };
 
   const sharePalette = async (palette: SavedPalette) => {
     try {
       await Share.share({
-        message: `${palette.name}\n\nColors:\n${palette.colors.join('\n')}\n\nCreated with GamePalette`,
+        message: `${palette.name}\n\n${isKorean ? '색상' : 'Colors'}:\n${palette.colors.join('\n')}\n\n${t.paletteSharedSuffix}`,
       });
     } catch (error) {
       console.error(error);
@@ -175,12 +213,12 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
       if (uri && (await Sharing.isAvailableAsync())) {
         await Sharing.shareAsync(uri, {
           mimeType: 'image/png',
-          dialogTitle: 'Share Palette',
+          dialogTitle: t.shareDialogTitle,
         });
       }
     } catch (error) {
       console.error('SNS PNG export error:', error);
-      Alert.alert('Error', 'Failed to export palette image.');
+      Alert.alert(t.exportPaletteTitle, t.exportImageFailed);
     } finally {
       setIsExporting(false);
     }
@@ -198,7 +236,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
       }
     } catch (error) {
       console.error('SNS text export error:', error);
-      Alert.alert('Error', 'Failed to export palette.');
+      Alert.alert(t.exportPaletteTitle, t.exportFailed);
     } finally {
       setIsExporting(false);
     }
@@ -227,7 +265,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
     }
 
     await Clipboard.setStringAsync(content);
-    Alert.alert('Copied!', `${format.toUpperCase()} copied to clipboard`);
+    Alert.alert(t.copiedTitle, t.copiedFormat(format));
   };
 
   const renderPaletteCard = ({ item }: { item: SavedPalette }) => (
@@ -277,7 +315,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
           <Text style={[styles.cardTitle, { color: theme.textPrimary }]} numberOfLines={1}>
             {item.name}
           </Text>
-          <Text style={[styles.paletteLabel, { color: theme.textMuted }]}>PALETTE</Text>
+          <Text style={[styles.paletteLabel, { color: theme.textMuted }]}>{t.paletteWord}</Text>
         </View>
 
         {/* Tags */}
@@ -286,7 +324,9 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
             <Text style={[styles.tagText, { color: theme.textSecondary }]}>HEX</Text>
           </View>
           <View style={[styles.tag, { backgroundColor: theme.borderLight }]}>
-            <Text style={[styles.tagText, { color: theme.textSecondary }]}>{item.colors.length} colors</Text>
+            <Text style={[styles.tagText, { color: theme.textSecondary }]}>
+              {item.colors.length} {t.colorsSuffix}
+            </Text>
           </View>
           <Text style={[styles.dateText, { color: theme.textMuted }]}>{formatDate(item.createdAt)}</Text>
         </View>
@@ -297,7 +337,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
           onPress={() => setExportPalette(item)}
         >
           <Ionicons name="share-outline" size={14} color={theme.textPrimary} />
-          <Text style={[styles.exportButtonText, { color: theme.textPrimary }]}>Export</Text>
+          <Text style={[styles.exportButtonText, { color: theme.textPrimary }]}>{t.export}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -310,7 +350,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
         <TouchableOpacity style={[styles.backButton, { backgroundColor: theme.backgroundSecondary }]} onPress={onNavigateBack}>
           <Ionicons name="chevron-back" size={24} color={theme.textPrimary} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.textPrimary }]}>GamePalette</Text>
+        <Text style={[styles.headerTitle, { color: theme.textPrimary }]}>{t.title}</Text>
         <View style={styles.profileButton}>
           <Ionicons name="person-circle-outline" size={28} color={theme.textSecondary} />
         </View>
@@ -322,7 +362,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
           <Ionicons name="search" size={18} color={theme.textMuted} />
           <TextInput
             style={[styles.searchInput, { color: theme.textPrimary }]}
-            placeholder="Search palettes, colors..."
+            placeholder={t.searchPlaceholder}
             placeholderTextColor={theme.textMuted}
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -337,9 +377,9 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
 
       {/* Section header */}
       <View style={styles.sectionHeader}>
-        <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>My Palettes</Text>
+        <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>{t.sectionTitle}</Text>
         <Text style={[styles.sectionCount, { color: theme.textMuted }]}>
-          {filteredPalettes.length} items
+          {filteredPalettes.length} {t.itemSuffix}
         </Text>
       </View>
 
@@ -349,17 +389,17 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
           <View style={[styles.emptyIcon, { backgroundColor: theme.backgroundSecondary }]}>
             <Ionicons name="color-palette-outline" size={48} color={theme.textMuted} />
           </View>
-          <Text style={[styles.emptyTitle, { color: theme.textPrimary }]}>No saved palettes</Text>
+          <Text style={[styles.emptyTitle, { color: theme.textPrimary }]}>{t.noSavedTitle}</Text>
           <Text style={[styles.emptySubtitle, { color: theme.textMuted }]}>
-            Extract colors from an image and save them to see them here
+            {t.noSavedSubtitle}
           </Text>
         </View>
       ) : filteredPalettes.length === 0 ? (
         <View style={styles.emptyState}>
           <Ionicons name="search-outline" size={48} color={theme.textMuted} />
-          <Text style={[styles.emptyTitle, { color: theme.textPrimary }]}>No results found</Text>
+          <Text style={[styles.emptyTitle, { color: theme.textPrimary }]}>{t.noResultTitle}</Text>
           <Text style={[styles.emptySubtitle, { color: theme.textMuted }]}>
-            Try a different search term
+            {t.noResultSubtitle}
           </Text>
         </View>
       ) : (
@@ -397,7 +437,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
               }}
             >
               <Ionicons name="open-outline" size={20} color={theme.textPrimary} />
-              <Text style={[styles.menuItemText, { color: theme.textPrimary }]}>Open</Text>
+              <Text style={[styles.menuItemText, { color: theme.textPrimary }]}>{t.open}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -408,7 +448,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
               }}
             >
               <Ionicons name="share-outline" size={20} color={theme.textPrimary} />
-              <Text style={[styles.menuItemText, { color: theme.textPrimary }]}>Export</Text>
+              <Text style={[styles.menuItemText, { color: theme.textPrimary }]}>{t.export}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -417,7 +457,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
             >
               <Ionicons name="trash-outline" size={20} color="#ff4444" />
               <Text style={[styles.menuItemText, styles.menuItemTextDanger]}>
-                Delete
+                {t.delete}
               </Text>
             </TouchableOpacity>
           </View>
@@ -438,7 +478,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
         >
           <View style={[styles.exportModal, { backgroundColor: theme.backgroundSecondary }]}>
             <View style={[styles.exportHandle, { backgroundColor: theme.border }]} />
-            <Text style={[styles.exportTitle, { color: theme.textPrimary }]}>Export Palette</Text>
+            <Text style={[styles.exportTitle, { color: theme.textPrimary }]}>{t.exportPaletteTitle}</Text>
 
             <View style={styles.exportOptions}>
               <TouchableOpacity
@@ -478,7 +518,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
                 <View style={[styles.exportIcon, { backgroundColor: '#555' }]}>
                   <Ionicons name="share-social" size={20} color="#fff" />
                 </View>
-                <Text style={[styles.exportOptionText, { color: theme.textSecondary }]}>Share</Text>
+                <Text style={[styles.exportOptionText, { color: theme.textSecondary }]}>{t.share}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -520,6 +560,7 @@ export default function LibraryScreen({ onNavigateBack }: LibraryScreenProps) {
       <ExportModal
         visible={snsExportPalette !== null}
         theme={theme}
+        language={language}
         snsCardType={snsCardType}
         onSnsCardTypeChange={setSnsCardType}
         cardShowHex={cardShowHex}

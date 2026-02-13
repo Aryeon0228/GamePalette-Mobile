@@ -4,18 +4,23 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
+import { type AppLanguage } from '../../lib/colorUtils';
 
 interface HomeHeaderProps {
   theme: ThemeColors;
+  language: AppLanguage;
   onShowInfo: () => void;
   onHapticLight: () => void;
 }
 
 export default function HomeHeader({
   theme,
+  language,
   onShowInfo,
   onHapticLight,
 }: HomeHeaderProps) {
+  const subtitle = language === 'ko' ? '컬러 추출기' : 'Color Extractor';
+
   return (
     <View style={styles.header}>
       <View style={styles.headerLeft}>
@@ -29,7 +34,7 @@ export default function HomeHeader({
         <View>
           <Text style={[styles.title, { color: theme.textPrimary }]}>Pixel Paw</Text>
           <View style={styles.headerSubtitleRow}>
-            <Text style={[styles.headerSubtitle, { color: theme.textMuted }]}>Color Extractor</Text>
+            <Text style={[styles.headerSubtitle, { color: theme.textMuted }]}>{subtitle}</Text>
             <Text style={styles.headerSubtitlePaw}>🐾</Text>
           </View>
         </View>

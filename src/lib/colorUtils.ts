@@ -568,58 +568,57 @@ export function simulateColorBlindness(hex: string, type: ColorBlindnessType): s
  * Generate all color harmonies for a given base color
  */
 export function generateColorHarmonies(hex: string, language: AppLanguage = 'ko'): ColorHarmony[] {
-  const complementaryDescription =
-    language === 'ko' ? '보색 - 정반대 색상' : 'Complementary - opposite on wheel';
+  const isKorean = language === 'ko';
 
   return [
     {
       type: 'complementary',
-      name: 'Complementary',
-      description: complementaryDescription,
+      name: isKorean ? '보색' : 'Complementary',
+      description: isKorean ? '색상환에서 정반대에 있는 조합' : 'Complementary - opposite on wheel',
       colors: [
-        { hex, name: 'Base', angle: 0 },
-        { hex: rotateHue(hex, 180), name: 'Complement', angle: 180 },
+        { hex, name: isKorean ? '기준색' : 'Base', angle: 0 },
+        { hex: rotateHue(hex, 180), name: isKorean ? '보색' : 'Complement', angle: 180 },
       ],
     },
     {
       type: 'analogous',
-      name: 'Analogous',
-      description: 'Analogous - adjacent colors',
+      name: isKorean ? '유사색' : 'Analogous',
+      description: isKorean ? '인접한 색상으로 부드러운 조합' : 'Analogous - adjacent colors',
       colors: [
-        { hex: rotateHue(hex, -30), name: 'Left', angle: -30 },
-        { hex, name: 'Base', angle: 0 },
-        { hex: rotateHue(hex, 30), name: 'Right', angle: 30 },
+        { hex: rotateHue(hex, -30), name: isKorean ? '왼쪽' : 'Left', angle: -30 },
+        { hex, name: isKorean ? '기준색' : 'Base', angle: 0 },
+        { hex: rotateHue(hex, 30), name: isKorean ? '오른쪽' : 'Right', angle: 30 },
       ],
     },
     {
       type: 'triadic',
-      name: 'Triadic',
-      description: 'Triadic - 120° spacing',
+      name: isKorean ? '삼각 조화' : 'Triadic',
+      description: isKorean ? '120° 간격의 균형 잡힌 조합' : 'Triadic - 120° spacing',
       colors: [
-        { hex, name: 'Base', angle: 0 },
-        { hex: rotateHue(hex, 120), name: 'Second', angle: 120 },
-        { hex: rotateHue(hex, 240), name: 'Third', angle: 240 },
+        { hex, name: isKorean ? '기준색' : 'Base', angle: 0 },
+        { hex: rotateHue(hex, 120), name: isKorean ? '두 번째' : 'Second', angle: 120 },
+        { hex: rotateHue(hex, 240), name: isKorean ? '세 번째' : 'Third', angle: 240 },
       ],
     },
     {
       type: 'split-complementary',
-      name: 'Split Comp.',
-      description: 'Split complementary - around complement',
+      name: isKorean ? '분할 보색' : 'Split Comp.',
+      description: isKorean ? '보색 양옆으로 분리한 조합' : 'Split complementary - around complement',
       colors: [
-        { hex, name: 'Base', angle: 0 },
-        { hex: rotateHue(hex, 150), name: 'Split 1', angle: 150 },
-        { hex: rotateHue(hex, 210), name: 'Split 2', angle: 210 },
+        { hex, name: isKorean ? '기준색' : 'Base', angle: 0 },
+        { hex: rotateHue(hex, 150), name: isKorean ? '분할 1' : 'Split 1', angle: 150 },
+        { hex: rotateHue(hex, 210), name: isKorean ? '분할 2' : 'Split 2', angle: 210 },
       ],
     },
     {
       type: 'tetradic',
-      name: 'Tetradic',
-      description: 'Tetradic - 90° spacing',
+      name: isKorean ? '사각 조화' : 'Tetradic',
+      description: isKorean ? '90° 간격의 네 가지 조합' : 'Tetradic - 90° spacing',
       colors: [
-        { hex, name: 'Base', angle: 0 },
-        { hex: rotateHue(hex, 90), name: 'Second', angle: 90 },
-        { hex: rotateHue(hex, 180), name: 'Third', angle: 180 },
-        { hex: rotateHue(hex, 270), name: 'Fourth', angle: 270 },
+        { hex, name: isKorean ? '기준색' : 'Base', angle: 0 },
+        { hex: rotateHue(hex, 90), name: isKorean ? '두 번째' : 'Second', angle: 90 },
+        { hex: rotateHue(hex, 180), name: isKorean ? '세 번째' : 'Third', angle: 180 },
+        { hex: rotateHue(hex, 270), name: isKorean ? '네 번째' : 'Fourth', angle: 270 },
       ],
     },
   ];
