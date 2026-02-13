@@ -159,10 +159,8 @@ export const styles = StyleSheet.create({
   emptyDecoContainer: {
     ...StyleSheet.absoluteFillObject,
   },
-  emptyDecoDot: {
+  emptyDecoIcon: {
     position: 'absolute',
-    borderRadius: 50,
-    opacity: 0.5,
   },
   emptyIconCircle: {
     width: 72,

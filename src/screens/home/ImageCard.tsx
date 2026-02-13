@@ -32,6 +32,22 @@ export default function ImageCard({
   onPickFromGallery,
 }: ImageCardProps) {
   const cameraAccent = COLOR_TOKENS.info;
+  const emptyDecoIcons: Array<{
+    name: string;
+    color: string;
+    size: number;
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+    opacity?: number;
+  }> = [
+    { name: 'star', color: '#fbbf24', size: 13, top: 14, left: 20, opacity: 0.58 },
+    { name: 'paw', color: '#f472b6', size: 12, top: 28, right: 28, opacity: 0.46 },
+    { name: 'star-outline', color: '#60a5fa', size: 12, bottom: 42, left: 30, opacity: 0.52 },
+    { name: 'paw', color: '#34d399', size: 13, top: 50, right: 50, opacity: 0.44 },
+    { name: 'star', color: '#a78bfa', size: 11, bottom: 22, right: 20, opacity: 0.56 },
+  ];
 
   if (currentImageUri) {
     const imageElement = (
@@ -95,13 +111,26 @@ export default function ImageCard({
   return (
     <View style={[styles.imageCardEmpty, { backgroundColor: theme.backgroundSecondary, borderColor: theme.borderLight }]}
     >
-      {/* Decorative color dots */}
+      {/* Decorative markers: mixed stars + paws for quick visual comparison */}
       <View style={styles.emptyDecoContainer}>
-        <View style={[styles.emptyDecoDot, { backgroundColor: '#f472b6', top: 16, left: 20, width: 8, height: 8 }]} />
-        <View style={[styles.emptyDecoDot, { backgroundColor: '#60a5fa', top: 30, right: 30, width: 6, height: 6 }]} />
-        <View style={[styles.emptyDecoDot, { backgroundColor: '#fbbf24', bottom: 40, left: 30, width: 10, height: 10 }]} />
-        <View style={[styles.emptyDecoDot, { backgroundColor: '#34d399', top: 50, right: 50, width: 7, height: 7 }]} />
-        <View style={[styles.emptyDecoDot, { backgroundColor: '#a78bfa', bottom: 24, right: 20, width: 9, height: 9 }]} />
+        {emptyDecoIcons.map((icon, index) => (
+          <Ionicons
+            key={`${icon.name}-${index}`}
+            name={icon.name as any}
+            size={icon.size}
+            color={icon.color}
+            style={[
+              styles.emptyDecoIcon,
+              {
+                top: icon.top,
+                right: icon.right,
+                bottom: icon.bottom,
+                left: icon.left,
+                opacity: icon.opacity ?? 0.5,
+              },
+            ]}
+          />
+        ))}
       </View>
 
       {/* Central content */}
