@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { Grayscale } from 'react-native-color-matrix-image-filters';
 
@@ -46,11 +46,11 @@ export default function ImageCard({
     left?: number;
     opacity?: number;
   }> = [
-    { name: 'star', color: '#fbbf24', size: 13, top: 14, left: 20, opacity: 0.58 },
-    { name: 'paw', color: '#f472b6', size: 12, top: 28, right: 28, opacity: 0.46 },
-    { name: 'star-outline', color: '#60a5fa', size: 12, bottom: 42, left: 30, opacity: 0.52 },
-    { name: 'paw', color: '#34d399', size: 13, top: 50, right: 50, opacity: 0.44 },
-    { name: 'star', color: '#a78bfa', size: 11, bottom: 22, right: 20, opacity: 0.56 },
+    { name: 'auto-awesome', color: '#fbbf24', size: 13, top: 14, left: 20, opacity: 0.58 },
+    { name: 'stars', color: '#f472b6', size: 12, top: 28, right: 28, opacity: 0.5 },
+    { name: 'auto-awesome-motion', color: '#60a5fa', size: 12, bottom: 42, left: 30, opacity: 0.52 },
+    { name: 'auto-awesome', color: '#34d399', size: 13, top: 50, right: 50, opacity: 0.44 },
+    { name: 'stars', color: '#a78bfa', size: 11, bottom: 22, right: 20, opacity: 0.56 },
   ];
 
   if (currentImageUri) {
@@ -115,10 +115,10 @@ export default function ImageCard({
   return (
     <View style={[styles.imageCardEmpty, { backgroundColor: theme.backgroundSecondary, borderColor: theme.borderLight }]}
     >
-      {/* Decorative markers: mixed stars + paws for quick visual comparison */}
+      {/* Decorative markers: cute rounded stars (Google Material icon set) */}
       <View style={styles.emptyDecoContainer}>
         {emptyDecoIcons.map((icon, index) => (
-          <Ionicons
+          <MaterialIcons
             key={`${icon.name}-${index}`}
             name={icon.name as any}
             size={icon.size}
