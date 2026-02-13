@@ -227,9 +227,10 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
   const exportSnsAsText = async (format: 'json' | 'css') => {
     if (!snsExportPalette) return;
     setIsExporting(true);
+    let fileUri: string | null = null;
     try {
       const { content, filename } = buildPaletteExport(snsExportPalette, format);
-      const fileUri = FileSystem.cacheDirectory + filename;
+      fileUri = FileSystem.cacheDirectory + filename;
       await FileSystem.writeAsStringAsync(fileUri, content);
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(fileUri);
@@ -238,6 +239,9 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
       console.error('SNS text export error:', error);
       Alert.alert(t.exportPaletteTitle, t.exportFailed);
     } finally {
+      if (fileUri) {
+        FileSystem.deleteAsync(fileUri, { idempotent: true }).catch(() => undefined);
+      }
       setIsExporting(false);
     }
   };

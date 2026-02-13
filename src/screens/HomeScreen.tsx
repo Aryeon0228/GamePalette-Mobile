@@ -252,6 +252,8 @@ export default function HomeScreen({
   // Toast State
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const extractRequestRef = useRef(0);
+  const histogramRequestRef = useRef(0);
   const [hasSeenColorTapHint, setHasSeenColorTapHint] = useState(false);
 
   // Theme & Store
@@ -541,6 +543,10 @@ export default function HomeScreen({
   useEffect(() => {
     return () => {
       advancedPanelAnimationRef.current?.stop();
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+        toastTimeoutRef.current = null;
+      }
     };
   }, []);
 
@@ -653,32 +659,43 @@ export default function HomeScreen({
     count: number,
     method: ExtractionMethod
   ) => {
+    const requestId = ++extractRequestRef.current;
     setIsExtracting(true);
     try {
       const colors = await extractColorsFromImage(imageUri, count, method);
+      if (requestId !== extractRequestRef.current) return;
       setCurrentColors(colors);
     } catch (error) {
-      console.error('Error extracting colors:', error);
-      Alert.alert(errorTitle, extractErrorMessage);
+      if (requestId === extractRequestRef.current) {
+        console.error('Error extracting colors:', error);
+        Alert.alert(errorTitle, extractErrorMessage);
+      }
     } finally {
-      setIsExtracting(false);
+      if (requestId === extractRequestRef.current) {
+        setIsExtracting(false);
+      }
     }
   };
 
   const extractColors = async (imageUri: string) => {
     setCurrentImageUri(imageUri);
+    setHistogram(null);
     await doExtract(imageUri, colorCount, extractionMethod);
     // Run histogram analysis in background (non-blocking)
     analyzeHistogram(imageUri);
   };
 
   const analyzeHistogram = async (imageUri: string) => {
+    const requestId = ++histogramRequestRef.current;
     try {
       const histogramData = await analyzeLuminosityHistogram(imageUri);
+      if (requestId !== histogramRequestRef.current) return;
       setHistogram(histogramData);
     } catch (error) {
-      console.error('Histogram analysis error:', error);
-      setHistogram(null);
+      if (requestId === histogramRequestRef.current) {
+        console.error('Histogram analysis error:', error);
+        setHistogram(null);
+      }
     }
   };
 
@@ -780,6 +797,7 @@ export default function HomeScreen({
   const exportAsText = async (format: string) => {
     let content = '';
     let filename = 'palette';
+    let fileUri: string | null = null;
     const colors = processedColors;
 
     switch (format) {
@@ -816,7 +834,7 @@ export default function HomeScreen({
 
     setIsExporting(true);
     try {
-      const fileUri = FileSystem.cacheDirectory + filename;
+      fileUri = FileSystem.cacheDirectory + filename;
       await FileSystem.writeAsStringAsync(fileUri, content);
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(fileUri);
@@ -824,6 +842,9 @@ export default function HomeScreen({
     } catch (error) {
       Alert.alert(errorTitle, exportErrorMessage);
     } finally {
+      if (fileUri) {
+        FileSystem.deleteAsync(fileUri, { idempotent: true }).catch(() => undefined);
+      }
       setIsExporting(false);
     }
   };
