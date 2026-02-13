@@ -10,7 +10,10 @@
     "web": "expo start --web",
     "test": "jest",
     "test:watch": "jest --watch",
-    "check:ios-release": "node scripts/check-ios-release.mjs"
+    "check:ios-release": "node scripts/check-ios-release.mjs",
+    "check:localization": "node scripts/check-localization-keys.mjs",
+    "check:release": "node scripts/check-release.mjs",
+    "clean:artifacts": "node scripts/clean-artifacts.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/material-symbols-outlined": "^0.4.34",

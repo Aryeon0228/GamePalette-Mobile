@@ -13,7 +13,7 @@ interface HomeHeaderProps {
   onHapticLight: () => void;
 }
 
-export default function HomeHeader({
+function HomeHeader({
   theme,
   language,
   onShowInfo,
@@ -56,3 +56,5 @@ export default function HomeHeader({
     </View>
   );
 }
+
+export default React.memo(HomeHeader);

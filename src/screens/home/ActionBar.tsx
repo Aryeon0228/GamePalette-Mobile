@@ -15,7 +15,7 @@ interface ActionBarProps {
   onHapticLight: () => void;
 }
 
-export default function ActionBar({
+function ActionBar({
   theme,
   language,
   onNavigateToLibrary,
@@ -71,3 +71,5 @@ export default function ActionBar({
     </View>
   );
 }
+
+export default React.memo(ActionBar);

@@ -37,7 +37,7 @@ interface InlineSettingsPanelProps {
   onClose: () => void;
 }
 
-export default function InlineSettingsPanel({
+function InlineSettingsPanel({
   isMounted,
   showAdvanced,
   theme,
@@ -273,3 +273,5 @@ export default function InlineSettingsPanel({
     </Animated.View>
   );
 }
+
+export default React.memo(InlineSettingsPanel);
