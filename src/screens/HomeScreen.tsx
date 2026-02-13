@@ -335,7 +335,7 @@ export default function HomeScreen({
       original: '원본',
       hypercasual: '하이퍼',
       stylized: '스타일',
-      realistic: '리얼',
+      realistic: '실사',
     }
     : {
       original: 'Original',
