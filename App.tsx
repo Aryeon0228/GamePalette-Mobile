@@ -21,7 +21,6 @@ export default function App() {
   const [fontsLoaded] = useFonts({
     SpaceGrotesk_500Medium: require('./assets/fonts/SpaceGrotesk_500Medium.ttf'),
     SpaceGrotesk_700Bold: require('./assets/fonts/SpaceGrotesk_700Bold.ttf'),
-    MaterialSymbolsOutlined_400Regular: require('@expo-google-fonts/material-symbols-outlined/400Regular/MaterialSymbolsOutlined_400Regular.ttf'),
   });
 
   if (!fontsLoaded) {

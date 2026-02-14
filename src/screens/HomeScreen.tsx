@@ -642,7 +642,6 @@ export default function HomeScreen({
               return (
                 <View key={index} style={styles.colorCard}>
                   <View style={[styles.colorSwatch, styles.colorSwatchEmpty, { borderColor: hintColor + '30', backgroundColor: hintColor + '08' }]}>
-                    <Ionicons name="paw" size={16} color={hintColor + '35'} />
                   </View>
                 </View>
               );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, Linking, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
@@ -25,6 +25,7 @@ export default function InfoModal({
   onClose,
   onHapticLight,
 }: InfoModalProps) {
+  const [logoLoadError, setLogoLoadError] = useState(false);
   const appVersion = Constants.expoConfig?.version ?? '1.1.0';
   const languageLabel = language === 'ko' ? '언어' : 'Language';
   const closeLabel = language === 'ko' ? '닫기' : 'Close';
@@ -55,12 +56,17 @@ export default function InfoModal({
       <View style={[styles.modalOverlay, { backgroundColor: theme.modalOverlay }]}>
         <View style={[styles.infoModalContent, { backgroundColor: theme.backgroundSecondary }]}>
           <View style={styles.infoModalHeader}>
-            <View style={[styles.headerLogoMark, { marginBottom: 16 }]}>
-              <Image
-                source={require('../../../../assets/pow-header.png')}
-                style={styles.headerLogoImage}
-                resizeMode="contain"
-              />
+            <View style={styles.infoHeaderLogoMark}>
+              {logoLoadError ? (
+                <Ionicons name="paw" size={22} color="#ffd1dc" style={styles.infoHeaderLogoFallbackIcon} />
+              ) : (
+                <Image
+                  source={require('../../../../assets/pow-header.png')}
+                  style={styles.infoHeaderLogoImage}
+                  resizeMode="contain"
+                  onError={() => setLogoLoadError(true)}
+                />
+              )}
             </View>
             <Text style={[styles.infoModalTitle, { color: theme.textPrimary }]}>Pixel Paw</Text>
             <Text style={[styles.infoModalVersion, { color: theme.textMuted }]}>{subtitleLabel}</Text>

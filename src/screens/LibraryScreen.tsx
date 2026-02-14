@@ -71,7 +71,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
     paletteWord: isKorean ? '팔레트' : 'PALETTE',
     colorsSuffix: isKorean ? '색상' : 'colors',
     export: isKorean ? '내보내기' : 'Export',
-    title: isKorean ? '팔레트 보관함' : 'GamePalette',
+    title: isKorean ? '라이브러리' : 'Library',
     searchPlaceholder: isKorean ? '팔레트, 색상 검색...' : 'Search palettes, colors...',
     sectionTitle: isKorean ? '내 팔레트' : 'My Palettes',
     itemSuffix: isKorean ? '개' : 'items',
@@ -355,9 +355,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
           <Ionicons name="chevron-back" size={24} color={theme.textPrimary} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.textPrimary }]}>{t.title}</Text>
-        <View style={styles.profileButton}>
-          <Ionicons name="person-circle-outline" size={28} color={theme.textSecondary} />
-        </View>
+        <View style={styles.headerSpacer} />
       </View>
 
       {/* Search bar */}
@@ -615,11 +613,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
   },
-  profileButton: {
+  headerSpacer: {
     width: 40,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   searchContainer: {
     paddingHorizontal: 16,

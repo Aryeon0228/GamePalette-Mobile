@@ -188,9 +188,13 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
           },
         ]}
       >
-        <Text style={styles.brandTitle}>Pixel Paw</Text>
+        <View style={styles.brandTitleFrame}>
+          <Text style={styles.brandSparkle}>✦</Text>
+          <Text style={styles.brandTitle}>Pixel Paw</Text>
+          <Text style={styles.brandSparkle}>✦</Text>
+        </View>
         <Animated.Text style={[styles.brandSubtitle, { opacity: subtitleOpacityAnim }]}>
-          Palette Extractor for Game Art
+          Simple Color Extractor
         </Animated.Text>
       </Animated.View>
     </View>
@@ -248,20 +252,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 24,
   },
-  brandTitle: {
-    color: '#f5f7ff',
+  brandTitleFrame: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 18,
+    backgroundColor: 'rgba(8, 12, 28, 0.34)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.18)',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.28,
+    shadowRadius: 10,
+  },
+  brandSparkle: {
+    color: '#f7d77f',
     fontFamily: 'SpaceGrotesk_700Bold',
-    fontSize: 56,
-    letterSpacing: -0.8,
-    textShadowColor: 'rgba(3, 6, 20, 0.68)',
-    textShadowOffset: { width: 0, height: 3 },
-    textShadowRadius: 10,
+    fontSize: 14,
+    lineHeight: 16,
+    textShadowColor: 'rgba(247, 215, 127, 0.42)',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 4,
+  },
+  brandTitle: {
+    color: '#f8f9ff',
+    fontFamily: 'SpaceGrotesk_700Bold',
+    fontSize: 54,
+    letterSpacing: -0.7,
+    textShadowColor: 'rgba(4, 8, 22, 0.64)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
   },
   brandSubtitle: {
-    marginTop: 8,
-    color: 'rgba(243, 246, 255, 0.92)',
+    marginTop: 10,
+    color: 'rgba(243, 246, 255, 0.9)',
     fontFamily: 'SpaceGrotesk_500Medium',
     fontSize: 15,
-    letterSpacing: 0.5,
+    letterSpacing: 0.6,
   },
 });

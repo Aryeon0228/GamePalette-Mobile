@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -19,24 +19,27 @@ function HomeHeader({
   onShowInfo,
   onHapticLight,
 }: HomeHeaderProps) {
+  const [logoLoadError, setLogoLoadError] = useState(false);
   const subtitle = language === 'ko' ? '간편한 컬러 추출기' : 'Simple Color Extractor';
 
   return (
     <View style={styles.header}>
       <View style={styles.headerLeft}>
         <View style={styles.headerLogoMark}>
-          <Image
-            source={require('../../../assets/pow-header.png')}
-            style={styles.headerLogoImage}
-            resizeMode="contain"
-          />
+          {logoLoadError ? (
+            <Ionicons name="paw" size={18} color="#ffd1dc" style={styles.headerLogoFallbackIcon} />
+          ) : (
+            <Image
+              source={require('../../../assets/pow-header.png')}
+              style={styles.headerLogoImage}
+              resizeMode="contain"
+              onError={() => setLogoLoadError(true)}
+            />
+          )}
         </View>
         <View>
           <Text style={[styles.title, { color: theme.textPrimary }]}>Pixel Paw</Text>
-          <View style={styles.headerSubtitleRow}>
-            <Text style={[styles.headerSubtitle, { color: theme.textMuted }]}>{subtitle}</Text>
-            <Text style={styles.headerSubtitlePaw}>🐾</Text>
-          </View>
+          <Text style={[styles.headerSubtitle, { color: theme.textMuted }]}>{subtitle}</Text>
         </View>
       </View>
       <View style={styles.headerRight}>
