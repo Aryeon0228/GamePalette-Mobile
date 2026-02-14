@@ -27,6 +27,8 @@ export const styles = StyleSheet.create({
     height: 38,
     borderRadius: 11,
     backgroundColor: C.accentPrimary,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: C.accentPrimary,
@@ -36,24 +38,17 @@ export const styles = StyleSheet.create({
     elevation: 4,
   },
   headerLogoImage: {
-    width: 22,
-    height: 22,
+    width: 25,
+    height: 25,
   },
-  headerSubtitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 2,
+  headerLogoFallbackIcon: {
+    opacity: 0.95,
   },
   headerSubtitle: {
     fontSize: 11,
     fontWeight: '500',
     letterSpacing: 0.3,
-  },
-  headerSubtitlePaw: {
-    fontSize: 12,
-    lineHeight: 14,
-    transform: [{ translateX: -4 }, { translateY: 1 }],
+    marginTop: 2,
   },
   headerRight: {
     flexDirection: 'row',
@@ -155,12 +150,6 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: C.borderStrong,
     overflow: 'hidden',
-  },
-  emptyDecoContainer: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  emptyDecoIcon: {
-    position: 'absolute',
   },
   emptyIconCircle: {
     width: 72,
@@ -1406,18 +1395,21 @@ export const styles = StyleSheet.create({
   },
   formatOptions: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 10,
   },
   formatOption: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 14,
     borderRadius: 10,
     backgroundColor: C.backgroundControl,
     gap: 6,
-    minHeight: 44,
+    minHeight: 50,
   },
   formatOptionText: {
     fontSize: 13,
@@ -1634,6 +1626,29 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     minHeight: 132,
     marginBottom: 16,
+  },
+  infoHeaderLogoMark: {
+    width: 54,
+    height: 54,
+    borderRadius: 16,
+    backgroundColor: C.accentPrimary,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+    shadowColor: C.accentPrimary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  infoHeaderLogoImage: {
+    width: 34,
+    height: 34,
+  },
+  infoHeaderLogoFallbackIcon: {
+    opacity: 0.95,
   },
   infoModalTitle: {
     fontSize: 24,
