@@ -11,6 +11,7 @@ import {
   Modal,
   Share,
 } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import * as Sharing from 'expo-sharing';
@@ -422,10 +423,11 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
         onRequestClose={() => setMenuPalette(null)}
       >
         <TouchableOpacity
-          style={[styles.modalOverlay, { backgroundColor: theme.modalOverlay }]}
+          style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setMenuPalette(null)}
         >
+          <BlurView intensity={40} tint="light" style={StyleSheet.absoluteFill} />
           <View style={[styles.menuModal, { backgroundColor: theme.backgroundSecondary }]}>
             <Text style={[styles.menuTitle, { color: theme.textPrimary, borderBottomColor: theme.border }]}>
               {menuPalette?.name}
@@ -474,10 +476,11 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
         onRequestClose={() => setExportPalette(null)}
       >
         <TouchableOpacity
-          style={[styles.modalOverlay, { backgroundColor: theme.modalOverlay }]}
+          style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setExportPalette(null)}
         >
+          <BlurView intensity={40} tint="light" style={StyleSheet.absoluteFill} />
           <View style={[styles.exportModal, { backgroundColor: theme.backgroundSecondary }]}>
             <View style={[styles.exportHandle, { backgroundColor: theme.border }]} />
             <Text style={[styles.exportTitle, { color: theme.textPrimary }]}>{t.exportPaletteTitle}</Text>
@@ -590,7 +593,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a0a10',
+    backgroundColor: '#ECECF0',
   },
   header: {
     flexDirection: 'row',
@@ -604,14 +607,19 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#16161e',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
+    color: '#1C1C1E',
   },
   headerSpacer: {
     width: 40,
@@ -624,16 +632,21 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#16161e',
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,
     gap: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
   searchInput: {
     flex: 1,
     fontSize: 15,
-    color: '#fff',
+    color: '#1C1C1E',
     padding: 0,
   },
   sectionHeader: {
@@ -646,21 +659,26 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#fff',
+    color: '#1C1C1E',
   },
   sectionCount: {
     fontSize: 14,
-    color: '#666',
+    color: '#8E8E93',
   },
   list: {
     paddingHorizontal: 16,
     paddingBottom: 100,
   },
   card: {
-    backgroundColor: '#16161e',
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     marginBottom: 16,
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 4,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -671,7 +689,7 @@ const styles = StyleSheet.create({
   },
   thumbnail: {
     height: 140,
-    backgroundColor: '#0c0c12',
+    backgroundColor: '#E8E8ED',
   },
   thumbnailImage: {
     width: '100%',
@@ -682,7 +700,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0c0c12',
+    backgroundColor: '#E8E8ED',
   },
   menuButton: {
     position: 'absolute',
@@ -691,7 +709,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -718,13 +736,13 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#fff',
+    color: '#1C1C1E',
     flex: 1,
   },
   paletteLabel: {
     fontSize: 10,
     fontWeight: '600',
-    color: '#666',
+    color: '#8E8E93',
     letterSpacing: 0.5,
   },
   tagsRow: {
@@ -734,26 +752,26 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   tag: {
-    backgroundColor: '#24242e',
+    backgroundColor: '#E5E5EA',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
   },
   tagText: {
     fontSize: 11,
-    color: '#888',
+    color: '#636366',
     fontWeight: '500',
   },
   dateText: {
     fontSize: 11,
-    color: '#555',
+    color: '#AEAEB2',
     marginLeft: 'auto',
   },
   exportButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2d2d38',
+    backgroundColor: '#E8E8ED',
     paddingVertical: 10,
     borderRadius: 8,
     gap: 6,
@@ -761,7 +779,7 @@ const styles = StyleSheet.create({
   exportButtonText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#fff',
+    color: '#1C1C1E',
   },
   emptyState: {
     flex: 1,
@@ -773,45 +791,54 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#16161e',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
   emptyTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
+    color: '#1C1C1E',
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 14,
-    color: '#666',
+    color: '#8E8E93',
     textAlign: 'center',
     lineHeight: 20,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     justifyContent: 'flex-end',
   },
   menuModal: {
-    backgroundColor: '#16161e',
+    backgroundColor: '#F2F2F7',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 20,
     paddingBottom: 40,
     paddingHorizontal: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 4,
   },
   menuTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#fff',
+    color: '#1C1C1E',
     textAlign: 'center',
     marginBottom: 20,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#24242e',
+    borderBottomColor: '#E5E5EA',
   },
   menuItem: {
     flexDirection: 'row',
@@ -821,29 +848,34 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     fontSize: 16,
-    color: '#fff',
+    color: '#1C1C1E',
   },
   menuItemDanger: {
     borderTopWidth: 1,
-    borderTopColor: '#24242e',
+    borderTopColor: '#E5E5EA',
     marginTop: 8,
     paddingTop: 20,
   },
   menuItemTextDanger: {
-    color: '#ff4444',
+    color: '#FF3B30',
   },
   exportModal: {
-    backgroundColor: '#16161e',
+    backgroundColor: '#F2F2F7',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 12,
     paddingBottom: 40,
     paddingHorizontal: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 4,
   },
   exportHandle: {
     width: 36,
     height: 4,
-    backgroundColor: '#3e3e50',
+    backgroundColor: '#C7C7CC',
     borderRadius: 2,
     alignSelf: 'center',
     marginBottom: 16,
@@ -851,7 +883,7 @@ const styles = StyleSheet.create({
   exportTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
+    color: '#1C1C1E',
     textAlign: 'center',
     marginBottom: 24,
   },
@@ -880,7 +912,7 @@ const styles = StyleSheet.create({
   },
   exportOptionText: {
     fontSize: 12,
-    color: '#888',
+    color: '#636366',
     fontWeight: '500',
   },
 });

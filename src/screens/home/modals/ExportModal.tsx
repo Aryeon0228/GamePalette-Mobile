@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { View, Text, TouchableOpacity, Modal, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, ScrollView, ActivityIndicator, StyleSheet as RNStyleSheet } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import ViewShot from 'react-native-view-shot';
@@ -182,8 +183,8 @@ export default function ExportModal({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View style={[styles.exportModalOverlay, { backgroundColor: theme.modalOverlay }]}
-      >
+      <View style={styles.exportModalOverlay}>
+        <BlurView intensity={40} tint="light" style={RNStyleSheet.absoluteFill} />
         <TouchableOpacity
           style={styles.exportModalBackground}
           onPress={onClose}

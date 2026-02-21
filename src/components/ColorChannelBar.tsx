@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     width: 20,
     fontSize: 11,
     fontWeight: '600',
-    color: '#666',
+    color: '#8E8E93',
   },
   channelBarContainer: {
     flex: 1,
@@ -73,13 +73,13 @@ const styles = StyleSheet.create({
   },
   channelBarBg: {
     flex: 1,
-    backgroundColor: '#24242e',
+    backgroundColor: '#E5E5EA',
     borderRadius: 4,
     overflow: 'hidden',
   },
   hueGradientBar: {
     flex: 1,
-    backgroundColor: '#24242e',
+    backgroundColor: '#E5E5EA',
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   channelValue: {
     width: 36,
     fontSize: 12,
-    color: '#888',
+    color: '#636366',
     textAlign: 'right',
     fontFamily: 'monospace',
   },

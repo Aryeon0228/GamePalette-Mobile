@@ -20,28 +20,28 @@ export const STYLE_PRESETS: Record<StyleFilter, StylePreset> = {
     saturation: 1.0,
     brightness: 1.0,
     icon: 'heart',
-    color: '#a0a0b0',
+    color: '#8E8E93',
   },
   hypercasual: {
     name: 'Hyper',
     saturation: 1.3,
     brightness: 1.1,
     icon: 'sparkles-outline',
-    color: '#fbbf24',
+    color: '#F5A623',
   },
   stylized: {
     name: 'Stylized',
     saturation: 1.15,
     brightness: 1.05,
     icon: 'brush-outline',
-    color: '#c084fc',
+    color: '#636366',
   },
   realistic: {
     name: 'Realistic',
     saturation: 0.9,
     brightness: 0.95,
     icon: 'eye-outline',
-    color: '#34d399',
+    color: '#34C759',
   },
 };
 

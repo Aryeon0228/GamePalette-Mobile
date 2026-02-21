@@ -193,10 +193,10 @@ export default function HomeScreen({
     if (colorBlindMode === 'none') return '';
     return cvdOptions.find((option) => option.type === colorBlindMode)?.label ?? '';
   }, [colorBlindMode, cvdOptions]);
-  const kmeansAccentColor = '#f43f5e';
+  const kmeansAccentColor = '#48484A';
   const styleChipColor = STYLE_PRESETS[styleFilter].color;
-  const methodChipColor = extractionMethod === 'histogram' ? '#38bdf8' : kmeansAccentColor;
-  const countChipColor = '#a78bfa';
+  const methodChipColor = extractionMethod === 'histogram' ? '#8E8E93' : kmeansAccentColor;
+  const countChipColor = '#636366';
   const {
     stylePresetChipLabels,
     stylePresetButtonLabels,
@@ -637,7 +637,7 @@ export default function HomeScreen({
         ) : (
           <View style={[styles.colorCardsContainer, styles.colorCardsEmpty]}>
             {Array.from({ length: colorCount }).map((_, index) => {
-              const hintColors = ['#4f6d8c', '#f472b6', '#fbbf24', '#34d399', '#60a5fa', '#fb923c', '#a78bfa', '#f87171'];
+              const hintColors = ['#AEAEB2', '#C7C7CC', '#D1D1D6', '#8E8E93', '#AEAEB2', '#C7C7CC', '#D1D1D6', '#8E8E93'];
               const hintColor = hintColors[index % hintColors.length];
               return (
                 <View key={index} style={styles.colorCard}>
@@ -1001,7 +1001,7 @@ export default function HomeScreen({
                       styles.histogramBar,
                       {
                         height: `${Math.max(value, 2)}%`,
-                        backgroundColor: index < 11 ? '#6a6a80' : index < 21 ? '#8a8aa0' : '#b0b0c8',
+                        backgroundColor: index < 11 ? '#8E8E93' : index < 21 ? '#AEAEB2' : '#C7C7CC',
                       },
                     ]}
                   />

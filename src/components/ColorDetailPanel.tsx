@@ -133,11 +133,16 @@ export default function ColorDetailPanel({ color, onClose }: ColorDetailPanelPro
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 16,
     marginHorizontal: 16,
     marginVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 4,
   },
   colorPreview: {
     height: 80,
@@ -159,7 +164,7 @@ const styles = StyleSheet.create({
   },
   formatSelector: {
     flexDirection: 'row',
-    backgroundColor: '#0d0d1a',
+    backgroundColor: '#E8E8ED',
     borderRadius: 8,
     padding: 4,
   },
@@ -169,27 +174,27 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   formatButtonActive: {
-    backgroundColor: '#3a3a5c',
+    backgroundColor: '#C7C7CC',
   },
   formatButtonText: {
-    color: '#888',
+    color: '#8E8E93',
     fontSize: 12,
     fontWeight: '600',
   },
   formatButtonTextActive: {
-    color: '#fff',
+    color: '#1C1C1E',
   },
   copyButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#4a4a6a',
+    backgroundColor: '#2C2C2E',
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 8,
     gap: 6,
   },
   copyButtonSuccess: {
-    backgroundColor: '#2d7a4d',
+    backgroundColor: '#34C759',
   },
   copyButtonText: {
     color: '#fff',
@@ -200,7 +205,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   variationsLabel: {
-    color: '#888',
+    color: '#8E8E93',
     fontSize: 12,
     marginBottom: 8,
   },
@@ -221,12 +226,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   infoLabel: {
-    color: '#666',
+    color: '#8E8E93',
     fontSize: 11,
     marginBottom: 4,
   },
   infoValue: {
-    color: '#fff',
+    color: '#1C1C1E',
     fontSize: 14,
     fontWeight: '600',
   },
