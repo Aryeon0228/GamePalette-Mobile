@@ -289,7 +289,7 @@ export interface ColorVariation {
 
 /**
  * Generate shadow/highlight variations of a color
- * Optionally shifts hue for stylistic shadows/highlights
+ * Produces 9 steps with natural chromatic aberration (hue drift in shadows/highlights)
  * Warm yellow hues bias shadows toward magenta/purple to avoid green casts
  */
 export function generateColorVariations(
@@ -335,10 +335,10 @@ export function generateColorVariations(
     lightnessOffset: number,
     hueOffset: number
   ): { hex: string; hsl: HslColor } => {
-    const MIN_L = 5,
-      MAX_L = 95,
-      MAX_OFFSET = 30,
-      SPACE_USAGE = 0.5;
+    const MIN_L = 3,
+      MAX_L = 97,
+      MAX_OFFSET = 40,
+      SPACE_USAGE = 0.55;
 
     let newL: number;
     if (lightnessOffset < 0) {
@@ -375,11 +375,17 @@ export function generateColorVariations(
         newH = Math.min(newH, CYAN_HUE_MAX);
       }
     }
+    // Natural chromatic aberration: saturation curves with depth
     let newS = s;
     if (lightnessOffset < 0) {
-      newS = Math.min(s * (isWarmYellowHue ? 1.02 : 1.1), 100);
+      // Shadows: slight saturation boost (warm hues more subtle)
+      const depth = Math.abs(lightnessOffset) / MAX_OFFSET;
+      newS = Math.min(s * (1 + depth * (isWarmYellowHue ? 0.08 : 0.15)), 100);
+    } else if (lightnessOffset > 0) {
+      // Highlights: gradual desaturation
+      const depth = lightnessOffset / MAX_OFFSET;
+      newS = s * (1 - depth * 0.15);
     }
-    else if (lightnessOffset > 0) newS = s * 0.9;
 
     const newRgb = hslToRgb(newH, newS, newL);
     return {
@@ -388,17 +394,26 @@ export function generateColorVariations(
     };
   };
 
-  const shadow2 = createVar(-30, useHueShift ? shadowDir * baseHueShift * 1.5 : 0);
-  const shadow1 = createVar(-15, useHueShift ? shadowDir * baseHueShift * 0.75 : 0);
-  const highlight1 = createVar(15, useHueShift ? highlightDir * baseHueShift * 0.75 : 0);
-  const highlight2 = createVar(30, useHueShift ? highlightDir * baseHueShift * 1.5 : 0);
+  // 9-step gradient: S4 S3 S2 S1 Base L1 L2 L3 L4
+  const shadow4 = createVar(-40, useHueShift ? shadowDir * baseHueShift * 2.0 : 0);
+  const shadow3 = createVar(-30, useHueShift ? shadowDir * baseHueShift * 1.5 : 0);
+  const shadow2 = createVar(-20, useHueShift ? shadowDir * baseHueShift * 1.0 : 0);
+  const shadow1 = createVar(-10, useHueShift ? shadowDir * baseHueShift * 0.5 : 0);
+  const highlight1 = createVar(10, useHueShift ? highlightDir * baseHueShift * 0.5 : 0);
+  const highlight2 = createVar(20, useHueShift ? highlightDir * baseHueShift * 1.0 : 0);
+  const highlight3 = createVar(30, useHueShift ? highlightDir * baseHueShift * 1.5 : 0);
+  const highlight4 = createVar(40, useHueShift ? highlightDir * baseHueShift * 2.0 : 0);
 
   return [
+    { ...shadow4, label: 'S4', fullLabel: 'Shadow 4' },
+    { ...shadow3, label: 'S3', fullLabel: 'Shadow 3' },
     { ...shadow2, label: 'S2', fullLabel: 'Shadow 2' },
     { ...shadow1, label: 'S1', fullLabel: 'Shadow 1' },
     { hex, label: 'Base', fullLabel: 'Base', hsl: { h, s, l } },
     { ...highlight1, label: 'L1', fullLabel: 'Light 1' },
     { ...highlight2, label: 'L2', fullLabel: 'Light 2' },
+    { ...highlight3, label: 'L3', fullLabel: 'Light 3' },
+    { ...highlight4, label: 'L4', fullLabel: 'Light 4' },
   ];
 }
 

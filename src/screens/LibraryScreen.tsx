@@ -21,6 +21,9 @@ import { usePaletteStore, SavedPalette } from '../store/paletteStore';
 import { useThemeStore } from '../store/themeStore';
 import ExportModal from './home/modals/ExportModal';
 import { type AppLanguage } from '../lib/colorUtils';
+import { COLOR_TOKENS, SHADOW_TOKENS, RADIUS_TOKENS } from '../constants/designTokens';
+
+const C = COLOR_TOKENS;
 
 interface LibraryScreenProps {
   onNavigateBack: () => void;
@@ -593,7 +596,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ECECF0',
+    backgroundColor: C.backgroundApp,
   },
   header: {
     flexDirection: 'row',
@@ -607,19 +610,15 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: C.backgroundElevated,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1C1C1E',
+    color: C.textPrimary,
   },
   headerSpacer: {
     width: 40,
@@ -632,21 +631,19 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    backgroundColor: C.backgroundElevated,
+    borderRadius: RADIUS_TOKENS.md,
     paddingHorizontal: 14,
     paddingVertical: 12,
     gap: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   searchInput: {
     flex: 1,
     fontSize: 15,
-    color: '#1C1C1E',
+    color: C.textPrimary,
     padding: 0,
   },
   sectionHeader: {
@@ -659,26 +656,24 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#1C1C1E',
+    color: C.textPrimary,
   },
   sectionCount: {
     fontSize: 14,
-    color: '#8E8E93',
+    color: C.textMuted,
   },
   list: {
     paddingHorizontal: 16,
     paddingBottom: 100,
   },
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    backgroundColor: C.backgroundElevated,
+    borderRadius: RADIUS_TOKENS.lg,
     marginBottom: 16,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 4,
+    borderWidth: 1,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -689,7 +684,7 @@ const styles = StyleSheet.create({
   },
   thumbnail: {
     height: 140,
-    backgroundColor: '#E8E8ED',
+    backgroundColor: C.backgroundSurfaceAlt,
   },
   thumbnailImage: {
     width: '100%',
@@ -700,7 +695,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#E8E8ED',
+    backgroundColor: C.backgroundSurfaceAlt,
   },
   menuButton: {
     position: 'absolute',
@@ -722,7 +717,7 @@ const styles = StyleSheet.create({
   colorSwatch: {
     flex: 1,
     height: 32,
-    borderRadius: 6,
+    borderRadius: RADIUS_TOKENS.sm,
   },
   cardInfo: {
     padding: 12,
@@ -736,13 +731,13 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1C1C1E',
+    color: C.textPrimary,
     flex: 1,
   },
   paletteLabel: {
     fontSize: 10,
     fontWeight: '600',
-    color: '#8E8E93',
+    color: C.textMuted,
     letterSpacing: 0.5,
   },
   tagsRow: {
@@ -752,34 +747,35 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   tag: {
-    backgroundColor: '#E5E5EA',
+    backgroundColor: C.borderSoft,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
   },
   tagText: {
     fontSize: 11,
-    color: '#636366',
+    color: C.textSecondary,
     fontWeight: '500',
   },
   dateText: {
     fontSize: 11,
-    color: '#AEAEB2',
+    color: C.textSubtle,
     marginLeft: 'auto',
   },
   exportButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#E8E8ED',
+    backgroundColor: C.backgroundSurfaceAlt,
     paddingVertical: 10,
     borderRadius: 8,
     gap: 6,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   exportButtonText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#1C1C1E',
+    color: C.textPrimary,
   },
   emptyState: {
     flex: 1,
@@ -791,25 +787,21 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: C.backgroundElevated,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   emptyTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1C1C1E',
+    color: C.textPrimary,
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 14,
-    color: '#8E8E93',
+    color: C.textMuted,
     textAlign: 'center',
     lineHeight: 20,
   },
@@ -818,27 +810,23 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   menuModal: {
-    backgroundColor: '#F2F2F7',
+    backgroundColor: C.backgroundSurface,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 20,
     paddingBottom: 40,
     paddingHorizontal: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 4,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   menuTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1C1C1E',
+    color: C.textPrimary,
     textAlign: 'center',
     marginBottom: 20,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E5EA',
+    borderBottomColor: C.borderSoft,
   },
   menuItem: {
     flexDirection: 'row',
@@ -848,34 +836,30 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     fontSize: 16,
-    color: '#1C1C1E',
+    color: C.textPrimary,
   },
   menuItemDanger: {
     borderTopWidth: 1,
-    borderTopColor: '#E5E5EA',
+    borderTopColor: C.borderSoft,
     marginTop: 8,
     paddingTop: 20,
   },
   menuItemTextDanger: {
-    color: '#FF3B30',
+    color: C.danger,
   },
   exportModal: {
-    backgroundColor: '#F2F2F7',
+    backgroundColor: C.backgroundSurface,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 12,
     paddingBottom: 40,
     paddingHorizontal: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 4,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   exportHandle: {
     width: 36,
     height: 4,
-    backgroundColor: '#C7C7CC',
+    backgroundColor: C.borderHandle,
     borderRadius: 2,
     alignSelf: 'center',
     marginBottom: 16,
@@ -883,7 +867,7 @@ const styles = StyleSheet.create({
   exportTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1C1C1E',
+    color: C.textPrimary,
     textAlign: 'center',
     marginBottom: 24,
   },
@@ -904,6 +888,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   exportIconText: {
     fontSize: 16,
@@ -912,7 +897,7 @@ const styles = StyleSheet.create({
   },
   exportOptionText: {
     fontSize: 12,
-    color: '#636366',
+    color: C.textSecondary,
     fontWeight: '500',
   },
 });

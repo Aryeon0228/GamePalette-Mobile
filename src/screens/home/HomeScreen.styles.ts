@@ -814,13 +814,13 @@ export const styles = StyleSheet.create({
   },
   variationColor: {
     width: '100%',
-    height: 48,
+    height: 40,
   },
   variationHex: {
-    fontSize: 8,
+    fontSize: 7,
     color: C.textSecondary,
     fontFamily: 'monospace',
-    marginTop: 4,
+    marginTop: 3,
   },
   variationLabel: {
     fontSize: 8,
