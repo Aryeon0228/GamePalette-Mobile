@@ -4,48 +4,48 @@
  */
 
 export const COLOR_TOKENS = {
-  // Brand / Accent
-  accentPrimary: '#3b426a',
-  accentLight: '#525b88',
-  accentInteractive: '#4f7bb8',
-  accentMuted: '#606b78',
-  accentVariationLightness: '#5b6775',
-  accentVariationHueShift: '#36a9b8',
+  // Brand / Accent — clean charcoal
+  accentPrimary: '#2C2C2E',
+  accentLight: '#48484A',
+  accentInteractive: '#3A3A3C',
+  accentMuted: '#636366',
+  accentVariationLightness: '#636366',
+  accentVariationHueShift: '#48484A',
 
   // Semantic
-  warning: '#f59e0b',
-  success: '#34d399',
-  danger: '#f87171',
-  info: '#60a5fa',
+  warning: '#F5A623',
+  success: '#34C759',
+  danger: '#FF3B30',
+  info: '#5AC8FA',
 
-  // Text
-  textPrimary: '#ffffff',
-  textSecondary: '#a0a0b0',
-  textMuted: '#8888a0',
-  textSubtle: '#9090a0',
-  textFaint: '#9999aa',
-  textDim: '#888888',
-  textDisabled: '#aaaaaa',
-  textGhost: '#444444',
+  // Text — dark on light
+  textPrimary: '#1C1C1E',
+  textSecondary: '#636366',
+  textMuted: '#8E8E93',
+  textSubtle: '#AEAEB2',
+  textFaint: '#C7C7CC',
+  textDim: '#8E8E93',
+  textDisabled: '#AEAEB2',
+  textGhost: '#D1D1D6',
 
-  // Backgrounds
-  backgroundApp: '#0a0a10',
-  backgroundSurface: '#16161e',
-  backgroundSurfaceAlt: '#0c0c12',
-  backgroundControl: '#24242e',
-  backgroundElevated: '#1e1e2a',
-  backgroundLayer: '#1a1a24',
-  backgroundActionBar: '#101018',
-  backgroundCardAlt: '#1a1a2e',
-  backgroundInput: '#000000',
+  // Backgrounds — neumorphic light grays
+  backgroundApp: '#ECECF0',
+  backgroundSurface: '#F2F2F7',
+  backgroundSurfaceAlt: '#E8E8ED',
+  backgroundControl: '#DCDCE2',
+  backgroundElevated: '#FFFFFF',
+  backgroundLayer: '#E8E8ED',
+  backgroundActionBar: '#F2F2F7',
+  backgroundCardAlt: '#E8E8ED',
+  backgroundInput: '#FFFFFF',
 
-  // Borders
-  borderDefault: '#2d2d38',
-  borderSoft: '#24242e',
-  borderStrong: '#2a2a3a',
-  borderSubtle: '#2a2a34',
-  borderNeutral: '#3a3a4a',
-  borderHandle: '#3e3e50',
+  // Borders — subtle
+  borderDefault: '#D1D1D6',
+  borderSoft: '#E5E5EA',
+  borderStrong: '#C7C7CC',
+  borderSubtle: '#E5E5EA',
+  borderNeutral: '#D1D1D6',
+  borderHandle: '#C7C7CC',
 } as const;
 
 export const SPACING_TOKENS = {
@@ -77,9 +77,24 @@ export const FONT_SIZE_TOKENS = {
 
 export const SHADOW_TOKENS = {
   accentGlow: {
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.08,
     shadowRadius: 8,
+    elevation: 3,
+  },
+  neumorphicLight: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  neumorphicMedium: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
     elevation: 4,
   },
 } as const;

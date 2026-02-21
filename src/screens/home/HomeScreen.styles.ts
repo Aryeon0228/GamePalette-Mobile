@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
-import { COLOR_TOKENS } from '../../constants/designTokens';
+import { COLOR_TOKENS, SHADOW_TOKENS } from '../../constants/designTokens';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const C = COLOR_TOKENS;
@@ -27,15 +27,9 @@ export const styles = StyleSheet.create({
     height: 38,
     borderRadius: 11,
     backgroundColor: C.accentPrimary,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: C.accentPrimary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 4,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   headerLogoImage: {
     width: 25,
@@ -63,8 +57,9 @@ export const styles = StyleSheet.create({
   },
   headerButton: {
     padding: 8,
-    backgroundColor: C.backgroundSurface,
+    backgroundColor: C.backgroundElevated,
     borderRadius: 12,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   content: {
     flex: 1,
@@ -78,7 +73,8 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: C.backgroundSurface,
     borderWidth: 1,
-    borderColor: C.borderStrong,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   image: {
     width: '100%',
@@ -88,19 +84,19 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     top: 12,
     right: 12,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
   },
   sourceImageText: {
-    color: C.textPrimary,
+    color: '#FFFFFF',
     fontSize: 12,
     fontWeight: '500',
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -115,7 +111,7 @@ export const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -134,7 +130,7 @@ export const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.28)',
   },
   valueOverlayButtonText: {
-    color: C.textPrimary,
+    color: '#FFFFFF',
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 0.35,
@@ -143,13 +139,14 @@ export const styles = StyleSheet.create({
     marginHorizontal: 16,
     height: 260,
     borderRadius: 20,
-    backgroundColor: C.backgroundSurface,
+    backgroundColor: C.backgroundElevated,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
     borderWidth: 1,
-    borderColor: C.borderStrong,
+    borderColor: C.borderSoft,
     overflow: 'hidden',
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   emptyIconCircle: {
     width: 72,
@@ -187,10 +184,11 @@ export const styles = StyleSheet.create({
     width: 110,
     height: 80,
     borderRadius: 16,
-    backgroundColor: C.backgroundElevated,
+    backgroundColor: C.backgroundSurface,
     gap: 8,
     borderWidth: 1,
-    borderColor: C.borderStrong,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   imageSourceIconBg: {
     width: 38,
@@ -202,7 +200,7 @@ export const styles = StyleSheet.create({
   imageSourceButtonText: {
     fontSize: 12,
     fontWeight: '600',
-    color: C.accentPrimary,
+    color: C.textPrimary,
   },
 
   // Style Filters - Icon Grid
@@ -220,10 +218,11 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 10,
     borderRadius: 12,
-    backgroundColor: C.backgroundLayer,
+    backgroundColor: C.backgroundElevated,
     gap: 4,
     borderWidth: 1,
-    borderColor: C.backgroundControl,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   styleFilterText: {
     fontSize: 11,
@@ -252,7 +251,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row' as const,
     gap: 3,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: C.backgroundSurfaceAlt,
     borderRadius: 10,
     padding: 3,
   },
@@ -288,12 +287,13 @@ export const styles = StyleSheet.create({
     height: 52,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: C.borderDefault,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   colorSwatchSelected: {
     borderWidth: 2.5,
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.7,
+    shadowOpacity: 0.4,
     shadowRadius: 12,
     elevation: 10,
   },
@@ -323,7 +323,7 @@ export const styles = StyleSheet.create({
     opacity: 0.6,
   },
   colorSwatchEmpty: {
-    backgroundColor: C.backgroundLayer,
+    backgroundColor: C.backgroundSurfaceAlt,
     borderStyle: 'dashed',
     borderWidth: 1.5,
     justifyContent: 'center',
@@ -349,7 +349,7 @@ export const styles = StyleSheet.create({
   algorithmToggle: {
     flexDirection: 'row' as const,
     gap: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: C.backgroundSurfaceAlt,
     borderRadius: 12,
     padding: 3,
   },
@@ -413,7 +413,7 @@ export const styles = StyleSheet.create({
   colorCountBadgeText: {
     fontSize: 13,
     fontWeight: '700' as const,
-    color: C.textPrimary,
+    color: '#FFFFFF',
   },
 
   // Inline Color Detail
@@ -474,14 +474,14 @@ export const styles = StyleSheet.create({
   inlineColorCopyButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,
     gap: 6,
   },
   inlineColorCopyText: {
-    color: C.textPrimary,
+    color: '#FFFFFF',
     fontSize: 13,
     fontWeight: '600',
   },
@@ -507,14 +507,14 @@ export const styles = StyleSheet.create({
     width: 14,
     textAlign: 'center',
     color: 'rgba(255, 255, 255, 0.85)',
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },
   previewChannelTrack: {
     flex: 1,
     height: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+    backgroundColor: 'rgba(0, 0, 0, 0.12)',
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -529,7 +529,7 @@ export const styles = StyleSheet.create({
     width: 32,
     textAlign: 'right',
     color: 'rgba(255, 255, 255, 0.85)',
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },
@@ -556,8 +556,6 @@ export const styles = StyleSheet.create({
     padding: 12,
   },
 
-  // (Old extraction card styles removed - replaced by settingsRow)
-
   // Slider - Inline
   sliderRow: {
     flexDirection: 'row',
@@ -582,7 +580,7 @@ export const styles = StyleSheet.create({
     marginLeft: 8,
   },
   countBadgeText: {
-    color: C.textPrimary,
+    color: '#FFFFFF',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -593,12 +591,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     paddingBottom: 36,
-    backgroundColor: C.backgroundActionBar,
+    backgroundColor: C.backgroundSurface,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     gap: 10,
     borderTopWidth: 1,
-    borderTopColor: C.backgroundElevated,
+    borderTopColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   actionButton: {
     flex: 1,
@@ -607,10 +606,11 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 14,
     borderRadius: 14,
-    backgroundColor: C.backgroundSurface,
+    backgroundColor: C.backgroundElevated,
     gap: 6,
     borderWidth: 1,
-    borderColor: C.backgroundControl,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   actionButtonText: {
     color: C.textSecondary,
@@ -626,14 +626,10 @@ export const styles = StyleSheet.create({
     borderRadius: 14,
     backgroundColor: C.accentPrimary,
     gap: 6,
-    shadowColor: C.accentPrimary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   saveButtonText: {
-    color: C.textPrimary,
+    color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '700',
   },
@@ -644,10 +640,11 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 14,
     borderRadius: 14,
-    backgroundColor: C.backgroundSurface,
+    backgroundColor: C.backgroundElevated,
     gap: 6,
     borderWidth: 1,
-    borderColor: C.backgroundControl,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   exportButtonText: {
     color: C.accentPrimary,
@@ -662,7 +659,6 @@ export const styles = StyleSheet.create({
   },
   colorDetailBackground: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   colorDetailContent: {
     backgroundColor: C.backgroundSurface,
@@ -671,6 +667,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 40,
     maxHeight: '70%',
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   colorDetailHandle: {
     width: 40,
@@ -690,7 +687,8 @@ export const styles = StyleSheet.create({
     height: 80,
     borderRadius: 16,
     borderWidth: 2,
-    borderColor: C.borderDefault,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   colorDetailValues: {
     flex: 1,
@@ -737,14 +735,14 @@ export const styles = StyleSheet.create({
   modalColorCopyButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 10,
     gap: 6,
   },
   modalColorCopyText: {
-    color: C.textPrimary,
+    color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -816,13 +814,13 @@ export const styles = StyleSheet.create({
   },
   variationColor: {
     width: '100%',
-    height: 48,
+    height: 40,
   },
   variationHex: {
-    fontSize: 8,
+    fontSize: 7,
     color: C.textSecondary,
     fontFamily: 'monospace',
-    marginTop: 4,
+    marginTop: 3,
   },
   variationLabel: {
     fontSize: 8,
@@ -860,8 +858,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 16,
-    backgroundColor: C.backgroundSurface,
+    backgroundColor: C.backgroundElevated,
     marginRight: 8,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   harmonyTypeText: {
     fontSize: 12,
@@ -888,7 +887,8 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 6,
     borderWidth: 2,
-    borderColor: C.borderDefault,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   harmonyColorSwatchBase: {
     borderColor: C.accentPrimary,
@@ -903,16 +903,16 @@ export const styles = StyleSheet.create({
   // Save Modal
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: C.backgroundSurface,
+    backgroundColor: C.backgroundElevated,
     borderRadius: 16,
     padding: 24,
     width: '85%',
     maxWidth: 340,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   modalTitle: {
     fontSize: 20,
@@ -922,7 +922,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   modalInput: {
-    backgroundColor: C.backgroundInput,
+    backgroundColor: C.backgroundSurfaceAlt,
     borderRadius: 10,
     padding: 14,
     fontSize: 16,
@@ -937,19 +937,19 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 10,
-    backgroundColor: C.borderDefault,
+    backgroundColor: C.backgroundSurfaceAlt,
     alignItems: 'center',
   },
   modalButtonPrimary: {
     backgroundColor: C.accentPrimary,
   },
   modalButtonText: {
-    color: C.textDisabled,
+    color: C.textSecondary,
     fontSize: 16,
     fontWeight: '600',
   },
   modalButtonTextPrimary: {
-    color: C.textPrimary,
+    color: '#FFFFFF',
   },
 
   // Export Modal
@@ -959,7 +959,6 @@ export const styles = StyleSheet.create({
   },
   exportModalBackground: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   exportModalContent: {
     backgroundColor: C.backgroundSurface,
@@ -967,6 +966,7 @@ export const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     paddingHorizontal: 20,
     paddingBottom: 40,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   exportModalHandle: {
     width: 40,
@@ -994,10 +994,11 @@ export const styles = StyleSheet.create({
 
   // Palette Card for export
   paletteCard: {
-    backgroundColor: C.backgroundLayer,
+    backgroundColor: C.backgroundElevated,
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   paletteCardImage: {
     width: '100%',
@@ -1095,9 +1096,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: C.backgroundControl,
+    backgroundColor: C.backgroundSurfaceAlt,
     gap: 8,
     minHeight: 48,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   snsTypeText: {
     fontSize: 14,
@@ -1107,7 +1109,7 @@ export const styles = StyleSheet.create({
   snsTypeRatio: {
     fontSize: 11,
     color: C.textMuted,
-    backgroundColor: C.backgroundLayer,
+    backgroundColor: C.backgroundSurface,
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
@@ -1124,9 +1126,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 12,
     borderRadius: 20,
-    backgroundColor: C.backgroundControl,
+    backgroundColor: C.backgroundSurfaceAlt,
     minHeight: 44,
     justifyContent: 'center',
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   cardOptionText: {
     fontSize: 12,
@@ -1263,7 +1266,7 @@ export const styles = StyleSheet.create({
   twitterUnifiedStatValue: {
     fontSize: 10,
     fontWeight: '700',
-    color: C.textPrimary,
+    color: '#FFFFFF',
   },
   twitterUnifiedStatLabel: {
     fontSize: 6,
@@ -1358,7 +1361,7 @@ export const styles = StyleSheet.create({
   snsCardStatValue: {
     fontSize: 16,
     fontWeight: '700',
-    color: C.textPrimary,
+    color: '#FFFFFF',
   },
   snsCardStatLabel: {
     fontSize: 10,
@@ -1388,7 +1391,7 @@ export const styles = StyleSheet.create({
   },
   formatSectionTitle: {
     fontSize: 12,
-    color: C.textDim,
+    color: C.textMuted,
     fontWeight: '600',
     marginBottom: 10,
     letterSpacing: 0.5,
@@ -1407,9 +1410,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 14,
     borderRadius: 10,
-    backgroundColor: C.backgroundControl,
+    backgroundColor: C.backgroundSurfaceAlt,
     gap: 6,
     minHeight: 50,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   formatOptionText: {
     fontSize: 13,
@@ -1425,18 +1429,19 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     gap: 8,
     marginBottom: 16,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   exportConfirmButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: C.textPrimary,
+    color: '#FFFFFF',
   },
   quickCopySection: {
     marginBottom: 8,
   },
   quickCopyTitle: {
     fontSize: 12,
-    color: C.textDim,
+    color: C.textMuted,
     fontWeight: '600',
     marginBottom: 10,
   },
@@ -1450,8 +1455,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 14,
     borderRadius: 10,
-    backgroundColor: C.backgroundControl,
+    backgroundColor: C.backgroundSurfaceAlt,
     minHeight: 44,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   quickCopyButtonText: {
     fontSize: 13,
@@ -1463,11 +1469,12 @@ export const styles = StyleSheet.create({
   histogramCard: {
     marginHorizontal: 16,
     marginTop: 4,
-    backgroundColor: C.backgroundSurface,
+    backgroundColor: C.backgroundElevated,
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
-    borderColor: C.backgroundElevated,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   histogramHeader: {
     flexDirection: 'row',
@@ -1482,7 +1489,7 @@ export const styles = StyleSheet.create({
   histogramTitle: {
     fontSize: 10,
     fontWeight: '600',
-    color: C.textFaint,
+    color: C.textMuted,
     letterSpacing: 0.5,
   },
   histogramStats: {
@@ -1497,7 +1504,7 @@ export const styles = StyleSheet.create({
   },
   histogramContrastLabel: {
     fontSize: 10,
-    color: C.textFaint,
+    color: C.textMuted,
     marginRight: 6,
   },
   histogramBars: {
@@ -1551,7 +1558,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   histogramStatItemAvg: {
-    backgroundColor: C.backgroundCardAlt,
+    backgroundColor: C.backgroundSurfaceAlt,
   },
   histogramStatLabel: {
     fontSize: 9,
@@ -1572,7 +1579,7 @@ export const styles = StyleSheet.create({
   // Camera
   cameraContainer: {
     flex: 1,
-    backgroundColor: C.backgroundInput,
+    backgroundColor: '#000000',
   },
   camera: {
     ...StyleSheet.absoluteFillObject,
@@ -1603,13 +1610,13 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 4,
-    borderColor: C.textPrimary,
+    borderColor: '#FFFFFF',
   },
   captureButtonInner: {
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: C.textPrimary,
+    backgroundColor: '#FFFFFF',
   },
 
   // Info Modal
@@ -1619,6 +1626,7 @@ export const styles = StyleSheet.create({
     padding: 24,
     alignItems: 'center',
     minHeight: 520,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   infoModalHeader: {
     width: '100%',
@@ -1632,16 +1640,10 @@ export const styles = StyleSheet.create({
     height: 54,
     borderRadius: 16,
     backgroundColor: C.accentPrimary,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.25)',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
-    shadowColor: C.accentPrimary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 5,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   infoHeaderLogoImage: {
     width: 34,
@@ -1673,6 +1675,7 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     gap: 8,
     marginBottom: 14,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   infoModalButtonText: {
     fontSize: 15,
@@ -1702,6 +1705,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   infoModalLanguageButtonText: {
     fontSize: 13,
@@ -1722,12 +1726,13 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   infoModalCloseButtonText: {
     fontSize: 16,
     fontWeight: '600',
     lineHeight: 20,
-    color: C.textPrimary,
+    color: '#FFFFFF',
   },
 
   // Toast
@@ -1742,18 +1747,14 @@ export const styles = StyleSheet.create({
   toastContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(22, 22, 30, 0.95)',
+    backgroundColor: C.backgroundElevated,
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 12,
     gap: 8,
     borderWidth: 1,
     borderColor: `${C.success}40`,
-    shadowColor: C.backgroundInput,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   toastText: {
     color: C.textPrimary,
@@ -1840,6 +1841,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 12,
     paddingBottom: 4,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   inlineSettingsHeaderRow: {
     flexDirection: 'row',
@@ -1950,6 +1952,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 12,
     gap: 4,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   advancedPresetButtonCompact: {
     paddingVertical: 8,
@@ -1991,6 +1994,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 12,
     gap: 2,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   advancedMethodTitle: {
     fontSize: 14,
@@ -2015,6 +2019,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   advancedCountBadge: {
     width: 44,
@@ -2026,7 +2031,7 @@ export const styles = StyleSheet.create({
   advancedCountText: {
     fontSize: 18,
     fontWeight: '700',
-    color: C.textPrimary,
+    color: '#FFFFFF',
   },
   advancedToggleRow: {
     flexDirection: 'row',
@@ -2034,7 +2039,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 14,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.06)',
+    borderTopColor: C.borderSoft,
     marginBottom: 16,
   },
   advancedToggleLabel: {
@@ -2072,6 +2077,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 2,
     position: 'relative',
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   cvdBarPair: {
     flexDirection: 'row',

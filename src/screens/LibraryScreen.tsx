@@ -11,6 +11,7 @@ import {
   Modal,
   Share,
 } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import * as Sharing from 'expo-sharing';
@@ -20,6 +21,9 @@ import { usePaletteStore, SavedPalette } from '../store/paletteStore';
 import { useThemeStore } from '../store/themeStore';
 import ExportModal from './home/modals/ExportModal';
 import { type AppLanguage } from '../lib/colorUtils';
+import { COLOR_TOKENS, SHADOW_TOKENS, RADIUS_TOKENS } from '../constants/designTokens';
+
+const C = COLOR_TOKENS;
 
 interface LibraryScreenProps {
   onNavigateBack: () => void;
@@ -422,10 +426,11 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
         onRequestClose={() => setMenuPalette(null)}
       >
         <TouchableOpacity
-          style={[styles.modalOverlay, { backgroundColor: theme.modalOverlay }]}
+          style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setMenuPalette(null)}
         >
+          <BlurView intensity={40} tint="light" style={StyleSheet.absoluteFill} />
           <View style={[styles.menuModal, { backgroundColor: theme.backgroundSecondary }]}>
             <Text style={[styles.menuTitle, { color: theme.textPrimary, borderBottomColor: theme.border }]}>
               {menuPalette?.name}
@@ -474,10 +479,11 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
         onRequestClose={() => setExportPalette(null)}
       >
         <TouchableOpacity
-          style={[styles.modalOverlay, { backgroundColor: theme.modalOverlay }]}
+          style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setExportPalette(null)}
         >
+          <BlurView intensity={40} tint="light" style={StyleSheet.absoluteFill} />
           <View style={[styles.exportModal, { backgroundColor: theme.backgroundSecondary }]}>
             <View style={[styles.exportHandle, { backgroundColor: theme.border }]} />
             <Text style={[styles.exportTitle, { color: theme.textPrimary }]}>{t.exportPaletteTitle}</Text>
@@ -590,7 +596,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a0a10',
+    backgroundColor: C.backgroundApp,
   },
   header: {
     flexDirection: 'row',
@@ -604,14 +610,15 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#16161e',
+    backgroundColor: C.backgroundElevated,
     justifyContent: 'center',
     alignItems: 'center',
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
+    color: C.textPrimary,
   },
   headerSpacer: {
     width: 40,
@@ -624,16 +631,19 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#16161e',
-    borderRadius: 12,
+    backgroundColor: C.backgroundElevated,
+    borderRadius: RADIUS_TOKENS.md,
     paddingHorizontal: 14,
     paddingVertical: 12,
     gap: 10,
+    borderWidth: 1,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   searchInput: {
     flex: 1,
     fontSize: 15,
-    color: '#fff',
+    color: C.textPrimary,
     padding: 0,
   },
   sectionHeader: {
@@ -646,21 +656,24 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#fff',
+    color: C.textPrimary,
   },
   sectionCount: {
     fontSize: 14,
-    color: '#666',
+    color: C.textMuted,
   },
   list: {
     paddingHorizontal: 16,
     paddingBottom: 100,
   },
   card: {
-    backgroundColor: '#16161e',
-    borderRadius: 16,
+    backgroundColor: C.backgroundElevated,
+    borderRadius: RADIUS_TOKENS.lg,
     marginBottom: 16,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -671,7 +684,7 @@ const styles = StyleSheet.create({
   },
   thumbnail: {
     height: 140,
-    backgroundColor: '#0c0c12',
+    backgroundColor: C.backgroundSurfaceAlt,
   },
   thumbnailImage: {
     width: '100%',
@@ -682,7 +695,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0c0c12',
+    backgroundColor: C.backgroundSurfaceAlt,
   },
   menuButton: {
     position: 'absolute',
@@ -691,7 +704,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -704,7 +717,7 @@ const styles = StyleSheet.create({
   colorSwatch: {
     flex: 1,
     height: 32,
-    borderRadius: 6,
+    borderRadius: RADIUS_TOKENS.sm,
   },
   cardInfo: {
     padding: 12,
@@ -718,13 +731,13 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#fff',
+    color: C.textPrimary,
     flex: 1,
   },
   paletteLabel: {
     fontSize: 10,
     fontWeight: '600',
-    color: '#666',
+    color: C.textMuted,
     letterSpacing: 0.5,
   },
   tagsRow: {
@@ -734,34 +747,35 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   tag: {
-    backgroundColor: '#24242e',
+    backgroundColor: C.borderSoft,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
   },
   tagText: {
     fontSize: 11,
-    color: '#888',
+    color: C.textSecondary,
     fontWeight: '500',
   },
   dateText: {
     fontSize: 11,
-    color: '#555',
+    color: C.textSubtle,
     marginLeft: 'auto',
   },
   exportButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2d2d38',
+    backgroundColor: C.backgroundSurfaceAlt,
     paddingVertical: 10,
     borderRadius: 8,
     gap: 6,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   exportButtonText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#fff',
+    color: C.textPrimary,
   },
   emptyState: {
     flex: 1,
@@ -773,45 +787,46 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#16161e',
+    backgroundColor: C.backgroundElevated,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   emptyTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
+    color: C.textPrimary,
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 14,
-    color: '#666',
+    color: C.textMuted,
     textAlign: 'center',
     lineHeight: 20,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     justifyContent: 'flex-end',
   },
   menuModal: {
-    backgroundColor: '#16161e',
+    backgroundColor: C.backgroundSurface,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 20,
     paddingBottom: 40,
     paddingHorizontal: 20,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   menuTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#fff',
+    color: C.textPrimary,
     textAlign: 'center',
     marginBottom: 20,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#24242e',
+    borderBottomColor: C.borderSoft,
   },
   menuItem: {
     flexDirection: 'row',
@@ -821,29 +836,30 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     fontSize: 16,
-    color: '#fff',
+    color: C.textPrimary,
   },
   menuItemDanger: {
     borderTopWidth: 1,
-    borderTopColor: '#24242e',
+    borderTopColor: C.borderSoft,
     marginTop: 8,
     paddingTop: 20,
   },
   menuItemTextDanger: {
-    color: '#ff4444',
+    color: C.danger,
   },
   exportModal: {
-    backgroundColor: '#16161e',
+    backgroundColor: C.backgroundSurface,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 12,
     paddingBottom: 40,
     paddingHorizontal: 20,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   exportHandle: {
     width: 36,
     height: 4,
-    backgroundColor: '#3e3e50',
+    backgroundColor: C.borderHandle,
     borderRadius: 2,
     alignSelf: 'center',
     marginBottom: 16,
@@ -851,7 +867,7 @@ const styles = StyleSheet.create({
   exportTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
+    color: C.textPrimary,
     textAlign: 'center',
     marginBottom: 24,
   },
@@ -872,6 +888,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   exportIconText: {
     fontSize: 16,
@@ -880,7 +897,7 @@ const styles = StyleSheet.create({
   },
   exportOptionText: {
     fontSize: 12,
-    color: '#888',
+    color: C.textSecondary,
     fontWeight: '500',
   },
 });

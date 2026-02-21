@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, Linking, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Linking, Image, StyleSheet as RNStyleSheet } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
@@ -53,7 +54,8 @@ export default function InfoModal({
       animationType="fade"
       onRequestClose={onClose}
     >
-      <View style={[styles.modalOverlay, { backgroundColor: theme.modalOverlay }]}>
+      <View style={styles.modalOverlay}>
+        <BlurView intensity={40} tint="light" style={RNStyleSheet.absoluteFill} />
         <View style={[styles.infoModalContent, { backgroundColor: theme.backgroundSecondary }]}>
           <View style={styles.infoModalHeader}>
             <View style={styles.infoHeaderLogoMark}>

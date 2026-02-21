@@ -15,6 +15,9 @@ import {
   getContrastColor,
   generateValueVariations,
 } from '../lib/styleFilters';
+import { COLOR_TOKENS, SHADOW_TOKENS, RADIUS_TOKENS } from '../constants/designTokens';
+
+const C = COLOR_TOKENS;
 
 interface ColorDetailPanelProps {
   color: string;
@@ -133,15 +136,18 @@ export default function ColorDetailPanel({ color, onClose }: ColorDetailPanelPro
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#1a1a2e',
-    borderRadius: 16,
+    backgroundColor: C.backgroundElevated,
+    borderRadius: RADIUS_TOKENS.lg,
     padding: 16,
     marginHorizontal: 16,
     marginVertical: 8,
+    borderWidth: 1,
+    borderColor: C.borderSoft,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   colorPreview: {
     height: 80,
-    borderRadius: 12,
+    borderRadius: RADIUS_TOKENS.md,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
@@ -159,7 +165,7 @@ const styles = StyleSheet.create({
   },
   formatSelector: {
     flexDirection: 'row',
-    backgroundColor: '#0d0d1a',
+    backgroundColor: C.backgroundSurfaceAlt,
     borderRadius: 8,
     padding: 4,
   },
@@ -169,27 +175,28 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   formatButtonActive: {
-    backgroundColor: '#3a3a5c',
+    backgroundColor: C.accentPrimary,
   },
   formatButtonText: {
-    color: '#888',
+    color: C.textMuted,
     fontSize: 12,
     fontWeight: '600',
   },
   formatButtonTextActive: {
-    color: '#fff',
+    color: '#FFFFFF',
   },
   copyButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#4a4a6a',
+    backgroundColor: C.accentPrimary,
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 8,
     gap: 6,
+    ...SHADOW_TOKENS.neumorphicLight,
   },
   copyButtonSuccess: {
-    backgroundColor: '#2d7a4d',
+    backgroundColor: C.success,
   },
   copyButtonText: {
     color: '#fff',
@@ -200,7 +207,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   variationsLabel: {
-    color: '#888',
+    color: C.textMuted,
     fontSize: 12,
     marginBottom: 8,
   },
@@ -211,7 +218,7 @@ const styles = StyleSheet.create({
   variationSwatch: {
     flex: 1,
     height: 32,
-    borderRadius: 6,
+    borderRadius: RADIUS_TOKENS.sm,
   },
   infoGrid: {
     flexDirection: 'row',
@@ -221,12 +228,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   infoLabel: {
-    color: '#666',
+    color: C.textMuted,
     fontSize: 11,
     marginBottom: 4,
   },
   infoValue: {
-    color: '#fff',
+    color: C.textPrimary,
     fontSize: 14,
     fontWeight: '600',
   },

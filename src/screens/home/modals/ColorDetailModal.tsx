@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, ScrollView, StyleSheet } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from '../HomeScreen.styles';
@@ -65,7 +66,8 @@ export default function ColorDetailModal({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View style={[styles.colorDetailOverlay, { backgroundColor: theme.modalOverlay }]}>
+      <View style={styles.colorDetailOverlay}>
+        <BlurView intensity={40} tint="light" style={StyleSheet.absoluteFill} />
         <TouchableOpacity
           style={styles.colorDetailBackground}
           onPress={onClose}

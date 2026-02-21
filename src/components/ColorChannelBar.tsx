@@ -5,6 +5,9 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { COLOR_TOKENS } from '../constants/designTokens';
+
+const C = COLOR_TOKENS;
 
 interface ColorChannelBarProps {
   label: string;
@@ -62,7 +65,7 @@ const styles = StyleSheet.create({
     width: 20,
     fontSize: 11,
     fontWeight: '600',
-    color: '#666',
+    color: C.textMuted,
   },
   channelBarContainer: {
     flex: 1,
@@ -73,13 +76,13 @@ const styles = StyleSheet.create({
   },
   channelBarBg: {
     flex: 1,
-    backgroundColor: '#24242e',
+    backgroundColor: C.borderSoft,
     borderRadius: 4,
     overflow: 'hidden',
   },
   hueGradientBar: {
     flex: 1,
-    backgroundColor: '#24242e',
+    backgroundColor: C.borderSoft,
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -90,7 +93,7 @@ const styles = StyleSheet.create({
   channelValue: {
     width: 36,
     fontSize: 12,
-    color: '#888',
+    color: C.textSecondary,
     textAlign: 'right',
     fontFamily: 'monospace',
   },

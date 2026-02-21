@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, TextInput, StyleSheet } from 'react-native';
+import { BlurView } from 'expo-blur';
 
 import { styles } from '../HomeScreen.styles';
 import { ThemeColors } from '../../../store/themeStore';
@@ -33,7 +34,8 @@ export default function SavePaletteModal({
       animationType="fade"
       onRequestClose={onClose}
     >
-      <View style={[styles.modalOverlay, { backgroundColor: theme.modalOverlay }]}>
+      <View style={styles.modalOverlay}>
+        <BlurView intensity={40} tint="light" style={StyleSheet.absoluteFill} />
         <View style={[styles.modalContent, { backgroundColor: theme.backgroundSecondary }]}>
           <Text style={[styles.modalTitle, { color: theme.textPrimary }]}>
             {isKorean ? '팔레트 저장' : 'Save Palette'}

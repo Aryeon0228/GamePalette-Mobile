@@ -214,28 +214,17 @@ export async function analyzeLuminosityHistogram(
   }
 }
 
-// Decode image without sampling (for more accurate histogram)
+// Decode image with 2x sampling for histogram accuracy
 async function decodeImageForHistogram(base64: string): Promise<RgbColor[]> {
   try {
-    const binaryString = atob(base64);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-
-    const png = UPNG.decode(bytes.buffer);
+    const bytes = base64ToUint8Array(base64);
+    const png = UPNG.decode(bytes.buffer as ArrayBuffer);
     const rgbaData = new Uint8Array(UPNG.toRGBA8(png)[0]);
 
-    // Sample every 2nd pixel for balance between accuracy and performance
     const pixels: RgbColor[] = [];
     for (let i = 0; i < rgbaData.length; i += 8) { // Every 2nd pixel
-      const r = rgbaData[i];
-      const g = rgbaData[i + 1];
-      const b = rgbaData[i + 2];
-      const a = rgbaData[i + 3];
-
-      if (a < 128) continue;
-      pixels.push({ r, g, b });
+      if (rgbaData[i + 3] < 128) continue;
+      pixels.push({ r: rgbaData[i], g: rgbaData[i + 1], b: rgbaData[i + 2] });
     }
 
     return pixels;
@@ -249,31 +238,32 @@ async function decodeImageForHistogram(base64: string): Promise<RgbColor[]> {
 // IMAGE DECODING
 // ============================================
 
+function base64ToUint8Array(base64: string): Uint8Array {
+  const binaryString = atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+}
+
 async function decodeImage(base64: string): Promise<RgbColor[]> {
   try {
-    // Convert base64 to ArrayBuffer
-    const binaryString = atob(base64);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-
-    // Decode PNG
-    const png = UPNG.decode(bytes.buffer);
+    const bytes = base64ToUint8Array(base64);
+    const png = UPNG.decode(bytes.buffer as ArrayBuffer);
     const rgbaData = new Uint8Array(UPNG.toRGBA8(png)[0]);
 
-    // Extract pixels (sample every 4th pixel for performance)
+    // Pre-allocate array with estimated capacity
+    const totalPixels = rgbaData.length / 4;
+    const estimatedSampled = Math.ceil(totalPixels / 4);
     const pixels: RgbColor[] = [];
-    for (let i = 0; i < rgbaData.length; i += 16) { // Every 4th pixel (4 bytes per pixel * 4)
-      const r = rgbaData[i];
-      const g = rgbaData[i + 1];
-      const b = rgbaData[i + 2];
-      const a = rgbaData[i + 3];
+    pixels.length = 0; // hint to engine
 
-      // Skip transparent pixels
-      if (a < 128) continue;
-
-      pixels.push({ r, g, b });
+    // Sample every 4th pixel for performance
+    for (let i = 0; i < rgbaData.length; i += 16) {
+      if (rgbaData[i + 3] < 128) continue; // skip transparent
+      pixels.push({ r: rgbaData[i], g: rgbaData[i + 1], b: rgbaData[i + 2] });
     }
 
     return pixels;
@@ -601,25 +591,32 @@ function findPeaks(smoothedCounts: number[], histogram: HueBin[]): HueBin[] {
     const next = smoothedCounts[(i + 1) % n];
 
     if (curr >= prev && curr >= next && curr > 0) {
-      const peakBin: HueBin = {
-        hue: histogram[i].hue,
-        count: histogram[i].count,
-        pixels: [...histogram[i].pixels]
-      };
+      // Collect pixel arrays by reference instead of spreading
+      const pixelArrays: PixelData[][] = [histogram[i].pixels];
+      let totalCount = histogram[i].count;
 
       const prevIdx = (i - 1 + n) % n;
       const nextIdx = (i + 1) % n;
 
-      if (smoothedCounts[prevIdx] > smoothedCounts[i] * 0.5) {
-        peakBin.count += histogram[prevIdx].count;
-        peakBin.pixels.push(...histogram[prevIdx].pixels);
+      if (smoothedCounts[prevIdx] > curr * 0.5) {
+        totalCount += histogram[prevIdx].count;
+        pixelArrays.push(histogram[prevIdx].pixels);
       }
-      if (smoothedCounts[nextIdx] > smoothedCounts[i] * 0.5) {
-        peakBin.count += histogram[nextIdx].count;
-        peakBin.pixels.push(...histogram[nextIdx].pixels);
+      if (smoothedCounts[nextIdx] > curr * 0.5) {
+        totalCount += histogram[nextIdx].count;
+        pixelArrays.push(histogram[nextIdx].pixels);
       }
 
-      peaks.push(peakBin);
+      // Flatten once instead of multiple spreads
+      const pixels = pixelArrays.length === 1
+        ? pixelArrays[0]
+        : ([] as PixelData[]).concat(...pixelArrays);
+
+      peaks.push({
+        hue: histogram[i].hue,
+        count: totalCount,
+        pixels,
+      });
     }
   }
 

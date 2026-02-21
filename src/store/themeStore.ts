@@ -43,7 +43,7 @@ export const APP_THEME: ThemeColors = {
   accentLight: COLOR_TOKENS.accentLight,
 
   buttonBg: COLOR_TOKENS.borderDefault,
-  modalOverlay: 'rgba(0, 0, 0, 0.7)',
+  modalOverlay: 'rgba(120, 120, 128, 0.2)',
 };
 
 interface ThemeState {
