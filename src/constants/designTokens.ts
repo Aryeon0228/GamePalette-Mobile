@@ -4,23 +4,23 @@
  */
 
 export const COLOR_TOKENS = {
-  // Brand / Accent — clean charcoal
-  accentPrimary: '#2C2C2E',
-  accentLight: '#48484A',
+  // Brand / Accent — deeper charcoal for a premium feel
+  accentPrimary: '#1C1C1E',
+  accentLight: '#2C2C2E',
   accentInteractive: '#3A3A3C',
-  accentMuted: '#636366',
+  accentMuted: '#48484A',
   accentVariationLightness: '#636366',
   accentVariationHueShift: '#48484A',
 
   // Semantic
-  warning: '#F5A623',
+  warning: '#FF9500',
   success: '#34C759',
   danger: '#FF3B30',
-  info: '#5AC8FA',
+  info: '#32ADE6',
 
-  // Text — dark on light
-  textPrimary: '#1C1C1E',
-  textSecondary: '#636366',
+  // Text
+  textPrimary: '#000000',
+  textSecondary: '#3A3A3C',
   textMuted: '#8E8E93',
   textSubtle: '#AEAEB2',
   textFaint: '#C7C7CC',
@@ -28,24 +28,24 @@ export const COLOR_TOKENS = {
   textDisabled: '#AEAEB2',
   textGhost: '#D1D1D6',
 
-  // Backgrounds — neumorphic light grays
-  backgroundApp: '#ECECF0',
-  backgroundSurface: '#F2F2F7',
-  backgroundSurfaceAlt: '#E8E8ED',
-  backgroundControl: '#DCDCE2',
+  // Backgrounds — cleaner canvas
+  backgroundApp: '#F5F5F7',
+  backgroundSurface: '#FFFFFF',
+  backgroundSurfaceAlt: '#F2F2F7',
+  backgroundControl: '#E5E5EA',
   backgroundElevated: '#FFFFFF',
-  backgroundLayer: '#E8E8ED',
-  backgroundActionBar: '#F2F2F7',
-  backgroundCardAlt: '#E8E8ED',
-  backgroundInput: '#FFFFFF',
+  backgroundLayer: '#F2F2F7',
+  backgroundActionBar: '#FFFFFF',
+  backgroundCardAlt: '#F2F2F7',
+  backgroundInput: '#F2F2F7',
 
-  // Borders — subtle
-  borderDefault: '#D1D1D6',
-  borderSoft: '#E5E5EA',
-  borderStrong: '#C7C7CC',
-  borderSubtle: '#E5E5EA',
-  borderNeutral: '#D1D1D6',
-  borderHandle: '#C7C7CC',
+  // Borders — subtle glass
+  borderDefault: '#E5E5EA',
+  borderSoft: '#F2F2F7',
+  borderStrong: '#D1D1D6',
+  borderSubtle: '#F2F2F7',
+  borderNeutral: '#E5E5EA',
+  borderHandle: '#D1D1D6',
 } as const;
 
 export const SPACING_TOKENS = {
@@ -59,10 +59,10 @@ export const SPACING_TOKENS = {
 } as const;
 
 export const RADIUS_TOKENS = {
-  sm: 6,
-  md: 10,
-  lg: 14,
-  xl: 20,
+  sm: 8,
+  md: 12,
+  lg: 18,
+  xl: 24,
   pill: 999,
 } as const;
 
@@ -72,36 +72,43 @@ export const FONT_SIZE_TOKENS = {
   md: 14,
   lg: 16,
   xl: 20,
-  title: 23,
+  title: 24,
 } as const;
 
 export const SHADOW_TOKENS = {
   accentGlow: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 4,
   },
   neumorphicLight: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
     elevation: 2,
   },
   neumorphicMedium: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 4,
+    shadowRadius: 24,
+    elevation: 6,
+  },
+  glassmorphism: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.05,
+    shadowRadius: 30,
+    elevation: 8,
   },
 } as const;
 
 export const ALPHA_TOKENS = {
-  chipBg: '14',
-  chipBorder: '2e',
+  chipBg: '1A', // A bit more opaque
+  chipBorder: '33', // Stronger border
 } as const;
 
 export type ColorToken = keyof typeof COLOR_TOKENS;

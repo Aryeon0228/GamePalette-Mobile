@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from './HomeScreen.styles';
@@ -30,7 +31,10 @@ function ActionBar({
   };
 
   return (
-    <View style={[styles.actionBar, { backgroundColor: theme.backgroundSecondary, borderTopColor: theme.border }]}
+    <BlurView
+      intensity={70}
+      tint={theme.background === '#000000' || theme.background === '#1C1C1E' ? 'dark' : 'light'}
+      style={[styles.actionBar, { backgroundColor: theme.backgroundSecondary + '88', borderTopColor: theme.border }]}
     >
       <TouchableOpacity
         style={[styles.actionButton, neutralButtonStyle]}
@@ -68,7 +72,7 @@ function ActionBar({
           {isKorean ? '내보내기' : 'Export'}
         </Text>
       </TouchableOpacity>
-    </View>
+    </BlurView>
   );
 }
 

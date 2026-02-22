@@ -10,6 +10,7 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
+import { BlurView } from 'expo-blur';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
 import { CameraView } from 'expo-camera';
@@ -540,7 +541,11 @@ export default function HomeScreen({
         />
 
         {/* ── Settings Summary Bar ── */}
-        <View style={[styles.summaryBar, { backgroundColor: theme.backgroundCard }]}>
+        <BlurView
+          intensity={60}
+          tint={theme.background === '#000000' || theme.background === '#1C1C1E' ? 'dark' : 'light'}
+          style={[styles.summaryBar, { backgroundColor: theme.backgroundCard + '99' }]}
+        >
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -580,7 +585,7 @@ export default function HomeScreen({
               color={isAdvancedMounted ? theme.accent : theme.textSecondary}
             />
           </TouchableOpacity>
-        </View>
+        </BlurView>
 
         {/* Swatch affordance hint */}
         {processedColors.length > 0 && selectedColorIndex === null && !hasSeenColorTapHint && (
@@ -720,93 +725,93 @@ export default function HomeScreen({
               const trackBg = isLight ? 'rgba(0,0,0,0.12)' : 'rgba(0,0,0,0.25)';
               const copyBg = isLight ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.3)';
               return (
-              <View style={[styles.inlineColorPreview, { backgroundColor: colorInfo.hex }]}>
-                <View style={styles.previewTopRow}>
-                  <Text style={[styles.inlineColorPreviewValue, { color: fgColor }]}>
-                    {getFormattedColor(colorInfo, colorFormat)}
-                  </Text>
-                  <TouchableOpacity
-                    style={[styles.inlineColorCopyButton, { backgroundColor: copyBg }]}
-                    onPress={() => copyColor(getFormattedColor(colorInfo, colorFormat), colorFormat)}
-                  >
-                    <Ionicons name="copy-outline" size={16} color={fgColor} />
-                    <Text style={[styles.inlineColorCopyText, { color: fgColor }]}>{copyButtonLabel}</Text>
-                  </TouchableOpacity>
-                </View>
+                <View style={[styles.inlineColorPreview, { backgroundColor: colorInfo.hex }]}>
+                  <View style={styles.previewTopRow}>
+                    <Text style={[styles.inlineColorPreviewValue, { color: fgColor }]}>
+                      {getFormattedColor(colorInfo, colorFormat)}
+                    </Text>
+                    <TouchableOpacity
+                      style={[styles.inlineColorCopyButton, { backgroundColor: copyBg }]}
+                      onPress={() => copyColor(getFormattedColor(colorInfo, colorFormat), colorFormat)}
+                    >
+                      <Ionicons name="copy-outline" size={16} color={fgColor} />
+                      <Text style={[styles.inlineColorCopyText, { color: fgColor }]}>{copyButtonLabel}</Text>
+                    </TouchableOpacity>
+                  </View>
 
-                {/* Fixed-height channel section: keep HEX/RGB/HSL card height stable */}
-                <View style={styles.previewChannelContainer}>
-                  {colorFormat === 'RGB' && (
-                    <View style={styles.previewChannelBars}>
-                      {[
-                        { label: 'R', value: colorInfo.rgb.r, max: 255, color: '#ef4444', display: `${colorInfo.rgb.r}` },
-                        { label: 'G', value: colorInfo.rgb.g, max: 255, color: '#22c55e', display: `${colorInfo.rgb.g}` },
-                        { label: 'B', value: colorInfo.rgb.b, max: 255, color: '#3b82f6', display: `${colorInfo.rgb.b}` },
-                      ].map((ch) => (
-                        <View key={ch.label} style={styles.previewChannelRow}>
-                          <Text style={[styles.previewChannelLabel, { color: fgMuted, textShadowColor: shadowColor }]}>{ch.label}</Text>
-                          <View style={[styles.previewChannelTrack, { backgroundColor: trackBg }]}>
-                            <View style={[styles.previewChannelFill, { width: `${(ch.value / ch.max) * 100}%`, backgroundColor: ch.color }]} />
-                          </View>
-                          <Text style={[styles.previewChannelValue, { color: fgMuted, textShadowColor: shadowColor }]}>{ch.display}</Text>
-                        </View>
-                      ))}
-                    </View>
-                  )}
-                {colorFormat === 'HSL' && (() => {
-                  const { h, s, l } = colorInfo.hsl;
-                  const hueRgb = hslToRgb(h, 100, 50);
-                  const hueHex = rgbToHex(hueRgb.r, hueRgb.g, hueRgb.b);
-                  const satRgb = hslToRgb(h, s, 50);
-                  const satHex = rgbToHex(satRgb.r, satRgb.g, satRgb.b);
-                  const lightnessGray = Math.round((l / 100) * 255);
-                  const boostedGray = lightnessGray < 128
-                    ? Math.max(0, lightnessGray - 35)
-                    : Math.min(255, lightnessGray + 35);
-                  const lightnessHex = rgbToHex(boostedGray, boostedGray, boostedGray);
-                  const lightnessBorder = boostedGray >= 180
-                    ? 'rgba(0,0,0,0.32)'
-                    : 'rgba(255,255,255,0.4)';
-                  const hslTrackBg = isLight ? 'rgba(0,0,0,0.18)' : 'rgba(255,255,255,0.18)';
-                  const hslChannels: Array<{
-                    label: string;
-                    value: number;
-                    max: number;
-                    barColor: string;
-                    display: string;
-                    borderColor?: string;
-                  }> = [
-                    { label: 'H', value: h, max: 360, barColor: hueHex, display: `${h}°` },
-                    { label: 'S', value: s, max: 100, barColor: satHex, display: `${s}%` },
-                    { label: 'L', value: l, max: 100, barColor: lightnessHex, display: `${l}%`, borderColor: lightnessBorder },
-                  ];
-                  return (
-                    <View style={styles.previewChannelBars}>
-                      {hslChannels.map((ch) => (
+                  {/* Fixed-height channel section: keep HEX/RGB/HSL card height stable */}
+                  <View style={styles.previewChannelContainer}>
+                    {colorFormat === 'RGB' && (
+                      <View style={styles.previewChannelBars}>
+                        {[
+                          { label: 'R', value: colorInfo.rgb.r, max: 255, color: '#ef4444', display: `${colorInfo.rgb.r}` },
+                          { label: 'G', value: colorInfo.rgb.g, max: 255, color: '#22c55e', display: `${colorInfo.rgb.g}` },
+                          { label: 'B', value: colorInfo.rgb.b, max: 255, color: '#3b82f6', display: `${colorInfo.rgb.b}` },
+                        ].map((ch) => (
                           <View key={ch.label} style={styles.previewChannelRow}>
                             <Text style={[styles.previewChannelLabel, { color: fgMuted, textShadowColor: shadowColor }]}>{ch.label}</Text>
-                            <View style={[styles.previewChannelTrack, { backgroundColor: hslTrackBg }]}>
-                              <View
-                                style={[
-                                  styles.previewChannelFill,
-                                  {
-                                    width: `${(ch.value / ch.max) * 100}%`,
-                                    minWidth: ch.value > 0 ? 6 : 0,
-                                    backgroundColor: ch.barColor,
-                                  },
-                                  ch.borderColor && { borderWidth: 1, borderColor: ch.borderColor },
-                                ]}
-                              />
+                            <View style={[styles.previewChannelTrack, { backgroundColor: trackBg }]}>
+                              <View style={[styles.previewChannelFill, { width: `${(ch.value / ch.max) * 100}%`, backgroundColor: ch.color }]} />
                             </View>
                             <Text style={[styles.previewChannelValue, { color: fgMuted, textShadowColor: shadowColor }]}>{ch.display}</Text>
                           </View>
                         ))}
                       </View>
-                    );
-                  })()}
-                  {colorFormat === 'HEX' && <View style={styles.previewChannelBarsPlaceholder} />}
+                    )}
+                    {colorFormat === 'HSL' && (() => {
+                      const { h, s, l } = colorInfo.hsl;
+                      const hueRgb = hslToRgb(h, 100, 50);
+                      const hueHex = rgbToHex(hueRgb.r, hueRgb.g, hueRgb.b);
+                      const satRgb = hslToRgb(h, s, 50);
+                      const satHex = rgbToHex(satRgb.r, satRgb.g, satRgb.b);
+                      const lightnessGray = Math.round((l / 100) * 255);
+                      const boostedGray = lightnessGray < 128
+                        ? Math.max(0, lightnessGray - 35)
+                        : Math.min(255, lightnessGray + 35);
+                      const lightnessHex = rgbToHex(boostedGray, boostedGray, boostedGray);
+                      const lightnessBorder = boostedGray >= 180
+                        ? 'rgba(0,0,0,0.32)'
+                        : 'rgba(255,255,255,0.4)';
+                      const hslTrackBg = isLight ? 'rgba(0,0,0,0.18)' : 'rgba(255,255,255,0.18)';
+                      const hslChannels: Array<{
+                        label: string;
+                        value: number;
+                        max: number;
+                        barColor: string;
+                        display: string;
+                        borderColor?: string;
+                      }> = [
+                          { label: 'H', value: h, max: 360, barColor: hueHex, display: `${h}°` },
+                          { label: 'S', value: s, max: 100, barColor: satHex, display: `${s}%` },
+                          { label: 'L', value: l, max: 100, barColor: lightnessHex, display: `${l}%`, borderColor: lightnessBorder },
+                        ];
+                      return (
+                        <View style={styles.previewChannelBars}>
+                          {hslChannels.map((ch) => (
+                            <View key={ch.label} style={styles.previewChannelRow}>
+                              <Text style={[styles.previewChannelLabel, { color: fgMuted, textShadowColor: shadowColor }]}>{ch.label}</Text>
+                              <View style={[styles.previewChannelTrack, { backgroundColor: hslTrackBg }]}>
+                                <View
+                                  style={[
+                                    styles.previewChannelFill,
+                                    {
+                                      width: `${(ch.value / ch.max) * 100}%`,
+                                      minWidth: ch.value > 0 ? 6 : 0,
+                                      backgroundColor: ch.barColor,
+                                    },
+                                    ch.borderColor && { borderWidth: 1, borderColor: ch.borderColor },
+                                  ]}
+                                />
+                              </View>
+                              <Text style={[styles.previewChannelValue, { color: fgMuted, textShadowColor: shadowColor }]}>{ch.display}</Text>
+                            </View>
+                          ))}
+                        </View>
+                      );
+                    })()}
+                    {colorFormat === 'HEX' && <View style={styles.previewChannelBarsPlaceholder} />}
+                  </View>
                 </View>
-              </View>
               );
             })()}
 
