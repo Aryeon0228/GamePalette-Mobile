@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from './HomeScreen.styles';
-import { ThemeColors } from '../../store/themeStore';
+import { useThemeStore } from '../../store/themeStore';
 import { type AppLanguage } from '../../lib/colorUtils';
+import { BouncyButton } from '../../components/BouncyButton';
 
 interface HomeHeaderProps {
-  theme: ThemeColors;
   language: AppLanguage;
   onShowInfo: () => void;
   onHapticLight: () => void;
 }
 
 function HomeHeader({
-  theme,
   language,
   onShowInfo,
   onHapticLight,
 }: HomeHeaderProps) {
   const [logoLoadError, setLogoLoadError] = useState(false);
   const subtitle = language === 'ko' ? '간편한 컬러 추출기' : 'Simple Color Extractor';
+  const { colors, toggleTheme, isDark } = useThemeStore();
 
   return (
     <View style={styles.header}>
@@ -38,23 +38,37 @@ function HomeHeader({
           )}
         </View>
         <View>
-          <Text style={[styles.title, { color: theme.textPrimary }]}>Pixel Paw</Text>
-          <Text style={[styles.headerSubtitle, { color: theme.textMuted }]}>{subtitle}</Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>Pixel Paw</Text>
+          <Text style={[styles.headerSubtitle, { color: colors.textMuted }]}>{subtitle}</Text>
         </View>
       </View>
       <View style={styles.headerRight}>
-        <TouchableOpacity
+        <BouncyButton
           style={[
             styles.headerButton,
-            { backgroundColor: theme.backgroundSecondary, borderColor: theme.borderLight, borderWidth: 1 },
+            { backgroundColor: colors.backgroundSecondary, borderColor: colors.borderLight, borderWidth: 1 },
+          ]}
+          onPress={() => {
+            onHapticLight();
+            toggleTheme();
+          }}
+          pressedScale={0.9}
+        >
+          <Ionicons name={isDark ? "moon" : "sunny"} size={20} color={colors.textSecondary} />
+        </BouncyButton>
+        <BouncyButton
+          style={[
+            styles.headerButton,
+            { backgroundColor: colors.backgroundSecondary, borderColor: colors.borderLight, borderWidth: 1 },
           ]}
           onPress={() => {
             onHapticLight();
             onShowInfo();
           }}
+          pressedScale={0.9}
         >
-          <Ionicons name="information-circle-outline" size={20} color={theme.textSecondary} />
-        </TouchableOpacity>
+          <Ionicons name="information-circle-outline" size={20} color={colors.textSecondary} />
+        </BouncyButton>
       </View>
     </View>
   );

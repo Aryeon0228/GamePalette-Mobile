@@ -76,12 +76,21 @@ export const FONT_SIZE_TOKENS = {
 } as const;
 
 export const SHADOW_TOKENS = {
-  accentGlow: {
+  // Use for floating elements (buttons, modals)
+  soft: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
+    shadowOpacity: 0.15,
     shadowRadius: 12,
     elevation: 4,
+  },
+  // Use for deeply elevated elements (popovers, tooltips)
+  deep: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.25,
+    shadowRadius: 24,
+    elevation: 8,
   },
   neumorphicLight: {
     shadowColor: '#000',

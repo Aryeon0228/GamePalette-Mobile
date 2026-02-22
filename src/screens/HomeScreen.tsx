@@ -1,3 +1,4 @@
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import {
   View,
@@ -513,9 +514,8 @@ export default function HomeScreen({
   // ============================================
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <Animated.View style={[styles.container, { backgroundColor: theme.backgroundSecondary }]}>
       <HomeHeader
-        theme={theme}
         language={appLanguage}
         onShowInfo={handleShowInfo}
         onHapticLight={hapticLight}
@@ -1186,6 +1186,6 @@ export default function HomeScreen({
         </View>
       )}
 
-    </View>
+    </Animated.View>
   );
 }

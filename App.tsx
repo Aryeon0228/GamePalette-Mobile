@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import SplashScreen from './src/screens/SplashScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import LibraryScreen from './src/screens/LibraryScreen';
@@ -50,9 +51,11 @@ export default function App() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <StatusBar style="light" />
-      {renderScreen()}
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        <StatusBar style="light" />
+        {renderScreen()}
+      </View>
+    </GestureHandlerRootView>
   );
 }
