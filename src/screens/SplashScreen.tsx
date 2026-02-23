@@ -49,24 +49,24 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
     sweepLoop.start();
 
     Animated.sequence([
-      Animated.delay(230),
+      Animated.delay(100),
       Animated.parallel([
         Animated.timing(titleOpacityAnim, {
           toValue: 1,
-          duration: 700,
-          easing: Easing.out(Easing.cubic),
+          duration: 900,
+          easing: Easing.out(Easing.exp),
           useNativeDriver: true,
         }),
-        Animated.timing(titleTranslateAnim, {
+        Animated.spring(titleTranslateAnim, {
           toValue: 0,
-          duration: 700,
-          easing: Easing.out(Easing.cubic),
+          friction: 6,
+          tension: 40,
           useNativeDriver: true,
         }),
-        Animated.timing(titleScaleAnim, {
+        Animated.spring(titleScaleAnim, {
           toValue: 1,
-          duration: 700,
-          easing: Easing.out(Easing.cubic),
+          friction: 6,
+          tension: 40,
           useNativeDriver: true,
         }),
       ]),

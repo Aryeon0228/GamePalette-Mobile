@@ -10,6 +10,8 @@ import {
   TextInput,
   Modal,
   Share,
+  Animated,
+  Easing,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
@@ -44,6 +46,9 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
     textSecondary: { color: theme.textSecondary },
     border: { borderColor: theme.border },
   };
+  const menuAnimScale = useRef(new Animated.Value(0.85)).current;
+  const menuAnimOpacity = useRef(new Animated.Value(0)).current;
+
   const [menuPalette, setMenuPalette] = useState<SavedPalette | null>(null);
   const [exportPalette, setExportPalette] = useState<SavedPalette | null>(null);
   const [snsExportPalette, setSnsExportPalette] = useState<SavedPalette | null>(null);
@@ -54,6 +59,27 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
   const [exportFormat, setExportFormat] = useState<'png' | 'json' | 'css'>('png');
   const [isExporting, setIsExporting] = useState(false);
   const paletteCardRef = useRef<ViewShot>(null);
+
+  React.useEffect(() => {
+    if (menuPalette !== null) {
+      Animated.parallel([
+        Animated.spring(menuAnimScale, {
+          toValue: 1,
+          friction: 7,
+          tension: 60,
+          useNativeDriver: true,
+        }),
+        Animated.timing(menuAnimOpacity, {
+          toValue: 1,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      menuAnimScale.setValue(0.85);
+      menuAnimOpacity.setValue(0);
+    }
+  }, [menuPalette, menuAnimScale, menuAnimOpacity]);
   const t = {
     copiedTitle: isKorean ? '복사됨!' : 'Copied!',
     deletePaletteTitle: isKorean ? '팔레트 삭제' : 'Delete Palette',
@@ -413,6 +439,8 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
           data={filteredPalettes}
           renderItem={renderPaletteCard}
           keyExtractor={(item) => item.id}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
         />
@@ -431,7 +459,14 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
           onPress={() => setMenuPalette(null)}
         >
           <BlurView intensity={40} tint="light" style={StyleSheet.absoluteFill} />
-          <View style={[styles.menuModal, { backgroundColor: theme.backgroundSecondary }]}>
+          <Animated.View style={[
+            styles.menuModal,
+            {
+              backgroundColor: theme.backgroundSecondary,
+              opacity: menuAnimOpacity,
+              transform: [{ scale: menuAnimScale }]
+            }
+          ]}>
             <Text style={[styles.menuTitle, { color: theme.textPrimary, borderBottomColor: theme.border }]}>
               {menuPalette?.name}
             </Text>
@@ -467,7 +502,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
                 {t.delete}
               </Text>
             </TouchableOpacity>
-          </View>
+          </Animated.View>
         </TouchableOpacity>
       </Modal>
 
@@ -587,7 +622,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
         onExportConfirm={handleSnsExportConfirm}
         onCopyToClipboard={copySnsToClipboard}
         onClose={() => setSnsExportPalette(null)}
-        onHapticLight={() => {}}
+        onHapticLight={() => { }}
       />
     </View>
   );
@@ -666,14 +701,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 100,
   },
+  row: {
+    justifyContent: 'space-between',
+    gap: 16,
+  },
   card: {
-    backgroundColor: C.backgroundElevated,
-    borderRadius: RADIUS_TOKENS.lg,
+    flex: 1,
+    backgroundColor: C.backgroundSurface,
+    borderRadius: 20,
     marginBottom: 16,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: C.borderSoft,
-    ...SHADOW_TOKENS.neumorphicMedium,
+    ...SHADOW_TOKENS.glassmorphism,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -742,8 +782,9 @@ const styles = StyleSheet.create({
   },
   tagsRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
     marginBottom: 12,
   },
   tag: {
