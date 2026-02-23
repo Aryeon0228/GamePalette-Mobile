@@ -35,9 +35,6 @@ export const styles = StyleSheet.create({
     width: 25,
     height: 25,
   },
-  headerLogoFallbackIcon: {
-    opacity: 0.95,
-  },
   headerSubtitle: {
     fontSize: 11,
     fontWeight: '500',
