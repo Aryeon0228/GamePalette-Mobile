@@ -1488,12 +1488,10 @@ export const styles = StyleSheet.create({
   histogramCard: {
     marginHorizontal: 16,
     marginTop: 4,
-    backgroundColor: C.backgroundElevated,
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
     borderColor: C.borderSoft,
-    ...SHADOW_TOKENS.neumorphicLight,
   },
   histogramHeader: {
     flexDirection: 'row',

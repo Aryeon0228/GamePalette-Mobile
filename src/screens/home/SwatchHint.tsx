@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
+import { GlassPanel } from '../../components/GlassPanel';
 
 interface SwatchHintProps {
   theme: ThemeColors;
@@ -13,7 +14,11 @@ interface SwatchHintProps {
 
 function SwatchHint({ theme, title, subtitle }: SwatchHintProps) {
   return (
-    <View style={[styles.swatchHintCard, { backgroundColor: theme.backgroundCard, borderColor: theme.borderLight }]}>
+    <GlassPanel
+      intensity={40}
+      tint={theme.isDark ? 'dark' : 'light'}
+      style={[styles.swatchHintCard, { borderColor: theme.borderLight }]}
+    >
       <View style={[styles.swatchHintIcon, { backgroundColor: theme.accent + '22' }]}>
         <Ionicons name="hand-left-outline" size={15} color={theme.accent} />
       </View>
@@ -25,7 +30,7 @@ function SwatchHint({ theme, title, subtitle }: SwatchHintProps) {
           {subtitle}
         </Text>
       </View>
-    </View>
+    </GlassPanel>
   );
 }
 

@@ -10,13 +10,11 @@ import { BouncyButton } from '../../components/BouncyButton';
 interface HomeHeaderProps {
   language: AppLanguage;
   onShowInfo: () => void;
-  onHapticLight: () => void;
 }
 
 function HomeHeader({
   language,
   onShowInfo,
-  onHapticLight,
 }: HomeHeaderProps) {
   const [logoLoadError, setLogoLoadError] = useState(false);
   const subtitle = language === 'ko' ? '간편한 컬러 추출기' : 'Simple Color Extractor';
@@ -48,11 +46,9 @@ function HomeHeader({
             styles.headerButton,
             { backgroundColor: colors.backgroundSecondary, borderColor: colors.borderLight, borderWidth: 1 },
           ]}
-          onPress={() => {
-            onHapticLight();
-            toggleTheme();
-          }}
+          onPress={toggleTheme}
           pressedScale={0.9}
+          hapticFeedback
         >
           <Ionicons name={isDark ? "moon" : "sunny"} size={20} color={colors.textSecondary} />
         </BouncyButton>
@@ -61,11 +57,9 @@ function HomeHeader({
             styles.headerButton,
             { backgroundColor: colors.backgroundSecondary, borderColor: colors.borderLight, borderWidth: 1 },
           ]}
-          onPress={() => {
-            onHapticLight();
-            onShowInfo();
-          }}
+          onPress={onShowInfo}
           pressedScale={0.9}
+          hapticFeedback
         >
           <Ionicons name="information-circle-outline" size={20} color={colors.textSecondary} />
         </BouncyButton>

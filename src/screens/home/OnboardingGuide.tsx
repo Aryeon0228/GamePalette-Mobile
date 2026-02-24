@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
+import { GlassPanel } from '../../components/GlassPanel';
 
 interface OnboardingGuideProps {
   theme: ThemeColors;
@@ -21,7 +22,11 @@ function OnboardingGuide({
   tapSwatchLabel,
 }: OnboardingGuideProps) {
   return (
-    <View style={[styles.emptyGuideCard, { backgroundColor: theme.backgroundCard, borderColor: theme.borderLight }]}>
+    <GlassPanel
+      intensity={40}
+      tint={theme.isDark ? 'dark' : 'light'}
+      style={[styles.emptyGuideCard, { borderColor: theme.borderLight }]}
+    >
       <Text style={[styles.emptyGuideTitle, { color: theme.textPrimary }]}>
         {title}
       </Text>
@@ -45,7 +50,7 @@ function OnboardingGuide({
           </Text>
         </View>
       </View>
-    </View>
+    </GlassPanel>
   );
 }
 

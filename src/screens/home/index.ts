@@ -18,6 +18,7 @@ export { useColorDetail } from './hooks/useColorDetail';
 export { useColorExtraction } from './hooks/useColorExtraction';
 export { useImageImportAndCrop } from './hooks/useImageImportAndCrop';
 export { usePaletteExport } from './hooks/usePaletteExport';
+export { useSectionEntrance } from './hooks/useSectionEntrance';
 export { useToast } from './hooks/useToast';
 
 // Styles & Localization

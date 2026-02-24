@@ -36,6 +36,7 @@ import { useAdvancedPanel } from './home/hooks/useAdvancedPanel';
 import { useCameraCapture } from './home/hooks/useCameraCapture';
 import { useColorDetail } from './home/hooks/useColorDetail';
 import { useToast } from './home/hooks/useToast';
+import { useSectionEntrance } from './home/hooks/useSectionEntrance';
 import HomeHeader from './home/HomeHeader';
 import ImageCard from './home/ImageCard';
 import ActionBar from './home/ActionBar';
@@ -52,6 +53,15 @@ import SavePaletteModal from './home/modals/SavePaletteModal';
 import ExportModal from './home/modals/ExportModal';
 import InfoModal from './home/modals/InfoModal';
 import ImageCropModal from './home/modals/ImageCropModal';
+
+// ============================================
+// ENTRANCE ANIMATION WRAPPER
+// ============================================
+
+function EntranceWrapper({ delay, children }: { delay: number; children: React.ReactNode }) {
+  const entranceStyle = useSectionEntrance({ delay });
+  return <Animated.View style={entranceStyle}>{children}</Animated.View>;
+}
 
 // ============================================
 // TYPES
@@ -376,7 +386,6 @@ export default function HomeScreen({
       <HomeHeader
         language={appLanguage}
         onShowInfo={handleShowInfo}
-        onHapticLight={hapticLight}
       />
 
       <ScrollView
@@ -413,11 +422,13 @@ export default function HomeScreen({
         />
 
         {processedColors.length > 0 && selectedColorIndex === null && !hasSeenColorTapHint && (
-          <SwatchHint
-            theme={theme}
-            title={localization.swatchHintTitle}
-            subtitle={localization.swatchHintSubtitle}
-          />
+          <EntranceWrapper delay={100}>
+            <SwatchHint
+              theme={theme}
+              title={localization.swatchHintTitle}
+              subtitle={localization.swatchHintSubtitle}
+            />
+          </EntranceWrapper>
         )}
 
         <ColorPaletteSection
@@ -455,54 +466,58 @@ export default function HomeScreen({
           cvdOptions={cvdOptions}
           colorBlindMode={colorBlindMode}
           onColorBlindModeChange={setColorBlindMode}
-          onHapticLight={hapticLight}
           onClose={closeAdvancedPanel}
         />
 
         {!currentImageUri && processedColors.length === 0 && (
-          <OnboardingGuide
-            theme={theme}
-            title={localization.emptyGuideTitle}
-            addImageLabel={localization.emptyGuideAddImage}
-            expandSettingsLabel={localization.emptyGuideExpandSettings}
-            tapSwatchLabel={localization.emptyGuideTapSwatch}
-          />
+          <EntranceWrapper delay={300}>
+            <OnboardingGuide
+              theme={theme}
+              title={localization.emptyGuideTitle}
+              addImageLabel={localization.emptyGuideAddImage}
+              expandSettingsLabel={localization.emptyGuideExpandSettings}
+              tapSwatchLabel={localization.emptyGuideTapSwatch}
+            />
+          </EntranceWrapper>
         )}
 
         {colorInfo && selectedColorIndex !== null && (
-          <ColorDetailSection
-            theme={theme}
-            colorInfo={colorInfo}
-            colorFormat={colorFormat}
-            onFormatChange={setColorFormat}
-            getFormattedColor={getFormattedColor}
-            copyColor={copyColor}
-            copyButtonLabel={localization.copyButtonLabel}
-            variationHueShift={variationHueShift}
-            onVariationHueShiftChange={setVariationHueShift}
-            variationsLabel={localization.variationsLabel}
-            lightnessLabel={localization.lightnessLabel}
-            hueShiftLabel={localization.hueShiftLabel}
-            harmonyLabel={localization.harmonyLabel}
-            selectedHarmony={selectedHarmony}
-            onHarmonyChange={setSelectedHarmony}
-            colorHarmonies={colorHarmonies}
-            currentHarmony={currentHarmony}
-            onHapticLight={hapticLight}
-          />
+          <EntranceWrapper delay={50}>
+            <ColorDetailSection
+              theme={theme}
+              colorInfo={colorInfo}
+              colorFormat={colorFormat}
+              onFormatChange={setColorFormat}
+              getFormattedColor={getFormattedColor}
+              copyColor={copyColor}
+              copyButtonLabel={localization.copyButtonLabel}
+              variationHueShift={variationHueShift}
+              onVariationHueShiftChange={setVariationHueShift}
+              variationsLabel={localization.variationsLabel}
+              lightnessLabel={localization.lightnessLabel}
+              hueShiftLabel={localization.hueShiftLabel}
+              harmonyLabel={localization.harmonyLabel}
+              selectedHarmony={selectedHarmony}
+              onHarmonyChange={setSelectedHarmony}
+              colorHarmonies={colorHarmonies}
+              currentHarmony={currentHarmony}
+            />
+          </EntranceWrapper>
         )}
 
         {histogram && currentImageUri && (
-          <HistogramSection
-            theme={theme}
-            histogram={histogram}
-            histogramTitle={localization.histogramTitle}
-            histogramContrastLabel={localization.histogramContrastLabel}
-            histogramDarkLabel={localization.histogramDarkLabel}
-            histogramMidLabel={localization.histogramMidLabel}
-            histogramBrightLabel={localization.histogramBrightLabel}
-            histogramAverageLabel={localization.histogramAverageLabel}
-          />
+          <EntranceWrapper delay={200}>
+            <HistogramSection
+              theme={theme}
+              histogram={histogram}
+              histogramTitle={localization.histogramTitle}
+              histogramContrastLabel={localization.histogramContrastLabel}
+              histogramDarkLabel={localization.histogramDarkLabel}
+              histogramMidLabel={localization.histogramMidLabel}
+              histogramBrightLabel={localization.histogramBrightLabel}
+              histogramAverageLabel={localization.histogramAverageLabel}
+            />
+          </EntranceWrapper>
         )}
 
         {currentImageUri && <View style={{ height: 100 }} />}
@@ -514,7 +529,6 @@ export default function HomeScreen({
         onNavigateToLibrary={onNavigateToLibrary}
         onSave={handleSave}
         onExport={handleExport}
-        onHapticLight={hapticLight}
       />
 
       <ColorDetailModal

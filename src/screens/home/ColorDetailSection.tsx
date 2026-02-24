@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
 import { COLOR_TOKENS, OVERLAY_TOKENS } from '../../constants/designTokens';
+import { BouncyButton } from '../../components/BouncyButton';
+import { GlassPanel } from '../../components/GlassPanel';
 import {
   FORMAT_ACCENT_COLORS,
   VARIATION_TOGGLE_COLORS,
@@ -47,7 +49,6 @@ interface ColorDetailSectionProps {
     description: string;
     colors: Array<{ hex: string; name: string; angle: number }>;
   } | null;
-  onHapticLight: () => void;
 }
 
 function ColorDetailSection({
@@ -68,10 +69,13 @@ function ColorDetailSection({
   onHarmonyChange,
   colorHarmonies,
   currentHarmony,
-  onHapticLight,
 }: ColorDetailSectionProps) {
   return (
-    <View style={[styles.inlineColorDetail, { backgroundColor: theme.backgroundCard, borderColor: colorInfo.hex + '60', borderWidth: 1.5 }]}>
+    <GlassPanel
+      intensity={50}
+      tint={theme.isDark ? 'dark' : 'light'}
+      style={[styles.inlineColorDetail, { borderColor: colorInfo.hex + '60', borderWidth: 1.5 }]}
+    >
       {/* Color Preview + Value + Copy + Channel Bars */}
       {(() => {
         const isLight = getLuminance(colorInfo.hex) > 140;
@@ -86,13 +90,15 @@ function ColorDetailSection({
               <Text style={[styles.inlineColorPreviewValue, { color: fgColor }]}>
                 {getFormattedColor(colorInfo, colorFormat)}
               </Text>
-              <TouchableOpacity
+              <BouncyButton
                 style={[styles.inlineColorCopyButton, { backgroundColor: copyBg }]}
                 onPress={() => copyColor(getFormattedColor(colorInfo, colorFormat), colorFormat)}
+                pressedScale={0.93}
+                hapticFeedback
               >
                 <Ionicons name="copy-outline" size={16} color={fgColor} />
                 <Text style={[styles.inlineColorCopyText, { color: fgColor }]}>{copyButtonLabel}</Text>
-              </TouchableOpacity>
+              </BouncyButton>
             </View>
 
             {/* Fixed-height channel section */}
@@ -174,16 +180,15 @@ function ColorDetailSection({
       {/* Format Segment Toggle */}
       <View style={[styles.formatSegment, { backgroundColor: theme.backgroundTertiary }]}>
         {(['HEX', 'RGB', 'HSL'] as const).map((fmt) => (
-          <TouchableOpacity
+          <BouncyButton
             key={fmt}
             style={[
               styles.formatSegmentButton,
               colorFormat === fmt && { backgroundColor: FORMAT_ACCENT_COLORS[fmt] },
             ]}
-            onPress={() => {
-              onHapticLight();
-              onFormatChange(fmt);
-            }}
+            onPress={() => onFormatChange(fmt)}
+            pressedScale={0.93}
+            hapticFeedback
           >
             <Text style={[
               styles.formatSegmentText,
@@ -191,7 +196,7 @@ function ColorDetailSection({
             ]}>
               {fmt}
             </Text>
-          </TouchableOpacity>
+          </BouncyButton>
         ))}
       </View>
 
@@ -200,15 +205,14 @@ function ColorDetailSection({
         <View style={styles.variationsHeader}>
           <Text style={[styles.variationsSectionTitle, { color: theme.textPrimary }]}>{variationsLabel}</Text>
           <View style={[styles.hueShiftToggle, { backgroundColor: theme.backgroundSecondary }]}>
-            <TouchableOpacity
+            <BouncyButton
               style={[
                 styles.hueShiftOption,
                 !variationHueShift && { backgroundColor: VARIATION_TOGGLE_COLORS.lightness },
               ]}
-              onPress={() => {
-                onHapticLight();
-                onVariationHueShiftChange(false);
-              }}
+              onPress={() => onVariationHueShiftChange(false)}
+              pressedScale={0.93}
+              hapticFeedback
             >
               <Text
                 style={[
@@ -218,16 +222,15 @@ function ColorDetailSection({
               >
                 {lightnessLabel}
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </BouncyButton>
+            <BouncyButton
               style={[
                 styles.hueShiftOption,
                 variationHueShift && { backgroundColor: VARIATION_TOGGLE_COLORS.hueShift },
               ]}
-              onPress={() => {
-                onHapticLight();
-                onVariationHueShiftChange(true);
-              }}
+              onPress={() => onVariationHueShiftChange(true)}
+              pressedScale={0.93}
+              hapticFeedback
             >
               <Text
                 style={[
@@ -237,24 +240,26 @@ function ColorDetailSection({
               >
                 {hueShiftLabel}
               </Text>
-            </TouchableOpacity>
+            </BouncyButton>
           </View>
         </View>
 
         <View style={styles.variationStrip}>
           {generateColorVariations(colorInfo.hex, variationHueShift).map(
             (v, i) => (
-              <TouchableOpacity
+              <BouncyButton
                 key={v.hex + '-' + i}
                 style={[
                   styles.variationCell,
                   v.label === 'Base' && styles.variationCellBase,
                 ]}
                 onPress={() => copyColor(v.hex)}
+                pressedScale={0.9}
+                hapticFeedback
               >
                 <View style={[styles.variationColor, { backgroundColor: v.hex }]} />
                 <Text style={[styles.variationHex, { color: theme.textMuted }]}>{v.hex}</Text>
-              </TouchableOpacity>
+              </BouncyButton>
             )
           )}
         </View>
@@ -281,7 +286,7 @@ function ColorDetailSection({
             style={styles.harmonyTypesScroll}
           >
             {colorHarmonies.map((harmony) => (
-              <TouchableOpacity
+              <BouncyButton
                 key={harmony.type}
                 style={[
                   styles.harmonyTypeButton,
@@ -292,10 +297,9 @@ function ColorDetailSection({
                         : theme.backgroundSecondary,
                   },
                 ]}
-                onPress={() => {
-                  onHapticLight();
-                  onHarmonyChange(harmony.type);
-                }}
+                onPress={() => onHarmonyChange(harmony.type)}
+                pressedScale={0.93}
+                hapticFeedback
               >
                 <Text
                   style={[
@@ -305,7 +309,7 @@ function ColorDetailSection({
                 >
                   {harmony.name}
                 </Text>
-              </TouchableOpacity>
+              </BouncyButton>
             ))}
           </ScrollView>
 
@@ -317,10 +321,12 @@ function ColorDetailSection({
 
           <View style={styles.harmonyColorsRow}>
             {currentHarmony.colors.map((harmonyColor) => (
-              <TouchableOpacity
+              <BouncyButton
                 key={harmonyColor.hex + '-' + harmonyColor.angle}
                 style={styles.harmonyColorItem}
                 onPress={() => copyColor(harmonyColor.hex.toUpperCase(), harmonyColor.name)}
+                pressedScale={0.9}
+                hapticFeedback
               >
                 <View
                   style={[
@@ -332,12 +338,12 @@ function ColorDetailSection({
                 <Text style={[styles.harmonyColorHex, { color: theme.textMuted }]}>
                   {harmonyColor.hex.toUpperCase()}
                 </Text>
-              </TouchableOpacity>
+              </BouncyButton>
             ))}
           </View>
         </View>
       )}
-    </View>
+    </GlassPanel>
   );
 }
 

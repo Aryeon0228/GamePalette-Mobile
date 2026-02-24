@@ -1,10 +1,11 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Animated, {
   SharedValue,
   useAnimatedStyle,
   interpolate,
 } from 'react-native-reanimated';
+import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from './HomeScreen.styles';
@@ -13,6 +14,7 @@ import { ExtractionMethod } from '../../lib/colorExtractor';
 import { ColorBlindnessInfo, ColorBlindnessType } from '../../lib/colorUtils';
 import { StyleFilter, STYLE_FILTER_KEYS, STYLE_PRESETS } from '../../constants/stylePresets';
 import { COLOR_TOKENS, OVERLAY_TOKENS } from '../../constants/designTokens';
+import { BouncyButton } from '../../components/BouncyButton';
 
 interface InlineSettingsPanelProps {
   isMounted: boolean;
@@ -39,7 +41,6 @@ interface InlineSettingsPanelProps {
   cvdOptions: ColorBlindnessInfo[];
   colorBlindMode: ColorBlindnessType;
   onColorBlindModeChange: (value: ColorBlindnessType) => void;
-  onHapticLight: () => void;
   onClose: () => void;
 }
 
@@ -68,7 +69,6 @@ function InlineSettingsPanel({
   cvdOptions,
   colorBlindMode,
   onColorBlindModeChange,
-  onHapticLight,
   onClose,
 }: InlineSettingsPanelProps) {
   const animatedStyle = useAnimatedStyle(() => ({
@@ -87,25 +87,29 @@ function InlineSettingsPanel({
       style={[
         styles.inlineSettingsPanel,
         {
-          backgroundColor: theme.backgroundCard,
           borderColor: theme.border,
+          overflow: 'hidden',
         },
         animatedStyle,
       ]}
     >
+      <BlurView
+        intensity={50}
+        tint={theme.isDark ? 'dark' : 'light'}
+        style={StyleSheet.absoluteFillObject}
+      />
       <View style={styles.inlineSettingsHeaderRow}>
         <View>
           <Text style={[styles.inlineSettingsTitle, { color: theme.textPrimary }]}>{settingLabel}</Text>
         </View>
-        <TouchableOpacity
+        <BouncyButton
           style={[styles.inlineSettingsCloseBtn, { backgroundColor: theme.backgroundTertiary }]}
-          onPress={() => {
-            onHapticLight();
-            onClose();
-          }}
+          onPress={onClose}
+          pressedScale={0.9}
+          hapticFeedback
         >
           <Ionicons name="close-outline" size={18} color={theme.textSecondary} />
-        </TouchableOpacity>
+        </BouncyButton>
       </View>
 
       <Text style={[styles.advancedSectionLabel, { color: theme.textMuted }]}>
@@ -113,7 +117,7 @@ function InlineSettingsPanel({
       </Text>
       <View style={styles.advancedPresetRow}>
         {STYLE_FILTER_KEYS.map((filter) => (
-          <TouchableOpacity
+          <BouncyButton
             key={filter}
             style={[
               styles.advancedPresetButton,
@@ -122,10 +126,9 @@ function InlineSettingsPanel({
                 backgroundColor: styleFilter === filter ? STYLE_PRESETS[filter].color : theme.backgroundTertiary,
               },
             ]}
-            onPress={() => {
-              onHapticLight();
-              onStyleFilterChange(filter);
-            }}
+            onPress={() => onStyleFilterChange(filter)}
+            pressedScale={0.93}
+            hapticFeedback
           >
             <View style={styles.advancedPresetInline}>
               <Ionicons
@@ -146,7 +149,7 @@ function InlineSettingsPanel({
                 </Text>
               </View>
             </View>
-          </TouchableOpacity>
+          </BouncyButton>
         ))}
       </View>
 
@@ -154,15 +157,14 @@ function InlineSettingsPanel({
         {extractionMethodLabel}
       </Text>
       <View style={styles.advancedMethodRow}>
-        <TouchableOpacity
+        <BouncyButton
           style={[
             styles.advancedMethodButton,
             { backgroundColor: extractionMethod === 'histogram' ? COLOR_TOKENS.cyan : theme.backgroundTertiary },
           ]}
-          onPress={() => {
-            onHapticLight();
-            onMethodChange('histogram');
-          }}
+          onPress={() => onMethodChange('histogram')}
+          pressedScale={0.95}
+          hapticFeedback
         >
           <Text style={[styles.advancedMethodTitle, { color: extractionMethod === 'histogram' ? '#FFFFFF' : theme.textPrimary }]}>
             {extractionMethodLabels.histogram}
@@ -170,16 +172,15 @@ function InlineSettingsPanel({
           <Text style={[styles.advancedMethodDesc, { color: extractionMethod === 'histogram' ? OVERLAY_TOKENS.textOnMethodDesc : theme.textMuted }]}>
             {methodDescriptions.histogram}
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </BouncyButton>
+        <BouncyButton
           style={[
             styles.advancedMethodButton,
             { backgroundColor: extractionMethod === 'kmeans' ? kmeansAccentColor : theme.backgroundTertiary },
           ]}
-          onPress={() => {
-            onHapticLight();
-            onMethodChange('kmeans');
-          }}
+          onPress={() => onMethodChange('kmeans')}
+          pressedScale={0.95}
+          hapticFeedback
         >
           <Text style={[styles.advancedMethodTitle, { color: extractionMethod === 'kmeans' ? '#FFFFFF' : theme.textPrimary }]}>
             {extractionMethodLabels.kmeans}
@@ -187,28 +188,32 @@ function InlineSettingsPanel({
           <Text style={[styles.advancedMethodDesc, { color: extractionMethod === 'kmeans' ? OVERLAY_TOKENS.textOnMethodDesc : theme.textMuted }]}>
             {methodDescriptions.kmeans}
           </Text>
-        </TouchableOpacity>
+        </BouncyButton>
       </View>
 
       <Text style={[styles.advancedSectionLabel, { color: theme.textMuted }]}>
         {colorCountLabel}
       </Text>
       <View style={[styles.advancedColorCount, { backgroundColor: theme.backgroundTertiary }]}>
-        <TouchableOpacity
+        <BouncyButton
           style={[styles.advancedStepperBtn, { backgroundColor: theme.backgroundSecondary }]}
           onPress={() => onColorCountStep('down')}
+          pressedScale={0.9}
+          hapticFeedback
         >
           <Ionicons name="remove" size={18} color={theme.textSecondary} />
-        </TouchableOpacity>
+        </BouncyButton>
         <View style={[styles.advancedCountBadge, { backgroundColor: theme.accent }]}>
           <Text style={styles.advancedCountText}>{colorCount}</Text>
         </View>
-        <TouchableOpacity
+        <BouncyButton
           style={[styles.advancedStepperBtn, { backgroundColor: theme.backgroundSecondary }]}
           onPress={() => onColorCountStep('up')}
+          pressedScale={0.9}
+          hapticFeedback
         >
           <Ionicons name="add" size={18} color={theme.textSecondary} />
-        </TouchableOpacity>
+        </BouncyButton>
       </View>
 
       <Text style={[styles.advancedSectionLabel, { color: theme.textMuted }]}>
@@ -218,7 +223,7 @@ function InlineSettingsPanel({
         {cvdOptions.map((cvd) => {
           const isActive = colorBlindMode === cvd.type;
           return (
-            <TouchableOpacity
+            <BouncyButton
               key={cvd.type}
               style={[
                 styles.advancedCvdCard,
@@ -232,10 +237,9 @@ function InlineSettingsPanel({
                     : theme.backgroundTertiary,
                 },
               ]}
-              onPress={() => {
-                onHapticLight();
-                onColorBlindModeChange(cvd.type);
-              }}
+              onPress={() => onColorBlindModeChange(cvd.type)}
+              pressedScale={0.95}
+              hapticFeedback
             >
               <View style={styles.cvdBarPair}>
                 <View style={[styles.cvdBar, { backgroundColor: cvd.confusedPair[0] }]} />
@@ -266,7 +270,7 @@ function InlineSettingsPanel({
                   style={styles.cvdCheck}
                 />
               )}
-            </TouchableOpacity>
+            </BouncyButton>
           );
         })}
       </View>

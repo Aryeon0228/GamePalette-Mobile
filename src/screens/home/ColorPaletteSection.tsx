@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
 import { COLOR_TOKENS } from '../../constants/designTokens';
 import { ColorBlindnessType } from '../../lib/colorUtils';
+import { BouncyButton } from '../../components/BouncyButton';
 
 interface ColorPaletteSectionProps {
   theme: ThemeColors;
@@ -33,13 +34,15 @@ function ColorPaletteSection({
           const originalColor = styledColors[index];
           const isCvdActive = colorBlindMode !== 'none' && originalColor !== color;
           return (
-            <TouchableOpacity
+            <BouncyButton
               key={color + '-' + index}
               style={[
                 styles.colorCard,
                 isSelected && styles.colorCardSelected,
               ]}
               onPress={() => onColorPress(index)}
+              pressedScale={0.9}
+              hapticFeedback
             >
               <View style={[
                 styles.colorSwatch,
@@ -56,7 +59,7 @@ function ColorPaletteSection({
               <Text style={[styles.chipRank, { color: isSelected ? theme.textPrimary : theme.textMuted }]}>
                 #{index + 1}
               </Text>
-            </TouchableOpacity>
+            </BouncyButton>
           );
         })}
       </View>
