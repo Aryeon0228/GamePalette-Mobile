@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -7,6 +7,7 @@ import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
 import { StyleFilter, STYLE_PRESETS } from '../../constants/stylePresets';
 import { UNIFIED_EMPHASIS } from '../../constants/uiEmphasis';
+import { BouncyButton } from '../../components/BouncyButton';
 
 interface SettingsSummaryBarProps {
   theme: ThemeColors;
@@ -69,19 +70,21 @@ function SettingsSummaryBar({
           </View>
         )}
       </ScrollView>
-      <TouchableOpacity
+      <BouncyButton
         style={[
           styles.summaryEditButton,
           { backgroundColor: isAdvancedMounted ? theme.accent + '22' : theme.backgroundTertiary },
         ]}
         onPress={onToggleAdvancedPanel}
+        pressedScale={0.9}
+        hapticFeedback
       >
         <Ionicons
           name={isAdvancedMounted ? 'close-outline' : 'options-outline'}
           size={16}
           color={isAdvancedMounted ? theme.accent : theme.textSecondary}
         />
-      </TouchableOpacity>
+      </BouncyButton>
     </BlurView>
   );
 }

@@ -16,7 +16,6 @@ interface ActionBarProps {
   onNavigateToLibrary: () => void;
   onSave: () => void;
   onExport: () => void;
-  onHapticLight: () => void;
 }
 
 function ActionBar({
@@ -25,7 +24,6 @@ function ActionBar({
   onNavigateToLibrary,
   onSave,
   onExport,
-  onHapticLight,
 }: ActionBarProps) {
   const isKorean = language === 'ko';
   const neutralButtonStyle = {
@@ -48,10 +46,9 @@ function ActionBar({
 
       <BouncyButton
         style={[styles.actionButton, neutralButtonStyle]}
-        onPress={() => {
-          onHapticLight();
-          onNavigateToLibrary();
-        }}
+        onPress={onNavigateToLibrary}
+        pressedScale={0.93}
+        hapticFeedback
       >
         <Ionicons name="library-outline" size={22} color={theme.textSecondary} />
         <Text style={[styles.actionButtonText, { color: theme.textSecondary }]}>
@@ -61,10 +58,9 @@ function ActionBar({
 
       <BouncyButton
         style={styles.saveButton}
-        onPress={() => {
-          onHapticLight();
-          onSave();
-        }}
+        onPress={onSave}
+        pressedScale={0.93}
+        hapticFeedback
       >
         <Ionicons name="download-outline" size={20} color="#fff" />
         <Text style={styles.saveButtonText}>{isKorean ? '저장' : 'Save'}</Text>
@@ -72,10 +68,9 @@ function ActionBar({
 
       <BouncyButton
         style={[styles.exportButton, neutralButtonStyle]}
-        onPress={() => {
-          onHapticLight();
-          onExport();
-        }}
+        onPress={onExport}
+        pressedScale={0.93}
+        hapticFeedback
       >
         <Ionicons name="share-outline" size={22} color={theme.accent} />
         <Text style={[styles.exportButtonText, { color: theme.accent }]}>
