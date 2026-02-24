@@ -16,7 +16,7 @@ function SwatchHint({ theme, title, subtitle }: SwatchHintProps) {
   return (
     <GlassPanel
       intensity={40}
-      tint={theme.isDark ? 'dark' : 'light'}
+      tint="light"
       style={[styles.swatchHintCard, { borderColor: theme.borderLight }]}
     >
       <View style={[styles.swatchHintIcon, { backgroundColor: theme.accent + '22' }]}>

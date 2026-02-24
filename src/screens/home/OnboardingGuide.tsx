@@ -24,7 +24,7 @@ function OnboardingGuide({
   return (
     <GlassPanel
       intensity={40}
-      tint={theme.isDark ? 'dark' : 'light'}
+      tint="light"
       style={[styles.emptyGuideCard, { borderColor: theme.borderLight }]}
     >
       <Text style={[styles.emptyGuideTitle, { color: theme.textPrimary }]}>

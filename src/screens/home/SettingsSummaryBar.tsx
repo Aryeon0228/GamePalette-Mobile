@@ -41,8 +41,8 @@ function SettingsSummaryBar({
   return (
     <BlurView
       intensity={60}
-      tint={theme.isDark ? 'dark' : 'light'}
-      style={[styles.summaryBar, { backgroundColor: theme.backgroundCard + '99' }]}
+      tint="light"
+      style={[styles.summaryBar, { backgroundColor: 'rgba(255,255,255,0.50)' }]}
     >
       <ScrollView
         horizontal

@@ -15,7 +15,7 @@ export function GlassPanel({
     children,
     style,
     intensity = 50,
-    tint = 'default',
+    tint = 'light',
     specularHighlight = true
 }: GlassPanelProps) {
     return (
@@ -43,8 +43,10 @@ const styles = StyleSheet.create({
     specularHighlight: {
         ...StyleSheet.absoluteFillObject,
         borderRadius: RADIUS_TOKENS.xl,
-        borderTopWidth: 1,
+        borderTopWidth: 1.5,
         borderLeftWidth: 1,
+        borderBottomWidth: 0,
+        borderRightWidth: 0,
         borderColor: OVERLAY_TOKENS.glassWhiteBorder,
     },
     content: {

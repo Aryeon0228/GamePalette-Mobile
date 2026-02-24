@@ -32,7 +32,7 @@ function HistogramSection({
   return (
     <GlassPanel
       intensity={45}
-      tint={theme.isDark ? 'dark' : 'light'}
+      tint="light"
       style={[styles.histogramCard, { borderColor: theme.border }]}
     >
       <View style={styles.histogramHeader}>

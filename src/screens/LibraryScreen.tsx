@@ -713,7 +713,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: C.borderSoft,
-    ...SHADOW_TOKENS.glassmorphism,
+    ...SHADOW_TOKENS.neumorphicMedium,
   },
   cardHeader: {
     flexDirection: 'row',

@@ -95,7 +95,7 @@ function InlineSettingsPanel({
     >
       <BlurView
         intensity={50}
-        tint={theme.isDark ? 'dark' : 'light'}
+        tint="light"
         style={StyleSheet.absoluteFillObject}
       />
       <View style={styles.inlineSettingsHeaderRow}>

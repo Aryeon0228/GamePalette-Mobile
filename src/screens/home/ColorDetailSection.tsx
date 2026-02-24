@@ -73,7 +73,7 @@ function ColorDetailSection({
   return (
     <GlassPanel
       intensity={50}
-      tint={theme.isDark ? 'dark' : 'light'}
+      tint="light"
       style={[styles.inlineColorDetail, { borderColor: colorInfo.hex + '60', borderWidth: 1.5 }]}
     >
       {/* Color Preview + Value + Copy + Channel Bars */}

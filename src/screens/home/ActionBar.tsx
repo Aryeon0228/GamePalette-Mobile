@@ -34,8 +34,8 @@ function ActionBar({
   return (
     <BlurView
       intensity={70}
-      tint={theme.isDark ? 'dark' : 'light'}
-      style={[styles.actionBar, { backgroundColor: theme.backgroundSecondary + '88', borderTopColor: theme.border }]}
+      tint="light"
+      style={[styles.actionBar, { backgroundColor: 'rgba(255,255,255,0.65)', borderTopColor: theme.border }]}
     >
       <LinearGradient
         colors={[OVERLAY_TOKENS.gradientWhite10, 'transparent']}
