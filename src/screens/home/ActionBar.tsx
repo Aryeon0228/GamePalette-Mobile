@@ -8,6 +8,7 @@ import { BouncyButton } from '../../components/BouncyButton';
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
 import { type AppLanguage } from '../../lib/colorUtils';
+import { OVERLAY_TOKENS } from '../../constants/designTokens';
 
 interface ActionBarProps {
   theme: ThemeColors;
@@ -35,11 +36,11 @@ function ActionBar({
   return (
     <BlurView
       intensity={70}
-      tint={theme.background === '#000000' || theme.background === '#1C1C1E' ? 'dark' : 'light'}
+      tint={theme.isDark ? 'dark' : 'light'}
       style={[styles.actionBar, { backgroundColor: theme.backgroundSecondary + '88', borderTopColor: theme.border }]}
     >
       <LinearGradient
-        colors={['rgba(255,255,255,0.1)', 'transparent']}
+        colors={[OVERLAY_TOKENS.gradientWhite10, 'transparent']}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 0.5 }}
         style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1 }}

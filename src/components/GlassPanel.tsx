@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { COLOR_TOKENS, RADIUS_TOKENS, SHADOW_TOKENS } from '../constants/designTokens';
+import { COLOR_TOKENS, RADIUS_TOKENS, SHADOW_TOKENS, OVERLAY_TOKENS } from '../constants/designTokens';
 
 export interface GlassPanelProps {
     children: React.ReactNode;
@@ -20,7 +20,7 @@ export function GlassPanel({
 }: GlassPanelProps) {
     return (
         <View style={[styles.container, style]}>
-            <BlurView intensity={intensity} tint={tint as any} style={StyleSheet.absoluteFillObject} />
+            <BlurView intensity={intensity} tint={tint} style={StyleSheet.absoluteFillObject} />
             {specularHighlight && (
                 <View style={styles.specularHighlight} pointerEvents="none" />
             )}
@@ -35,9 +35,9 @@ const styles = StyleSheet.create({
     container: {
         borderRadius: RADIUS_TOKENS.xl,
         overflow: 'hidden',
-        backgroundColor: 'rgba(255, 255, 255, 0.02)', // tiny bit of base color
+        backgroundColor: OVERLAY_TOKENS.glassWhiteFaint,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.2)', // basic glass border
+        borderColor: OVERLAY_TOKENS.glassWhiteThin,
         ...SHADOW_TOKENS.glassmorphism,
     },
     specularHighlight: {
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         borderRadius: RADIUS_TOKENS.xl,
         borderTopWidth: 1,
         borderLeftWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.4)',
+        borderColor: OVERLAY_TOKENS.glassWhiteBorder,
     },
     content: {
         flex: 1,

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Easing, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
+import { COLOR_TOKENS, OVERLAY_TOKENS } from '../constants/designTokens';
 
 interface SplashScreenProps {
   onFinish: () => void;
@@ -204,7 +205,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: COLOR_TOKENS.textPrimary,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -218,15 +219,15 @@ const styles = StyleSheet.create({
   },
   coverTint: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    backgroundColor: OVERLAY_TOKENS.splashTint,
   },
   auroraGlow: {
     position: 'absolute',
     width: SCREEN_WIDTH * 0.72,
     height: SCREEN_WIDTH * 0.72,
     borderRadius: (SCREEN_WIDTH * 0.72) / 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    shadowColor: '#ffffff',
+    backgroundColor: OVERLAY_TOKENS.splashAurora,
+    shadowColor: '#FFFFFF',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.14,
     shadowRadius: 20,
@@ -236,7 +237,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH * 0.28,
     height: '130%',
     borderRadius: SCREEN_WIDTH * 0.14,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: OVERLAY_TOKENS.splashAurora,
   },
   vignetteTop: {
     ...StyleSheet.absoluteFillObject,
@@ -244,7 +245,7 @@ const styles = StyleSheet.create({
   },
   vignetteBottom: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+    backgroundColor: OVERLAY_TOKENS.splashVignetteBottom,
   },
   brandBlock: {
     position: 'absolute',
@@ -259,35 +260,35 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: 18,
-    backgroundColor: 'rgba(8, 12, 28, 0.34)',
+    backgroundColor: OVERLAY_TOKENS.splashBrandBg,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.18)',
-    shadowColor: '#000000',
+    borderColor: OVERLAY_TOKENS.splashBrandBorder,
+    shadowColor: COLOR_TOKENS.textPrimary,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.28,
     shadowRadius: 10,
   },
   brandSparkle: {
-    color: '#f7d77f',
+    color: COLOR_TOKENS.brandSparkle,
     fontFamily: 'SpaceGrotesk_700Bold',
     fontSize: 14,
     lineHeight: 16,
-    textShadowColor: 'rgba(247, 215, 127, 0.42)',
+    textShadowColor: OVERLAY_TOKENS.splashSparkleGlow,
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 4,
   },
   brandTitle: {
-    color: '#f8f9ff',
+    color: COLOR_TOKENS.brandTitleText,
     fontFamily: 'SpaceGrotesk_700Bold',
     fontSize: 54,
     letterSpacing: -0.7,
-    textShadowColor: 'rgba(4, 8, 22, 0.64)',
+    textShadowColor: OVERLAY_TOKENS.splashTitleShadow,
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
   },
   brandSubtitle: {
     marginTop: 10,
-    color: 'rgba(243, 246, 255, 0.9)',
+    color: OVERLAY_TOKENS.splashSubtitle,
     fontFamily: 'SpaceGrotesk_500Medium',
     fontSize: 15,
     letterSpacing: 0.6,

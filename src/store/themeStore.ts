@@ -1,7 +1,8 @@
 import { create } from 'zustand';
-import { COLOR_TOKENS } from '../constants/designTokens';
+import { COLOR_TOKENS, OVERLAY_TOKENS } from '../constants/designTokens';
 
 export interface ThemeColors {
+  isDark: boolean;
   background: string;
   backgroundSecondary: string;
   backgroundTertiary: string;
@@ -24,6 +25,7 @@ export interface ThemeColors {
 export const getThemeColors = (isDark: boolean): ThemeColors => {
   return isDark
     ? {
+      isDark,
       background: COLOR_TOKENS.backgroundApp,
       backgroundSecondary: COLOR_TOKENS.backgroundSurface,
       backgroundTertiary: COLOR_TOKENS.backgroundSurfaceAlt,
@@ -39,19 +41,20 @@ export const getThemeColors = (isDark: boolean): ThemeColors => {
       modalOverlay: 'rgba(120, 120, 128, 0.2)',
     }
     : {
-      background: '#F2F2F7',
-      backgroundSecondary: '#FFFFFF',
-      backgroundTertiary: '#E5E5EA',
-      backgroundCard: '#FFFFFF',
-      textPrimary: '#1C1C1E',
-      textSecondary: '#3A3A3C',
-      textMuted: '#8E8E93',
-      border: '#C6C6C8',
-      borderLight: '#E5E5EA',
-      accent: '#007AFF', // Standard iOS blue or custom primary
-      accentLight: '#E5F1FF',
-      buttonBg: '#FFFFFF',
-      modalOverlay: 'rgba(0, 0, 0, 0.4)',
+      isDark,
+      background: COLOR_TOKENS.backgroundSurfaceAlt,
+      backgroundSecondary: COLOR_TOKENS.backgroundSurface,
+      backgroundTertiary: COLOR_TOKENS.backgroundControl,
+      backgroundCard: COLOR_TOKENS.backgroundSurface,
+      textPrimary: COLOR_TOKENS.accentPrimary,
+      textSecondary: COLOR_TOKENS.accentInteractive,
+      textMuted: COLOR_TOKENS.textMuted,
+      border: COLOR_TOKENS.lightBorder,
+      borderLight: COLOR_TOKENS.borderDefault,
+      accent: COLOR_TOKENS.iosBlue,
+      accentLight: COLOR_TOKENS.iosBlueTint,
+      buttonBg: COLOR_TOKENS.backgroundSurface,
+      modalOverlay: OVERLAY_TOKENS.scrimLight,
     };
 };
 

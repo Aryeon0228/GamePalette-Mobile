@@ -23,7 +23,7 @@ import { usePaletteStore, SavedPalette } from '../store/paletteStore';
 import { useThemeStore } from '../store/themeStore';
 import ExportModal from './home/modals/ExportModal';
 import { type AppLanguage } from '../lib/colorUtils';
-import { COLOR_TOKENS, SHADOW_TOKENS, RADIUS_TOKENS } from '../constants/designTokens';
+import { COLOR_TOKENS, SHADOW_TOKENS, RADIUS_TOKENS, OVERLAY_TOKENS } from '../constants/designTokens';
 
 const C = COLOR_TOKENS;
 
@@ -497,7 +497,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
               style={[styles.menuItem, styles.menuItemDanger, { borderTopColor: theme.border }]}
               onPress={() => menuPalette && handleDeletePalette(menuPalette)}
             >
-              <Ionicons name="trash-outline" size={20} color="#ff4444" />
+              <Ionicons name="trash-outline" size={20} color={C.danger} />
               <Text style={[styles.menuItemText, styles.menuItemTextDanger]}>
                 {t.delete}
               </Text>
@@ -528,7 +528,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
                 style={styles.exportOption}
                 onPress={() => exportPalette && exportAsHEX(exportPalette)}
               >
-                <View style={[styles.exportIcon, { backgroundColor: '#333' }]}>
+                <View style={[styles.exportIcon, { backgroundColor: C.accentInteractive }]}>
                   <Text style={styles.exportIconText}>#</Text>
                 </View>
                 <Text style={[styles.exportOptionText, { color: theme.textSecondary }]}>HEX</Text>
@@ -538,7 +538,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
                 style={styles.exportOption}
                 onPress={() => exportPalette && exportAsJSON(exportPalette)}
               >
-                <View style={[styles.exportIcon, { backgroundColor: '#2d5a27' }]}>
+                <View style={[styles.exportIcon, { backgroundColor: C.exportJson }]}>
                   <Ionicons name="code-slash" size={20} color="#fff" />
                 </View>
                 <Text style={[styles.exportOptionText, { color: theme.textSecondary }]}>JSON</Text>
@@ -548,7 +548,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
                 style={styles.exportOption}
                 onPress={() => exportPalette && exportAsCSS(exportPalette)}
               >
-                <View style={[styles.exportIcon, { backgroundColor: '#264de4' }]}>
+                <View style={[styles.exportIcon, { backgroundColor: C.exportCss }]}>
                   <Text style={styles.exportIconText}>CSS</Text>
                 </View>
                 <Text style={[styles.exportOptionText, { color: theme.textSecondary }]}>CSS</Text>
@@ -558,7 +558,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
                 style={styles.exportOption}
                 onPress={() => exportPalette && sharePalette(exportPalette)}
               >
-                <View style={[styles.exportIcon, { backgroundColor: '#555' }]}>
+                <View style={[styles.exportIcon, { backgroundColor: C.accentMuted }]}>
                   <Ionicons name="share-social" size={20} color="#fff" />
                 </View>
                 <Text style={[styles.exportOptionText, { color: theme.textSecondary }]}>{t.share}</Text>
@@ -574,7 +574,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
                   setExportPalette(null);
                 }}
               >
-                <View style={[styles.exportIcon, { backgroundColor: '#c13584' }]}>
+                <View style={[styles.exportIcon, { backgroundColor: C.brandInstagram }]}>
                   <Ionicons name="logo-instagram" size={20} color="#fff" />
                 </View>
                 <Text style={[styles.exportOptionText, { color: theme.textSecondary }]}>Instagram</Text>
@@ -590,7 +590,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
                   setExportPalette(null);
                 }}
               >
-                <View style={[styles.exportIcon, { backgroundColor: '#1d9bf0' }]}>
+                <View style={[styles.exportIcon, { backgroundColor: C.brandTwitter }]}>
                   <Ionicons name="logo-twitter" size={20} color="#fff" />
                 </View>
                 <Text style={[styles.exportOptionText, { color: theme.textSecondary }]}>Twitter</Text>
@@ -744,7 +744,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: OVERLAY_TOKENS.scrimLight,
     justifyContent: 'center',
     alignItems: 'center',
   },

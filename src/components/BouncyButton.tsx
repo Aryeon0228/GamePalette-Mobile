@@ -1,5 +1,14 @@
-import React, { useRef, useEffect } from 'react';
-import { Pressable, Animated, StyleProp, ViewStyle } from 'react-native';
+import React, { useEffect } from 'react';
+import { Pressable, StyleProp, ViewStyle } from 'react-native';
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withSpring,
+    withTiming,
+    withRepeat,
+    withSequence,
+    cancelAnimation,
+} from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 
 export interface BouncyButtonProps {
@@ -25,56 +34,44 @@ export function BouncyButton({
     onPressOut,
     onPress,
 }: BouncyButtonProps) {
-    const scale = useRef(new Animated.Value(restScale)).current;
+    const scale = useSharedValue(restScale);
 
     useEffect(() => {
         if (!isBreathing) {
-            scale.setValue(restScale);
+            cancelAnimation(scale);
+            scale.value = restScale;
             return;
         }
-        const breatheAnimation = Animated.loop(
-            Animated.sequence([
-                Animated.timing(scale, {
-                    toValue: restScale * 1.05,
-                    duration: 1500,
-                    useNativeDriver: true,
-                }),
-                Animated.timing(scale, {
-                    toValue: restScale,
-                    duration: 1500,
-                    useNativeDriver: true,
-                }),
-            ])
+        scale.value = withRepeat(
+            withSequence(
+                withTiming(restScale * 1.05, { duration: 1500 }),
+                withTiming(restScale, { duration: 1500 }),
+            ),
+            -1,
         );
-        breatheAnimation.start();
 
         return () => {
-            breatheAnimation.stop();
+            cancelAnimation(scale);
         };
-    }, [isBreathing, scale, restScale]);
+    }, [isBreathing, restScale]);
 
     const handlePressIn = () => {
         if (hapticFeedback) {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         }
-        Animated.spring(scale, {
-            toValue: pressedScale,
-            useNativeDriver: true,
-            speed: 20,
-            bounciness: 10,
-        }).start();
+        cancelAnimation(scale);
+        scale.value = withSpring(pressedScale, { damping: 12, stiffness: 200 });
         onPressIn?.();
     };
 
     const handlePressOut = () => {
-        Animated.spring(scale, {
-            toValue: restScale,
-            useNativeDriver: true,
-            speed: 20,
-            bounciness: 10,
-        }).start();
+        scale.value = withSpring(restScale, { damping: 12, stiffness: 200 });
         onPressOut?.();
     };
+
+    const animatedStyle = useAnimatedStyle(() => ({
+        transform: [{ scale: scale.value }],
+    }));
 
     return (
         <Pressable
@@ -82,7 +79,7 @@ export function BouncyButton({
             onPressOut={handlePressOut}
             onPress={onPress}
         >
-            <Animated.View style={[style, { transform: [{ scale }] }]}>
+            <Animated.View style={[style, animatedStyle]}>
                 {children}
             </Animated.View>
         </Pressable>

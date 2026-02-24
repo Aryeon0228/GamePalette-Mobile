@@ -9,7 +9,7 @@ import * as Haptics from 'expo-haptics';
 
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
-import { COLOR_TOKENS } from '../../constants/designTokens';
+import { COLOR_TOKENS, OVERLAY_TOKENS } from '../../constants/designTokens';
 import { type AppLanguage } from '../../lib/colorUtils';
 import { BouncyButton } from '../../components/BouncyButton';
 
@@ -118,7 +118,7 @@ function ImageCard({
             style={[
               styles.valueOverlayButton,
               {
-                backgroundColor: showGrayscale ? '#34d399' + 'CC' : 'rgba(0, 0, 0, 0.6)',
+                backgroundColor: showGrayscale ? COLOR_TOKENS.emerald + 'CC' : OVERLAY_TOKENS.darkOnColorButton,
               },
             ]}
             onPress={() => onToggleGrayscale()}
@@ -181,8 +181,8 @@ function ImageCard({
           onPress={onPickFromGallery}
           hapticFeedback
         >
-          <View style={[styles.imageSourceIconBg, { backgroundColor: '#f472b6' + '20' }]}>
-            <Ionicons name="images" size={22} color="#f472b6" />
+          <View style={[styles.imageSourceIconBg, { backgroundColor: COLOR_TOKENS.pink + '20' }]}>
+            <Ionicons name="images" size={22} color={COLOR_TOKENS.pink} />
           </View>
           <Text style={[styles.imageSourceButtonText, { color: theme.textPrimary }]}>
             {isKorean ? '갤러리' : 'Gallery'}

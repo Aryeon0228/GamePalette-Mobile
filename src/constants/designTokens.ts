@@ -46,6 +46,98 @@ export const COLOR_TOKENS = {
   borderSubtle: '#F2F2F7',
   borderNeutral: '#E5E5EA',
   borderHandle: '#D1D1D6',
+
+  // Channel colors (RGB bars)
+  channelRed: '#ef4444',
+  channelGreen: '#22c55e',
+  channelBlue: '#3b82f6',
+
+  // Functional accent colors
+  pink: '#f472b6',
+  amber: '#f59e0b',
+  cyan: '#38bdf8',
+  emerald: '#34d399',
+
+  // iOS platform
+  iosBlue: '#007AFF',
+  iosBlueTint: '#E5F1FF',
+
+  // Brand / SNS
+  brandInstagram: '#c7587f',
+  brandTwitter: '#1d9bf0',
+
+  // Light mode overrides
+  lightBorder: '#C6C6C8',
+
+  // Export format colors
+  exportPng: '#f472b6',
+  exportJson: '#22c55e',
+  exportCss: '#3b82f6',
+
+  // Card option colors
+  cardOptionHex: '#60a5fa',
+  cardOptionStats: '#34d399',
+  cardOptionHistogram: '#f59e0b',
+
+  // Splash/brand decorative
+  brandSparkle: '#f7d77f',
+  brandTitleText: '#f8f9ff',
+} as const;
+
+export const OVERLAY_TOKENS = {
+  // Scrim / backdrop
+  scrimDark: 'rgba(0, 0, 0, 0.5)',
+  scrimLight: 'rgba(0, 0, 0, 0.4)',
+  scrimSubtle: 'rgba(0, 0, 0, 0.08)',
+
+  // Glass surfaces
+  glassWhite: 'rgba(255, 255, 255, 0.6)',
+  glassWhiteBorder: 'rgba(255, 255, 255, 0.4)',
+  glassWhiteThin: 'rgba(255, 255, 255, 0.2)',
+  glassWhiteFaint: 'rgba(255, 255, 255, 0.02)',
+  glassWhiteLoading: 'rgba(255, 255, 255, 0.7)',
+  glassCaptureButton: 'rgba(255, 255, 255, 0.3)',
+
+  // Text on color / overlay
+  textOnColorPrimary: 'rgba(255, 255, 255, 0.85)',
+  textOnColorMuted: 'rgba(255, 255, 255, 0.8)',
+  textOnColorFaint: 'rgba(255, 255, 255, 0.6)',
+  textOnColorGhost: 'rgba(255, 255, 255, 0.4)',
+  textOnColorSubtle: 'rgba(255, 255, 255, 0.7)',
+  textOnColorSnsRatio: 'rgba(255,255,255,0.7)',
+  textOnMethodDesc: 'rgba(255,255,255,0.8)',
+
+  // Dark overlays on color backgrounds
+  darkOnColor: 'rgba(0, 0, 0, 0.3)',
+  darkOnColorLight: 'rgba(0, 0, 0, 0.15)',
+  darkOnColorMedium: 'rgba(0, 0, 0, 0.25)',
+  darkOnColorButton: 'rgba(0, 0, 0, 0.6)',
+  darkOnColorTrack: 'rgba(0, 0, 0, 0.12)',
+
+  // SNS card specific
+  snsCardScrim: 'rgba(0, 0, 0, 0.5)',
+  snsCardHistogramBg: 'rgba(0, 0, 0, 0.3)',
+  snsCardStatDivider: 'rgba(255, 255, 255, 0.2)',
+
+  // Shadow tinting
+  textShadowDark: 'rgba(0, 0, 0, 0.3)',
+  textShadowSns: 'rgba(0, 0, 0, 0.35)',
+
+  // Camera overlay
+  cameraCloseBg: 'rgba(0,0,0,0.5)',
+
+  // Splash decorative
+  splashTint: 'rgba(0, 0, 0, 0.08)',
+  splashAurora: 'rgba(255, 255, 255, 0.08)',
+  splashBrandBg: 'rgba(8, 12, 28, 0.34)',
+  splashBrandBorder: 'rgba(255, 255, 255, 0.18)',
+  splashSubtitle: 'rgba(243, 246, 255, 0.9)',
+  splashVignetteBottom: 'rgba(0, 0, 0, 0.04)',
+  splashSparkleGlow: 'rgba(247, 215, 127, 0.42)',
+  splashTitleShadow: 'rgba(4, 8, 22, 0.64)',
+
+  // Gradient
+  gradientWhite10: 'rgba(255,255,255,0.1)',
 } as const;
 
 export const SPACING_TOKENS = {

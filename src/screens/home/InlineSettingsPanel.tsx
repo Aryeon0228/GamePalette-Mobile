@@ -1,5 +1,10 @@
 import React from 'react';
-import { Animated, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+  interpolate,
+} from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from './HomeScreen.styles';
@@ -7,12 +12,13 @@ import { ThemeColors } from '../../store/themeStore';
 import { ExtractionMethod } from '../../lib/colorExtractor';
 import { ColorBlindnessInfo, ColorBlindnessType } from '../../lib/colorUtils';
 import { StyleFilter, STYLE_FILTER_KEYS, STYLE_PRESETS } from '../../constants/stylePresets';
+import { COLOR_TOKENS, OVERLAY_TOKENS } from '../../constants/designTokens';
 
 interface InlineSettingsPanelProps {
   isMounted: boolean;
   showAdvanced: boolean;
   theme: ThemeColors;
-  advancedPanelAnim: Animated.Value;
+  advancedPanelAnim: SharedValue<number>;
   isKorean: boolean;
   settingLabel: string;
   stylePresetLabel: string;
@@ -65,6 +71,14 @@ function InlineSettingsPanel({
   onHapticLight,
   onClose,
 }: InlineSettingsPanelProps) {
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: advancedPanelAnim.value,
+    transform: [
+      { translateY: interpolate(advancedPanelAnim.value, [0, 1], [-10, 0]) },
+      { scaleY: interpolate(advancedPanelAnim.value, [0, 1], [0.965, 1]) },
+    ],
+  }));
+
   if (!isMounted) return null;
 
   return (
@@ -75,22 +89,8 @@ function InlineSettingsPanel({
         {
           backgroundColor: theme.backgroundCard,
           borderColor: theme.border,
-          opacity: advancedPanelAnim,
-          transform: [
-            {
-              translateY: advancedPanelAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [-10, 0],
-              }),
-            },
-            {
-              scaleY: advancedPanelAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.965, 1],
-              }),
-            },
-          ],
         },
+        animatedStyle,
       ]}
     >
       <View style={styles.inlineSettingsHeaderRow}>
@@ -131,7 +131,7 @@ function InlineSettingsPanel({
               <Ionicons
                 name={STYLE_PRESETS[filter].icon}
                 size={14}
-                color={styleFilter === filter ? '#fff' : STYLE_PRESETS[filter].color}
+                color={styleFilter === filter ? '#FFFFFF' : STYLE_PRESETS[filter].color}
               />
               <View style={[styles.advancedPresetLabelWrap, isKorean && styles.advancedPresetLabelWrapCompact]}>
                 <Text
@@ -139,7 +139,7 @@ function InlineSettingsPanel({
                   style={[
                     styles.advancedPresetText,
                     isKorean && styles.advancedPresetTextCompact,
-                    { color: styleFilter === filter ? '#fff' : STYLE_PRESETS[filter].color },
+                    { color: styleFilter === filter ? '#FFFFFF' : STYLE_PRESETS[filter].color },
                   ]}
                 >
                   {stylePresetButtonLabels[filter]}
@@ -157,17 +157,17 @@ function InlineSettingsPanel({
         <TouchableOpacity
           style={[
             styles.advancedMethodButton,
-            { backgroundColor: extractionMethod === 'histogram' ? '#38bdf8' : theme.backgroundTertiary },
+            { backgroundColor: extractionMethod === 'histogram' ? COLOR_TOKENS.cyan : theme.backgroundTertiary },
           ]}
           onPress={() => {
             onHapticLight();
             onMethodChange('histogram');
           }}
         >
-          <Text style={[styles.advancedMethodTitle, { color: extractionMethod === 'histogram' ? '#fff' : theme.textPrimary }]}>
+          <Text style={[styles.advancedMethodTitle, { color: extractionMethod === 'histogram' ? '#FFFFFF' : theme.textPrimary }]}>
             {extractionMethodLabels.histogram}
           </Text>
-          <Text style={[styles.advancedMethodDesc, { color: extractionMethod === 'histogram' ? 'rgba(255,255,255,0.8)' : theme.textMuted }]}>
+          <Text style={[styles.advancedMethodDesc, { color: extractionMethod === 'histogram' ? OVERLAY_TOKENS.textOnMethodDesc : theme.textMuted }]}>
             {methodDescriptions.histogram}
           </Text>
         </TouchableOpacity>
@@ -181,10 +181,10 @@ function InlineSettingsPanel({
             onMethodChange('kmeans');
           }}
         >
-          <Text style={[styles.advancedMethodTitle, { color: extractionMethod === 'kmeans' ? '#fff' : theme.textPrimary }]}>
+          <Text style={[styles.advancedMethodTitle, { color: extractionMethod === 'kmeans' ? '#FFFFFF' : theme.textPrimary }]}>
             {extractionMethodLabels.kmeans}
           </Text>
-          <Text style={[styles.advancedMethodDesc, { color: extractionMethod === 'kmeans' ? 'rgba(255,255,255,0.8)' : theme.textMuted }]}>
+          <Text style={[styles.advancedMethodDesc, { color: extractionMethod === 'kmeans' ? OVERLAY_TOKENS.textOnMethodDesc : theme.textMuted }]}>
             {methodDescriptions.kmeans}
           </Text>
         </TouchableOpacity>
@@ -224,11 +224,11 @@ function InlineSettingsPanel({
                 styles.advancedCvdCard,
                 {
                   backgroundColor: isActive
-                    ? (cvd.type === 'none' ? theme.accent + '20' : '#f59e0b' + '20')
+                    ? (cvd.type === 'none' ? theme.accent + '20' : COLOR_TOKENS.amber + '20')
                     : theme.backgroundTertiary,
                   borderWidth: isActive ? 1.5 : 1,
                   borderColor: isActive
-                    ? (cvd.type === 'none' ? theme.accent : '#f59e0b')
+                    ? (cvd.type === 'none' ? theme.accent : COLOR_TOKENS.amber)
                     : theme.backgroundTertiary,
                 },
               ]}
@@ -247,7 +247,7 @@ function InlineSettingsPanel({
                   styles.advancedCvdLabel,
                   {
                     color: isActive
-                      ? (cvd.type === 'none' ? theme.accent : '#f59e0b')
+                      ? (cvd.type === 'none' ? theme.accent : COLOR_TOKENS.amber)
                       : theme.textPrimary,
                     fontWeight: isActive ? '700' : '600',
                   },
@@ -262,7 +262,7 @@ function InlineSettingsPanel({
                 <Ionicons
                   name="checkmark-circle"
                   size={14}
-                  color={cvd.type === 'none' ? theme.accent : '#f59e0b'}
+                  color={cvd.type === 'none' ? theme.accent : COLOR_TOKENS.amber}
                   style={styles.cvdCheck}
                 />
               )}

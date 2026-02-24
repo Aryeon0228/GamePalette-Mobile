@@ -1,8 +1,9 @@
 import { StyleSheet, Dimensions } from 'react-native';
-import { COLOR_TOKENS, SHADOW_TOKENS } from '../../constants/designTokens';
+import { COLOR_TOKENS, SHADOW_TOKENS, OVERLAY_TOKENS } from '../../constants/designTokens';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const C = COLOR_TOKENS;
+const O = OVERLAY_TOKENS;
 
 export const styles = StyleSheet.create({
   container: {
@@ -84,7 +85,7 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     top: 12,
     right: 12,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: O.scrimDark,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
@@ -96,7 +97,7 @@ export const styles = StyleSheet.create({
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    backgroundColor: O.glassWhiteLoading,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -111,7 +112,7 @@ export const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: O.scrimDark,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -121,8 +122,8 @@ export const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     borderWidth: 2,
-    borderColor: '#fff',
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderColor: '#FFFFFF',
+    backgroundColor: O.glassWhiteThin,
     justifyContent: 'center',
     alignItems: 'center',
     ...SHADOW_TOKENS.glassmorphism,
@@ -145,7 +146,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.28)',
+    borderColor: O.glassWhiteThin,
   },
   valueOverlayButtonText: {
     color: '#FFFFFF',
@@ -492,7 +493,7 @@ export const styles = StyleSheet.create({
   inlineColorCopyButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    backgroundColor: O.darkOnColorLight,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,
@@ -524,15 +525,15 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     width: 14,
     textAlign: 'center',
-    color: 'rgba(255, 255, 255, 0.85)',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    color: O.textOnColorPrimary,
+    textShadowColor: O.textShadowDark,
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },
   previewChannelTrack: {
     flex: 1,
     height: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.12)',
+    backgroundColor: O.darkOnColorTrack,
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -546,8 +547,8 @@ export const styles = StyleSheet.create({
     fontFamily: 'monospace',
     width: 32,
     textAlign: 'right',
-    color: 'rgba(255, 255, 255, 0.85)',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    color: O.textOnColorPrimary,
+    textShadowColor: O.textShadowDark,
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },
@@ -609,7 +610,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     paddingBottom: 40,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: O.textOnColorPrimary,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     gap: 12,
@@ -753,7 +754,7 @@ export const styles = StyleSheet.create({
   modalColorCopyButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    backgroundColor: O.darkOnColorLight,
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 10,
@@ -1174,7 +1175,7 @@ export const styles = StyleSheet.create({
   },
   snsCardOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: O.snsCardScrim,
   },
   snsCardContent: {
     flex: 1,
@@ -1231,9 +1232,9 @@ export const styles = StyleSheet.create({
     lineHeight: 9,
     minHeight: 9,
     fontWeight: '600',
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: O.textOnColorMuted,
     fontFamily: 'monospace',
-    textShadowColor: 'rgba(0, 0, 0, 0.35)',
+    textShadowColor: O.textShadowSns,
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 1,
   },
@@ -1252,7 +1253,7 @@ export const styles = StyleSheet.create({
   },
   twitterUnifiedHistogram: {
     flex: 3,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: O.snsCardHistogramBg,
     borderRadius: 6,
     padding: 5,
   },
@@ -1272,7 +1273,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: O.snsCardHistogramBg,
     borderRadius: 6,
     paddingVertical: 4,
     paddingHorizontal: 6,
@@ -1288,7 +1289,7 @@ export const styles = StyleSheet.create({
   },
   twitterUnifiedStatLabel: {
     fontSize: 6,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: O.textOnColorFaint,
     marginTop: 1,
   },
   snsCardImage: {
@@ -1319,9 +1320,9 @@ export const styles = StyleSheet.create({
     lineHeight: 11,
     minHeight: 11,
     fontWeight: '600',
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: O.textOnColorMuted,
     fontFamily: 'monospace',
-    textShadowColor: 'rgba(0, 0, 0, 0.35)',
+    textShadowColor: O.textShadowSns,
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 1,
   },
@@ -1332,7 +1333,7 @@ export const styles = StyleSheet.create({
     letterSpacing: -0.1,
   },
   snsCardHistogram: {
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: O.snsCardHistogramBg,
     borderRadius: 10,
     padding: 10,
     marginTop: 10,
@@ -1360,13 +1361,13 @@ export const styles = StyleSheet.create({
   },
   snsCardHistogramLabel: {
     fontSize: 8,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: O.textOnColorFaint,
   },
   snsCardStats: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: O.snsCardHistogramBg,
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 16,
@@ -1383,13 +1384,13 @@ export const styles = StyleSheet.create({
   },
   snsCardStatLabel: {
     fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: O.textOnColorFaint,
     marginTop: 2,
   },
   snsCardStatDivider: {
     width: 1,
     height: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: O.snsCardStatDivider,
   },
   snsCardWatermark: {
     alignItems: 'center',
@@ -1398,7 +1399,7 @@ export const styles = StyleSheet.create({
   },
   snsCardWatermarkText: {
     fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.4)',
+    color: O.textOnColorGhost,
     fontFamily: 'SpaceGrotesk_700Bold',
     letterSpacing: 0.25,
   },
@@ -1597,7 +1598,7 @@ export const styles = StyleSheet.create({
   // Camera
   cameraContainer: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: C.textPrimary,
   },
   camera: {
     ...StyleSheet.absoluteFillObject,
@@ -1612,7 +1613,7 @@ export const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: O.cameraCloseBg,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -1624,7 +1625,7 @@ export const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: 'rgba(255,255,255,0.3)',
+    backgroundColor: O.glassCaptureButton,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 4,
@@ -1791,10 +1792,10 @@ export const styles = StyleSheet.create({
     paddingRight: 8,
     paddingVertical: 10,
     borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    backgroundColor: O.glassWhite,
     gap: 6,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderColor: O.glassWhiteBorder,
     ...SHADOW_TOKENS.glassmorphism,
   },
   summaryChipsScroll: {

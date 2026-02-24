@@ -9,6 +9,7 @@ import { styles } from '../HomeScreen.styles';
 import { ThemeColors } from '../../../store/themeStore';
 import { LuminosityHistogram } from '../../../lib/colorExtractor';
 import { getLuminance, type AppLanguage } from '../../../lib/colorUtils';
+import { COLOR_TOKENS, OVERLAY_TOKENS } from '../../../constants/designTokens';
 
 type ExportFormat = 'png' | 'json' | 'css';
 type ExportCopyFormat = 'text' | 'json' | 'css';
@@ -140,18 +141,18 @@ export default function ExportModal({
 }: ExportModalProps) {
   const isKorean = language === 'ko';
   const snsAccentColors: Record<'instagram' | 'twitter', string> = {
-    instagram: '#c7587f',
-    twitter: '#1d9bf0',
+    instagram: COLOR_TOKENS.brandInstagram,
+    twitter: COLOR_TOKENS.brandTwitter,
   };
   const cardOptionColors = {
-    hex: '#60a5fa',
-    stats: '#34d399',
-    histogram: '#f59e0b',
+    hex: COLOR_TOKENS.cardOptionHex,
+    stats: COLOR_TOKENS.cardOptionStats,
+    histogram: COLOR_TOKENS.cardOptionHistogram,
   };
   const exportFormatColors: Record<'png' | 'json' | 'css', string> = {
-    png: '#f472b6',
-    json: '#22c55e',
-    css: '#3b82f6',
+    png: COLOR_TOKENS.exportPng,
+    json: COLOR_TOKENS.exportJson,
+    css: COLOR_TOKENS.exportCss,
   };
 
   const effectiveHistogram = useMemo(
@@ -232,7 +233,7 @@ export default function ExportModal({
                 >
                   Instagram
                 </Text>
-                <Text style={[styles.snsTypeRatio, { color: snsCardType === 'instagram' ? 'rgba(255,255,255,0.7)' : theme.textMuted }]}
+                <Text style={[styles.snsTypeRatio, { color: snsCardType === 'instagram' ? OVERLAY_TOKENS.textOnColorSubtle : theme.textMuted }]}
                 >
                   1:1
                 </Text>
@@ -264,7 +265,7 @@ export default function ExportModal({
                 >
                   Twitter
                 </Text>
-                <Text style={[styles.snsTypeRatio, { color: snsCardType === 'twitter' ? 'rgba(255,255,255,0.7)' : theme.textMuted }]}
+                <Text style={[styles.snsTypeRatio, { color: snsCardType === 'twitter' ? OVERLAY_TOKENS.textOnColorSubtle : theme.textMuted }]}
                 >
                   16:9
                 </Text>
