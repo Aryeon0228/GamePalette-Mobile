@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, Linking, Image, StyleSheet as RNStyleSheet } from 'react-native';
+import { Alert, View, Text, TouchableOpacity, Modal, Linking, Image, StyleSheet as RNStyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
@@ -31,20 +31,34 @@ export default function InfoModal({
   const languageLabel = language === 'ko' ? '언어' : 'Language';
   const closeLabel = language === 'ko' ? '닫기' : 'Close';
   const feedbackLabel = language === 'ko' ? '피드백 보내기' : 'Send Feedback';
+  const feedbackPromptTitle = language === 'ko' ? '진단 로그 포함' : 'Include Diagnostics';
+  const feedbackPromptMessage = language === 'ko'
+    ? '최근 진단 로그를 함께 보낼까요? 민감한 정보는 자동으로 가려집니다.'
+    : 'Include recent diagnostics in the email? Sensitive data will be redacted automatically.';
+  const feedbackWithoutLogsLabel = language === 'ko' ? '로그 없이 보내기' : 'Send Without Logs';
+  const feedbackWithLogsLabel = language === 'ko' ? '로그 포함 보내기' : 'Send With Logs';
+  const cancelLabel = language === 'ko' ? '취소' : 'Cancel';
   const subtitleLabel = language === 'ko' ? '간편한 컬러 추출기' : 'Simple Color Extractor';
   const footerLabel = language === 'ko'
     ? 'Studio Aryeon 제작\nCodex 및 Claude Code와 함께'
     : 'Built by Studio Aryeon\nwith Codex and Claude Code';
-  const handleFeedbackPress = async () => {
-    onHapticLight();
-    const report = await buildRuntimeErrorReport(5);
+  const openFeedbackMail = async (includeDiagnostics: boolean) => {
+    const report = includeDiagnostics ? await buildRuntimeErrorReport(5) : '';
     const bodyPrefix = language === 'ko'
-      ? '안녕하세요! 피드백을 보냅니다.\n\n[Runtime Error Logs]\n'
-      : 'Hi! Sending feedback.\n\n[Runtime Error Logs]\n';
+      ? `안녕하세요! 피드백을 보냅니다.${includeDiagnostics ? '\n\n[Redacted Diagnostics]\n' : ''}`
+      : `Hi! Sending feedback.${includeDiagnostics ? '\n\n[Redacted Diagnostics]\n' : ''}`;
     const url = `mailto:studio.aryeon@gmail.com?subject=Pixel Paw Feedback&body=${encodeURIComponent(
       `${bodyPrefix}${report}`
     )}`;
     void Linking.openURL(url);
+  };
+  const handleFeedbackPress = () => {
+    onHapticLight();
+    Alert.alert(feedbackPromptTitle, feedbackPromptMessage, [
+      { text: cancelLabel, style: 'cancel' },
+      { text: feedbackWithoutLogsLabel, onPress: () => { void openFeedbackMail(false); } },
+      { text: feedbackWithLogsLabel, onPress: () => { void openFeedbackMail(true); } },
+    ]);
   };
 
   return (
@@ -77,9 +91,7 @@ export default function InfoModal({
 
           <TouchableOpacity
             style={[styles.infoModalButton, { backgroundColor: theme.backgroundTertiary }]}
-            onPress={() => {
-              void handleFeedbackPress();
-            }}
+            onPress={handleFeedbackPress}
           >
             <Ionicons name="mail-outline" size={20} color={theme.accent} />
             <Text style={[styles.infoModalButtonText, { color: theme.textPrimary }]}>

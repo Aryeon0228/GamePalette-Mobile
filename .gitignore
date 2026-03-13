@@ -38,3 +38,7 @@ yarn-error.*
 
 # Testing
 coverage/
+
+# Test/development images
+*.jpg
+!assets/**/*.jpg

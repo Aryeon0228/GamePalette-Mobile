@@ -6,7 +6,6 @@ import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
 import { LuminosityHistogram } from '../../lib/colorExtractor';
 import { COLOR_TOKENS } from '../../constants/designTokens';
-import { GlassPanel } from '../../components/GlassPanel';
 
 interface HistogramSectionProps {
   theme: ThemeColors;
@@ -30,11 +29,7 @@ function HistogramSection({
   histogramAverageLabel,
 }: HistogramSectionProps) {
   return (
-    <GlassPanel
-      intensity={45}
-      tint="light"
-      style={[styles.histogramCard, { borderColor: theme.border }]}
-    >
+    <View style={styles.histogramCard}>
       <View style={styles.histogramHeader}>
         <View style={styles.histogramTitleRow}>
           <Ionicons name="analytics-outline" size={14} color={theme.textMuted} />
@@ -100,7 +95,7 @@ function HistogramSection({
           <Text style={[styles.histogramStatLabel, { color: theme.textSecondary }]}>{histogramAverageLabel}</Text>
         </View>
       </View>
-    </GlassPanel>
+    </View>
   );
 }
 

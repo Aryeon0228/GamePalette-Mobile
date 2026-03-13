@@ -13,23 +13,55 @@ export interface RuntimeErrorEntry {
 
 const STORAGE_KEY = 'pixelpaw.runtime-errors';
 const MAX_ENTRIES = 40;
+const MAX_MESSAGE_LENGTH = 280;
+const MAX_STACK_LENGTH = 1200;
 let installed = false;
+
+const DIAGNOSTIC_REDACTIONS: Array<[RegExp, string]> = [
+  [/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, '<email>'],
+  [/\bfile:\/\/[^\s)\]]+/gi, 'file://<redacted>'],
+  [/\b(?:\/Users\/[^\s)\]]+|\/private\/var\/[^\s)\]]+|\/var\/[^\s)\]]+|\/data\/[^\s)\]]+|\/storage\/[^\s)\]]+|[A-Za-z]:\\[^\s)\]]+)/g, '<path>'],
+  [/([?&](?:token|secret|password|auth|authorization|api[_-]?key|session|cookie)=)[^&\s]+/gi, '$1<redacted>'],
+  [/((?:token|secret|password|auth(?:orization)?|api[_-]?key|session|cookie)\s*[:=]\s*)([^\s,;]+)/gi, '$1<redacted>'],
+  [/\bBearer\s+[A-Za-z0-9\-._~+/]+=*\b/gi, 'Bearer <redacted>'],
+];
+
+const truncateDiagnosticText = (value: string, limit: number): string => {
+  if (value.length <= limit) return value;
+  return `${value.slice(0, Math.max(0, limit - 13))}… [truncated]`;
+};
+
+const sanitizeDiagnosticText = (value: string, limit: number): string => {
+  let sanitized = value.replace(/\r\n/g, '\n').trim();
+  for (const [pattern, replacement] of DIAGNOSTIC_REDACTIONS) {
+    sanitized = sanitized.replace(pattern, replacement);
+  }
+  return truncateDiagnosticText(sanitized, limit);
+};
+
+const stringifyUnknownError = (input: unknown): string => {
+  try {
+    return JSON.stringify(input ?? 'Unknown runtime error');
+  } catch {
+    return String(input ?? 'Unknown runtime error');
+  }
+};
 
 const toErrorParts = (input: unknown): { message: string; stack: string } => {
   if (input instanceof Error) {
     return {
-      message: input.message || 'Unknown runtime error',
-      stack: input.stack || '',
+      message: sanitizeDiagnosticText(input.message || 'Unknown runtime error', MAX_MESSAGE_LENGTH),
+      stack: sanitizeDiagnosticText(input.stack || '', MAX_STACK_LENGTH),
     };
   }
   if (typeof input === 'string') {
     return {
-      message: input,
+      message: sanitizeDiagnosticText(input, MAX_MESSAGE_LENGTH),
       stack: '',
     };
   }
   return {
-    message: JSON.stringify(input ?? 'Unknown runtime error'),
+    message: sanitizeDiagnosticText(stringifyUnknownError(input), MAX_MESSAGE_LENGTH),
     stack: '',
   };
 };

@@ -10,7 +10,7 @@ export const COLOR_TOKENS = {
   accentInteractive: '#3A3A3C',
   accentMuted: '#48484A',
   accentVariationLightness: '#636366',
-  accentVariationHueShift: '#48484A',
+  accentVariationHueShift: '#6366A0',
 
   // Semantic
   warning: '#FF9500',
@@ -29,7 +29,7 @@ export const COLOR_TOKENS = {
   textGhost: '#D1D1D6',
 
   // Backgrounds — cleaner canvas
-  backgroundApp: '#F5F5F7',
+  backgroundApp: '#D1D1D6', // Noticeably darker so frames and white glows stand out
   backgroundSurface: '#FFFFFF',
   backgroundSurfaceAlt: '#F2F2F7',
   backgroundControl: '#E5E5EA',
@@ -98,6 +98,13 @@ export const OVERLAY_TOKENS = {
   glassWhiteLoading: 'rgba(255, 255, 255, 0.7)',
   glassCaptureButton: 'rgba(255, 255, 255, 0.3)',
 
+  // Blur surfaces (aggressive translucency)
+  blurSurfaceHeavy: 'rgba(255, 255, 255, 0.25)',
+  blurSurfaceMedium: '#F2F2F2',
+  blurSurfaceLight: 'rgba(255, 255, 255, 0.45)',
+  blurBorder: 'rgba(255, 255, 255, 0.20)',
+  blurBorderStrong: 'rgba(255, 255, 255, 0.35)',
+
   // Text on color / overlay
   textOnColorPrimary: 'rgba(255, 255, 255, 0.85)',
   textOnColorMuted: 'rgba(255, 255, 255, 0.8)',
@@ -136,8 +143,30 @@ export const OVERLAY_TOKENS = {
   splashSparkleGlow: 'rgba(247, 215, 127, 0.42)',
   splashTitleShadow: 'rgba(4, 8, 22, 0.64)',
 
+  // Dark blur surface (dark mode only, light value unused)
+  darkBlurSurface: 'rgba(255, 255, 255, 0.9)',
+
+  // Glass section background
+  glassSectionBg: 'rgba(255, 255, 255, 0.12)',
+
   // Gradient
   gradientWhite10: 'rgba(255,255,255,0.1)',
+
+  // Glass gradient (top-to-bottom specular)
+  glassGradientTop: 'rgba(255,255,255,0.30)',
+  glassGradientMid: 'rgba(255,255,255,0.0)',
+  glassGradientBottom: 'rgba(0,0,0,0)',
+
+  // Glass border highlight
+  glassBorderHighlight: 'rgba(255,255,255,0.50)',
+
+  // Neumorphic Inset — pressed / concave swatch effect
+  neumorphInsetTop: 'rgba(0,0,0,0.55)',
+  neumorphInsetMid: 'rgba(0,0,0,0.18)',
+  neumorphInsetLight: 'rgba(255,255,255,0.0)',
+  neumorphInsetBottom: 'rgba(255,255,255,0.50)',
+  neumorphInsetBorderTop: 'rgba(0,0,0,0.30)',
+  neumorphInsetBorderBottom: 'rgba(255,255,255,0.45)',
 } as const;
 
 export const SPACING_TOKENS = {
@@ -156,6 +185,14 @@ export const RADIUS_TOKENS = {
   lg: 18,
   xl: 24,
   pill: 999,
+} as const;
+
+export const FONT_FAMILY = {
+  regular: 'Pretendard-Regular',
+  medium: 'Pretendard-Medium',
+  semiBold: 'Pretendard-SemiBold',
+  bold: 'Pretendard-Bold',
+  mono: 'monospace',
 } as const;
 
 export const FONT_SIZE_TOKENS = {
@@ -184,33 +221,149 @@ export const SHADOW_TOKENS = {
     shadowRadius: 24,
     elevation: 8,
   },
+  // Material Flat — minimal subtle shadow
+  subtle: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  // Material Flat — medium elevation
+  medium: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  // Material Flat — elevated surface
+  elevated: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  // No shadow
+  none: {
+    shadowColor: 'transparent',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
+  },
+  // Legacy aliases (kept for backward compatibility)
   neumorphicLight: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 3,
+    elevation: 1,
   },
   neumorphicMedium: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.10,
-    shadowRadius: 20,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
   },
   glassmorphism: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.10,
-    shadowRadius: 24,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  // Liquid Glass — deep soft shadow for glass surfaces
+  glass: {
+    shadowColor: '#fff',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0,
+    shadowRadius: 3,
     elevation: 8,
   },
+  // Neumorphic Inset — soft top shadow simulating pressed look (Used as outer dark drop shadow)
+  neumorphInset: {
+    shadowColor: '#000',
+    shadowOffset: { width: 3, height: 4 },
+    shadowOpacity: 0.60, // Increased from 0.40 for darker shadow
+    shadowRadius: 5,
+    elevation: 4,
+  },
+  // Neumorphic Outer Light — bright top-left glow to complement the dark shadow
+  neumorphOuterLight: {
+    shadowColor: '#FFFFFF',
+    shadowOffset: { width: -3, height: -3 },
+    shadowOpacity: 0.8,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+} as const;
+
+export const BLUR_INTENSITY = {
+  heavy: 80,
+  medium: 60,
+  light: 40,
+  actionBar: 90,
+  glass: 5,
 } as const;
 
 export const ALPHA_TOKENS = {
   chipBg: '1A', // A bit more opaque
   chipBorder: '33', // Stronger border
 } as const;
+
+export function getOverlayTokens(isDark: boolean) {
+  if (!isDark) return OVERLAY_TOKENS;
+  return {
+    ...OVERLAY_TOKENS,
+    // Glass surfaces — dark translucent
+    glassWhite: 'rgba(255, 255, 255, 0.06)',
+    glassWhiteBorder: 'rgba(255, 255, 255, 0.12)',
+    glassWhiteThin: 'rgba(255, 255, 255, 0.04)',
+    glassWhiteLoading: 'rgba(0, 0, 0, 0.6)',
+    // Blur surfaces
+    blurSurfaceHeavy: 'rgba(30, 33, 48, 0.85)',
+    blurSurfaceMedium: 'rgba(38, 41, 64, 0.9)',
+    darkBlurSurface: 'rgba(38, 41, 64, 0.9)',
+    blurSurfaceLight: 'rgba(30, 33, 48, 0.7)',
+    blurBorder: 'rgba(255, 255, 255, 0.08)',
+    blurBorderStrong: 'rgba(255, 255, 255, 0.12)',
+    // Glass gradient
+    glassGradientTop: 'rgba(255,255,255,0.08)',
+    glassGradientMid: 'rgba(255,255,255,0.0)',
+    glassGradientBottom: 'rgba(0,0,0,0)',
+    glassBorderHighlight: 'rgba(255,255,255,0.12)',
+    // Neumorphic Inset — dark surface
+    neumorphInsetTop: 'rgba(0,0,0,0.6)',
+    neumorphInsetMid: 'rgba(0,0,0,0.25)',
+    neumorphInsetLight: 'rgba(255,255,255,0.0)',
+    neumorphInsetBottom: 'rgba(255,255,255,0.08)',
+    neumorphInsetBorderTop: 'rgba(0,0,0,0.4)',
+    neumorphInsetBorderBottom: 'rgba(255,255,255,0.06)',
+  };
+}
+
+export function getChipThemes(isDark: boolean) {
+  if (!isDark) return null;
+  const accent = {
+    bg: 'rgba(93, 184, 232, 0.10)',
+    activeBg: 'rgba(93, 184, 232, 0.20)',
+    activeBorder: 'rgba(93, 184, 232, 0.35)',
+    border: 'rgba(93, 184, 232, 0.08)',
+    text: '#5db8e8',
+    glow: 'rgb(50, 130, 180)',
+    activeGlow: 'rgb(93, 184, 232)',
+  };
+  return {
+    red: accent,
+    gold: accent,
+    purple: accent,
+    green: accent,
+    gray: accent,
+  };
+}
 
 export type ColorToken = keyof typeof COLOR_TOKENS;
 export type SpacingToken = keyof typeof SPACING_TOKENS;

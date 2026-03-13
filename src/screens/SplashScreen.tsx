@@ -270,8 +270,8 @@ const styles = StyleSheet.create({
   },
   brandSparkle: {
     color: COLOR_TOKENS.brandSparkle,
-    fontFamily: 'SpaceGrotesk_700Bold',
-    fontSize: 14,
+    fontFamily: 'Pretendard-Bold',
+    fontSize: 15,
     lineHeight: 16,
     textShadowColor: OVERLAY_TOKENS.splashSparkleGlow,
     textShadowOffset: { width: 0, height: 0 },
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
   },
   brandTitle: {
     color: COLOR_TOKENS.brandTitleText,
-    fontFamily: 'SpaceGrotesk_700Bold',
+    fontFamily: 'Pretendard-Bold',
     fontSize: 54,
     letterSpacing: -0.7,
     textShadowColor: OVERLAY_TOKENS.splashTitleShadow,
@@ -289,8 +289,8 @@ const styles = StyleSheet.create({
   brandSubtitle: {
     marginTop: 10,
     color: OVERLAY_TOKENS.splashSubtitle,
-    fontFamily: 'SpaceGrotesk_500Medium',
-    fontSize: 15,
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 16,
     letterSpacing: 0.6,
   },
 });

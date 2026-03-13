@@ -13,7 +13,7 @@ import { ThemeColors } from '../../store/themeStore';
 import { ExtractionMethod } from '../../lib/colorExtractor';
 import { ColorBlindnessInfo, ColorBlindnessType } from '../../lib/colorUtils';
 import { StyleFilter, STYLE_FILTER_KEYS, STYLE_PRESETS } from '../../constants/stylePresets';
-import { COLOR_TOKENS, OVERLAY_TOKENS } from '../../constants/designTokens';
+import { COLOR_TOKENS, OVERLAY_TOKENS, BLUR_INTENSITY } from '../../constants/designTokens';
 import { BouncyButton } from '../../components/BouncyButton';
 
 interface InlineSettingsPanelProps {
@@ -94,7 +94,7 @@ function InlineSettingsPanel({
       ]}
     >
       <BlurView
-        intensity={50}
+        intensity={BLUR_INTENSITY.medium}
         tint="light"
         style={StyleSheet.absoluteFillObject}
       />
@@ -123,7 +123,7 @@ function InlineSettingsPanel({
               styles.advancedPresetButton,
               isKorean && styles.advancedPresetButtonCompact,
               {
-                backgroundColor: styleFilter === filter ? STYLE_PRESETS[filter].color : theme.backgroundTertiary,
+                backgroundColor: styleFilter === filter ? STYLE_PRESETS[filter].color : STYLE_PRESETS[filter].color + '18',
               },
             ]}
             onPress={() => onStyleFilterChange(filter)}
@@ -160,7 +160,7 @@ function InlineSettingsPanel({
         <BouncyButton
           style={[
             styles.advancedMethodButton,
-            { backgroundColor: extractionMethod === 'histogram' ? COLOR_TOKENS.cyan : theme.backgroundTertiary },
+            { backgroundColor: extractionMethod === 'histogram' ? COLOR_TOKENS.cyan : COLOR_TOKENS.cyan + '18' },
           ]}
           onPress={() => onMethodChange('histogram')}
           pressedScale={0.95}
@@ -176,7 +176,7 @@ function InlineSettingsPanel({
         <BouncyButton
           style={[
             styles.advancedMethodButton,
-            { backgroundColor: extractionMethod === 'kmeans' ? kmeansAccentColor : theme.backgroundTertiary },
+            { backgroundColor: extractionMethod === 'kmeans' ? kmeansAccentColor : kmeansAccentColor + '18' },
           ]}
           onPress={() => onMethodChange('kmeans')}
           pressedScale={0.95}

@@ -1,5 +1,15 @@
 # GamePalette-Mobile
 
+## Development Environment
+
+- Node.js: `20` (see `./.nvmrc`)
+- 권장 명령:
+
+```bash
+nvm install
+nvm use
+```
+
 ## Release Workflow
 
 ### 1) 시뮬레이터 QA

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,7 +8,7 @@ import { BouncyButton } from '../../components/BouncyButton';
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
 import { type AppLanguage } from '../../lib/colorUtils';
-import { OVERLAY_TOKENS } from '../../constants/designTokens';
+import { OVERLAY_TOKENS, BLUR_INTENSITY } from '../../constants/designTokens';
 
 interface ActionBarProps {
   theme: ThemeColors;
@@ -26,31 +26,30 @@ function ActionBar({
   onExport,
 }: ActionBarProps) {
   const isKorean = language === 'ko';
-  const neutralButtonStyle = {
-    backgroundColor: theme.backgroundTertiary,
-    borderColor: theme.borderLight,
-  };
-
   return (
     <BlurView
-      intensity={70}
-      tint="light"
-      style={[styles.actionBar, { backgroundColor: 'rgba(255,255,255,0.65)', borderTopColor: theme.border }]}
+      intensity={40}
+      tint={theme.isDark ? "dark" : "light"}
+      style={[styles.actionBar, { backgroundColor: theme.isDark ? 'rgba(30, 33, 48, 0.8)' : 'rgba(255, 255, 255, 0.1)' }]}
     >
+      {/* 상단 하이라이트 */}
       <LinearGradient
-        colors={[OVERLAY_TOKENS.gradientWhite10, 'transparent']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 0.5 }}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1 }}
+        colors={theme.isDark
+          ? ['rgba(255,255,255,0.06)', 'transparent']
+          : ['rgba(255,255,255,0.25)', 'transparent']}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={StyleSheet.absoluteFillObject}
+        pointerEvents="none"
       />
 
       <BouncyButton
-        style={[styles.actionButton, neutralButtonStyle]}
+        style={styles.actionButton}
         onPress={onNavigateToLibrary}
         pressedScale={0.93}
         hapticFeedback
       >
-        <Ionicons name="library-outline" size={22} color={theme.textSecondary} />
+        <Ionicons name="library-outline" size={20} color={theme.textSecondary} />
         <Text style={[styles.actionButtonText, { color: theme.textSecondary }]}>
           {isKorean ? '보관함' : 'Library'}
         </Text>
@@ -67,12 +66,12 @@ function ActionBar({
       </BouncyButton>
 
       <BouncyButton
-        style={[styles.exportButton, neutralButtonStyle]}
+        style={styles.actionButton}
         onPress={onExport}
         pressedScale={0.93}
         hapticFeedback
       >
-        <Ionicons name="share-outline" size={22} color={theme.accent} />
+        <Ionicons name="share-outline" size={20} color={theme.accent} />
         <Text style={[styles.exportButtonText, { color: theme.accent }]}>
           {isKorean ? '내보내기' : 'Export'}
         </Text>

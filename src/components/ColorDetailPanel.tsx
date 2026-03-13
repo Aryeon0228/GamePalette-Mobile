@@ -141,9 +141,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginHorizontal: 16,
     marginVertical: 8,
-    borderWidth: 1,
-    borderColor: C.borderSoft,
-    ...SHADOW_TOKENS.neumorphicMedium,
+    ...SHADOW_TOKENS.medium,
   },
   colorPreview: {
     height: 80,
@@ -193,7 +191,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 8,
     gap: 6,
-    ...SHADOW_TOKENS.neumorphicLight,
+    ...SHADOW_TOKENS.subtle,
   },
   copyButtonSuccess: {
     backgroundColor: C.success,

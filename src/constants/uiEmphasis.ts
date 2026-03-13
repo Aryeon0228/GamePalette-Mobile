@@ -11,10 +11,11 @@ export const UNIFIED_EMPHASIS = {
   cvdBorder: `${COLOR_TOKENS.warning}${ALPHA_TOKENS.chipBorder}`,
 } as const;
 
-export const FORMAT_ACCENT_COLORS: Record<'HEX' | 'RGB' | 'HSL', string> = {
+export const FORMAT_ACCENT_COLORS: Record<'HEX' | 'RGB' | 'HSL' | 'OKLCH', string> = {
   HEX: UNIFIED_EMPHASIS.activeButtonBg,
   RGB: UNIFIED_EMPHASIS.activeButtonBg,
   HSL: UNIFIED_EMPHASIS.activeButtonBg,
+  OKLCH: UNIFIED_EMPHASIS.activeButtonBg,
 };
 
 export const VARIATION_TOGGLE_COLORS = {

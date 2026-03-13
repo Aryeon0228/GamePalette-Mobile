@@ -18,6 +18,8 @@ export interface ThemeColors {
   accent: string;
   accentLight: string;
 
+  backgroundDepressed: string;
+
   buttonBg: string;
   modalOverlay: string;
 }
@@ -26,19 +28,20 @@ export const getThemeColors = (isDark: boolean): ThemeColors => {
   return isDark
     ? {
       isDark,
-      background: COLOR_TOKENS.backgroundApp,
-      backgroundSecondary: COLOR_TOKENS.backgroundSurface,
-      backgroundTertiary: COLOR_TOKENS.backgroundSurfaceAlt,
-      backgroundCard: COLOR_TOKENS.backgroundSurface,
-      textPrimary: COLOR_TOKENS.textPrimary,
-      textSecondary: COLOR_TOKENS.textSecondary,
-      textMuted: COLOR_TOKENS.textMuted,
-      border: COLOR_TOKENS.borderDefault,
-      borderLight: COLOR_TOKENS.borderSoft,
-      accent: COLOR_TOKENS.accentPrimary,
-      accentLight: COLOR_TOKENS.accentLight,
-      buttonBg: COLOR_TOKENS.borderDefault,
-      modalOverlay: 'rgba(120, 120, 128, 0.2)',
+      background:          '#1e2130',
+      backgroundSecondary: '#262940',
+      backgroundTertiary:  '#303348',
+      backgroundCard:      '#262940',
+      textPrimary:         '#E8EAF0',
+      textSecondary:       '#B0B4C0',
+      textMuted:           '#6B7080',
+      border:              '#3A3D50',
+      borderLight:         '#2E3145',
+      accent:              '#5db8e8',
+      accentLight:         '#8ec8e8',
+      backgroundDepressed: '#222538',
+      buttonBg:            '#303348',
+      modalOverlay:        'rgba(0, 0, 0, 0.6)',
     }
     : {
       isDark,
@@ -53,6 +56,7 @@ export const getThemeColors = (isDark: boolean): ThemeColors => {
       borderLight: COLOR_TOKENS.borderDefault,
       accent: COLOR_TOKENS.iosBlue,
       accentLight: COLOR_TOKENS.iosBlueTint,
+      backgroundDepressed: COLOR_TOKENS.backgroundControl,
       buttonBg: COLOR_TOKENS.backgroundSurface,
       modalOverlay: OVERLAY_TOKENS.scrimLight,
     };

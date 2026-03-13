@@ -23,7 +23,7 @@ import { usePaletteStore, SavedPalette } from '../store/paletteStore';
 import { useThemeStore } from '../store/themeStore';
 import ExportModal from './home/modals/ExportModal';
 import { type AppLanguage } from '../lib/colorUtils';
-import { COLOR_TOKENS, SHADOW_TOKENS, RADIUS_TOKENS, OVERLAY_TOKENS } from '../constants/designTokens';
+import { COLOR_TOKENS, SHADOW_TOKENS, RADIUS_TOKENS, OVERLAY_TOKENS, BLUR_INTENSITY } from '../constants/designTokens';
 
 const C = COLOR_TOKENS;
 
@@ -194,7 +194,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
         message: `${palette.name}\n\n${isKorean ? '색상' : 'Colors'}:\n${palette.colors.join('\n')}\n\n${t.paletteSharedSuffix}`,
       });
     } catch (error) {
-      console.error(error);
+      if (__DEV__) console.error(error);
     }
     setExportPalette(null);
   };
@@ -247,7 +247,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
         });
       }
     } catch (error) {
-      console.error('SNS PNG export error:', error);
+      if (__DEV__) console.error('SNS PNG export error:', error);
       Alert.alert(t.exportPaletteTitle, t.exportImageFailed);
     } finally {
       setIsExporting(false);
@@ -266,7 +266,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
         await Sharing.shareAsync(fileUri);
       }
     } catch (error) {
-      console.error('SNS text export error:', error);
+      if (__DEV__) console.error('SNS text export error:', error);
       Alert.alert(t.exportPaletteTitle, t.exportFailed);
     } finally {
       if (fileUri) {
@@ -303,7 +303,8 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
   };
 
   const renderPaletteCard = ({ item }: { item: SavedPalette }) => (
-    <View style={[styles.card, { backgroundColor: theme.backgroundSecondary }]}>
+    <View style={styles.card}>
+      <BlurView intensity={BLUR_INTENSITY.heavy} tint="light" style={StyleSheet.absoluteFillObject} />
       {/* Header with thumbnail and menu */}
       <View style={styles.cardHeader}>
         <TouchableOpacity
@@ -462,11 +463,11 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
           <Animated.View style={[
             styles.menuModal,
             {
-              backgroundColor: theme.backgroundSecondary,
               opacity: menuAnimOpacity,
               transform: [{ scale: menuAnimScale }]
             }
           ]}>
+            <BlurView intensity={BLUR_INTENSITY.medium} tint="light" style={StyleSheet.absoluteFillObject} />
             <Text style={[styles.menuTitle, { color: theme.textPrimary, borderBottomColor: theme.border }]}>
               {menuPalette?.name}
             </Text>
@@ -519,7 +520,8 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
           onPress={() => setExportPalette(null)}
         >
           <BlurView intensity={40} tint="light" style={StyleSheet.absoluteFill} />
-          <View style={[styles.exportModal, { backgroundColor: theme.backgroundSecondary }]}>
+          <View style={styles.exportModal}>
+            <BlurView intensity={BLUR_INTENSITY.medium} tint="light" style={StyleSheet.absoluteFillObject} />
             <View style={[styles.exportHandle, { backgroundColor: theme.border }]} />
             <Text style={[styles.exportTitle, { color: theme.textPrimary }]}>{t.exportPaletteTitle}</Text>
 
@@ -648,10 +650,11 @@ const styles = StyleSheet.create({
     backgroundColor: C.backgroundElevated,
     justifyContent: 'center',
     alignItems: 'center',
-    ...SHADOW_TOKENS.neumorphicLight,
+    ...SHADOW_TOKENS.subtle,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 19,
+    fontFamily: 'Pretendard-SemiBold',
     fontWeight: '600',
     color: C.textPrimary,
   },
@@ -671,13 +674,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     gap: 10,
-    borderWidth: 1,
-    borderColor: C.borderSoft,
-    ...SHADOW_TOKENS.neumorphicLight,
+    ...SHADOW_TOKENS.none,
   },
   searchInput: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 16,
+    fontFamily: 'Pretendard-Regular',
     color: C.textPrimary,
     padding: 0,
   },
@@ -689,12 +691,14 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 22,
+    fontFamily: 'Pretendard-Bold',
     fontWeight: '700',
     color: C.textPrimary,
   },
   sectionCount: {
-    fontSize: 14,
+    fontSize: 15,
+    fontFamily: 'Pretendard-Regular',
     color: C.textMuted,
   },
   list: {
@@ -707,13 +711,11 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    backgroundColor: C.backgroundSurface,
+    backgroundColor: OVERLAY_TOKENS.blurSurfaceHeavy,
     borderRadius: 20,
     marginBottom: 16,
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: C.borderSoft,
-    ...SHADOW_TOKENS.neumorphicMedium,
+    ...SHADOW_TOKENS.medium,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -769,13 +771,15 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   cardTitle: {
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: 'Pretendard-SemiBold',
     fontWeight: '600',
     color: C.textPrimary,
     flex: 1,
   },
   paletteLabel: {
-    fontSize: 10,
+    fontSize: 11,
+    fontFamily: 'Pretendard-SemiBold',
     fontWeight: '600',
     color: C.textMuted,
     letterSpacing: 0.5,
@@ -794,12 +798,14 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   tagText: {
-    fontSize: 11,
+    fontSize: 12,
     color: C.textSecondary,
+    fontFamily: 'Pretendard-Medium',
     fontWeight: '500',
   },
   dateText: {
-    fontSize: 11,
+    fontSize: 12,
+    fontFamily: 'Pretendard-Regular',
     color: C.textSubtle,
     marginLeft: 'auto',
   },
@@ -811,10 +817,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
     gap: 6,
-    ...SHADOW_TOKENS.neumorphicLight,
+    ...SHADOW_TOKENS.none,
   },
   exportButtonText: {
-    fontSize: 13,
+    fontSize: 14,
+    fontFamily: 'Pretendard-SemiBold',
     fontWeight: '600',
     color: C.textPrimary,
   },
@@ -832,16 +839,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    ...SHADOW_TOKENS.neumorphicLight,
+    ...SHADOW_TOKENS.subtle,
   },
   emptyTitle: {
-    fontSize: 18,
+    fontSize: 19,
+    fontFamily: 'Pretendard-SemiBold',
     fontWeight: '600',
     color: C.textPrimary,
     marginBottom: 8,
   },
   emptySubtitle: {
-    fontSize: 14,
+    fontSize: 15,
+    fontFamily: 'Pretendard-Regular',
     color: C.textMuted,
     textAlign: 'center',
     lineHeight: 20,
@@ -851,16 +860,18 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   menuModal: {
-    backgroundColor: C.backgroundSurface,
+    backgroundColor: OVERLAY_TOKENS.blurSurfaceMedium,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 20,
     paddingBottom: 40,
     paddingHorizontal: 20,
-    ...SHADOW_TOKENS.neumorphicMedium,
+    overflow: 'hidden',
+    ...SHADOW_TOKENS.elevated,
   },
   menuTitle: {
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: 'Pretendard-SemiBold',
     fontWeight: '600',
     color: C.textPrimary,
     textAlign: 'center',
@@ -876,7 +887,8 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   menuItemText: {
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: 'Pretendard-Regular',
     color: C.textPrimary,
   },
   menuItemDanger: {
@@ -889,13 +901,14 @@ const styles = StyleSheet.create({
     color: C.danger,
   },
   exportModal: {
-    backgroundColor: C.backgroundSurface,
+    backgroundColor: OVERLAY_TOKENS.blurSurfaceMedium,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 12,
     paddingBottom: 40,
     paddingHorizontal: 20,
-    ...SHADOW_TOKENS.neumorphicMedium,
+    overflow: 'hidden',
+    ...SHADOW_TOKENS.elevated,
   },
   exportHandle: {
     width: 36,
@@ -906,7 +919,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   exportTitle: {
-    fontSize: 18,
+    fontSize: 19,
+    fontFamily: 'Pretendard-SemiBold',
     fontWeight: '600',
     color: C.textPrimary,
     textAlign: 'center',
@@ -929,16 +943,18 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    ...SHADOW_TOKENS.neumorphicLight,
+    ...SHADOW_TOKENS.none,
   },
   exportIconText: {
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: 'Pretendard-Bold',
     fontWeight: '700',
     color: '#fff',
   },
   exportOptionText: {
-    fontSize: 12,
+    fontSize: 13,
     color: C.textSecondary,
+    fontFamily: 'Pretendard-Medium',
     fontWeight: '500',
   },
 });

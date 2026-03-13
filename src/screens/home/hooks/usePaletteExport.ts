@@ -56,7 +56,7 @@ export function usePaletteExport({
         });
       }
     } catch (error) {
-      console.error('PNG export error:', error);
+      if (__DEV__) console.error('PNG export error:', error);
       Alert.alert(errorTitle, exportPngErrorMessage);
     } finally {
       setIsExporting(false);

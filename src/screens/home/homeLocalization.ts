@@ -82,8 +82,8 @@ const KO_LOCALIZATION: HomeLocalization = {
     kmeans: '케이-민스',
   },
   methodDescriptions: {
-    histogram: '색과 밝기의 전체 분포값 추출',
-    kmeans: '대표색 기준 추출',
+    histogram: '평균 색 분포를 고르게 추출',
+    kmeans: '핵심 색만 골라서 추출',
   },
   actionSheetLabels: {
     cancel: '취소',
@@ -116,8 +116,8 @@ const KO_LOCALIZATION: HomeLocalization = {
   colorVisionLabel: '색각 모드',
   copyButtonLabel: '복사',
   variationsLabel: '색상 변형',
-  lightnessLabel: '명도',
-  hueShiftLabel: '색상 이동',
+  lightnessLabel: '명암',
+  hueShiftLabel: '명암+색조',
   harmonyLabel: '조화',
   histogramTitle: '명도 분포',
   histogramContrastLabel: '대비',
@@ -157,8 +157,8 @@ const EN_LOCALIZATION: HomeLocalization = {
     kmeans: 'K-Means',
   },
   methodDescriptions: {
-    histogram: 'Distribution-based dominant colors',
-    kmeans: 'K dominant colors extraction',
+    histogram: 'Picks colors evenly from spread',
+    kmeans: 'Picks only the key colors',
   },
   actionSheetLabels: {
     cancel: 'Cancel',
@@ -191,8 +191,8 @@ const EN_LOCALIZATION: HomeLocalization = {
   colorVisionLabel: 'Color Vision',
   copyButtonLabel: 'Copy',
   variationsLabel: 'Variations',
-  lightnessLabel: 'Lightness',
-  hueShiftLabel: 'Hue Shift',
+  lightnessLabel: 'Value',
+  hueShiftLabel: 'Value + Hue',
   harmonyLabel: 'Harmony',
   histogramTitle: 'LUMINOSITY',
   histogramContrastLabel: 'contrast',

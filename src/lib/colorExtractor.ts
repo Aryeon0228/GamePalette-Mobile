@@ -50,6 +50,19 @@ export interface LuminosityHistogram {
   maxValue: number;         // Maximum luminosity
 }
 
+// ── Image processing constants ──
+const EXTRACTION_RESIZE = 100;
+const HISTOGRAM_RESIZE = 150;
+const ALPHA_THRESHOLD = 128;
+export const LUMINOSITY_WEIGHTS = { r: 0.299, g: 0.587, b: 0.114 } as const;
+const LUMINOSITY_BIN_SIZE = 8;
+const LUMINOSITY_STD_NORMALIZER = 128;
+const LUMINOSITY_DARK_THRESHOLD = 85;
+const LUMINOSITY_MID_THRESHOLD = 170;
+const KMEANS_MAX_ITERATIONS = 20;
+const KMEANS_CONVERGENCE_THRESHOLD = 1.0;
+const DEFAULT_GRAY: RgbColor = { r: 128, g: 128, b: 128 };
+
 // ============================================
 // MAIN EXTRACTION FUNCTION
 // ============================================
@@ -69,7 +82,7 @@ export async function extractColorsFromImage(
     // 1. Resize image for performance (max 100x100)
     const manipulated = await ImageManipulator.manipulateAsync(
       imageUri,
-      [{ resize: { width: 100, height: 100 } }],
+      [{ resize: { width: EXTRACTION_RESIZE, height: EXTRACTION_RESIZE } }],
       { format: ImageManipulator.SaveFormat.PNG, base64: true }
     );
 
@@ -101,7 +114,7 @@ export async function extractColorsFromImage(
     return dominantColors.map(rgb => rgbToHex(rgb.r, rgb.g, rgb.b));
 
   } catch (error) {
-    console.error('Color extraction error:', error);
+    if (__DEV__) console.error('Color extraction error:', error);
     return generateFallbackColors(colorCount);
   }
 }
@@ -122,7 +135,7 @@ export async function analyzeLuminosityHistogram(
     // Resize image for performance (max 150x150 for better accuracy)
     const manipulated = await ImageManipulator.manipulateAsync(
       imageUri,
-      [{ resize: { width: 150, height: 150 } }],
+      [{ resize: { width: HISTOGRAM_RESIZE, height: HISTOGRAM_RESIZE } }],
       { format: ImageManipulator.SaveFormat.PNG, base64: true }
     );
 
@@ -139,7 +152,7 @@ export async function analyzeLuminosityHistogram(
 
     // Calculate luminosity for each pixel
     const luminosities = pixels.map(({ r, g, b }) =>
-      Math.round(0.299 * r + 0.587 * g + 0.114 * b)
+      Math.round(LUMINOSITY_WEIGHTS.r * r + LUMINOSITY_WEIGHTS.g * g + LUMINOSITY_WEIGHTS.b * b)
     );
 
     // Create 32-bin histogram (each bin covers 8 values: 0-7, 8-15, etc.)
@@ -147,7 +160,7 @@ export async function analyzeLuminosityHistogram(
     const bins: number[] = new Array(binCount).fill(0);
 
     for (const lum of luminosities) {
-      const binIndex = Math.min(Math.floor(lum / 8), binCount - 1);
+      const binIndex = Math.min(Math.floor(lum / LUMINOSITY_BIN_SIZE), binCount - 1);
       bins[binIndex]++;
     }
 
@@ -176,7 +189,7 @@ export async function analyzeLuminosityHistogram(
 
     // Contrast: combination of range and std deviation
     const rangeContrast = (maxValue - minValue) / 255;
-    const stdContrast = stdDev / 128; // Normalize std dev
+    const stdContrast = stdDev / LUMINOSITY_STD_NORMALIZER; // Normalize std dev
     const contrast = Math.round(Math.min(100, ((rangeContrast + stdContrast) / 2) * 100));
 
     // Calculate tone distribution (dark/mid/bright)
@@ -185,9 +198,9 @@ export async function analyzeLuminosityHistogram(
     let brightCount = 0;
 
     for (const lum of luminosities) {
-      if (lum < 85) {
+      if (lum < LUMINOSITY_DARK_THRESHOLD) {
         darkCount++;
-      } else if (lum < 170) {
+      } else if (lum < LUMINOSITY_MID_THRESHOLD) {
         midCount++;
       } else {
         brightCount++;
@@ -209,7 +222,7 @@ export async function analyzeLuminosityHistogram(
       maxValue,
     };
   } catch (error) {
-    console.error('Luminosity histogram error:', error);
+    if (__DEV__) console.error('Luminosity histogram error:', error);
     return null;
   }
 }
@@ -223,13 +236,13 @@ async function decodeImageForHistogram(base64: string): Promise<RgbColor[]> {
 
     const pixels: RgbColor[] = [];
     for (let i = 0; i < rgbaData.length; i += 8) { // Every 2nd pixel
-      if (rgbaData[i + 3] < 128) continue;
+      if (rgbaData[i + 3] < ALPHA_THRESHOLD) continue;
       pixels.push({ r: rgbaData[i], g: rgbaData[i + 1], b: rgbaData[i + 2] });
     }
 
     return pixels;
   } catch (error) {
-    console.error('Image decode for histogram error:', error);
+    if (__DEV__) console.error('Image decode for histogram error:', error);
     return [];
   }
 }
@@ -262,13 +275,13 @@ async function decodeImage(base64: string): Promise<RgbColor[]> {
 
     // Sample every 4th pixel for performance
     for (let i = 0; i < rgbaData.length; i += 16) {
-      if (rgbaData[i + 3] < 128) continue; // skip transparent
+      if (rgbaData[i + 3] < ALPHA_THRESHOLD) continue; // skip transparent
       pixels.push({ r: rgbaData[i], g: rgbaData[i + 1], b: rgbaData[i + 2] });
     }
 
     return pixels;
   } catch (error) {
-    console.error('Image decode error:', error);
+    if (__DEV__) console.error('Image decode error:', error);
     return [];
   }
 }
@@ -277,13 +290,13 @@ async function decodeImage(base64: string): Promise<RgbColor[]> {
 // K-MEANS CLUSTERING
 // ============================================
 
-function kMeansClustering(pixels: RgbColor[], k: number, maxIterations: number = 20): RgbColor[] {
+function kMeansClustering(pixels: RgbColor[], k: number, maxIterations: number = KMEANS_MAX_ITERATIONS): RgbColor[] {
   if (pixels.length === 0) {
-    return Array(k).fill({ r: 128, g: 128, b: 128 });
+    return Array(k).fill(DEFAULT_GRAY);
   }
 
   if (pixels.length < k) {
-    return pixels.concat(Array(k - pixels.length).fill(pixels[0] || { r: 128, g: 128, b: 128 }));
+    return pixels.concat(Array(k - pixels.length).fill(pixels[0] || DEFAULT_GRAY));
   }
 
   // Initialize centroids using k-means++ algorithm
@@ -314,7 +327,7 @@ function kMeansClustering(pixels: RgbColor[], k: number, maxIterations: number =
       if (clusters[i].length === 0) continue;
 
       const newCentroid = averageColor(clusters[i]);
-      if (colorDistance(newCentroid, centroids[i]) > 1) {
+      if (colorDistance(newCentroid, centroids[i]) > KMEANS_CONVERGENCE_THRESHOLD) {
         converged = false;
       }
       centroids[i] = newCentroid;
@@ -325,8 +338,8 @@ function kMeansClustering(pixels: RgbColor[], k: number, maxIterations: number =
 
   // Sort by luminance (brightness)
   return centroids.sort((a, b) => {
-    const lumA = 0.299 * a.r + 0.587 * a.g + 0.114 * a.b;
-    const lumB = 0.299 * b.r + 0.587 * b.g + 0.114 * b.b;
+    const lumA = LUMINOSITY_WEIGHTS.r * a.r + LUMINOSITY_WEIGHTS.g * a.g + LUMINOSITY_WEIGHTS.b * a.b;
+    const lumB = LUMINOSITY_WEIGHTS.r * b.r + LUMINOSITY_WEIGHTS.g * b.g + LUMINOSITY_WEIGHTS.b * b.b;
     return lumB - lumA;
   });
 }
@@ -368,13 +381,13 @@ function initializeCentroids(pixels: RgbColor[], k: number): RgbColor[] {
 }
 
 function colorDistance(c1: RgbColor, c2: RgbColor): number {
-  // Weighted Euclidean distance for perceptual similarity
+  // Weighted squared Euclidean distance for perceptual similarity (sqrt omitted for performance)
   const rmean = (c1.r + c2.r) / 2;
   const dr = c1.r - c2.r;
   const dg = c1.g - c2.g;
   const db = c1.b - c2.b;
 
-  return Math.sqrt(
+  return (
     (2 + rmean / 256) * dr * dr +
     4 * dg * dg +
     (2 + (255 - rmean) / 256) * db * db
@@ -383,7 +396,7 @@ function colorDistance(c1: RgbColor, c2: RgbColor): number {
 
 function averageColor(colors: RgbColor[]): RgbColor {
   if (colors.length === 0) {
-    return { r: 128, g: 128, b: 128 };
+    return DEFAULT_GRAY;
   }
 
   const sum = colors.reduce(
@@ -408,7 +421,7 @@ function averageColor(colors: RgbColor[]): RgbColor {
 
 function extractColorsFromHueHistogram(pixels: PixelData[], colorCount: number): RgbColor[] {
   if (pixels.length === 0) {
-    return Array(colorCount).fill({ r: 128, g: 128, b: 128 });
+    return Array(colorCount).fill(DEFAULT_GRAY);
   }
 
   // Separate chromatic and achromatic pixels
@@ -555,8 +568,8 @@ function extractColorsFromHueHistogram(pixels: PixelData[], colorCount: number):
 
   // Sort by luminance
   return colors.slice(0, colorCount).sort((a, b) => {
-    const lumA = 0.299 * a.r + 0.587 * a.g + 0.114 * a.b;
-    const lumB = 0.299 * b.r + 0.587 * b.g + 0.114 * b.b;
+    const lumA = LUMINOSITY_WEIGHTS.r * a.r + LUMINOSITY_WEIGHTS.g * a.g + LUMINOSITY_WEIGHTS.b * a.b;
+    const lumB = LUMINOSITY_WEIGHTS.r * b.r + LUMINOSITY_WEIGHTS.g * b.g + LUMINOSITY_WEIGHTS.b * b.b;
     return lumB - lumA;
   });
 }
@@ -625,7 +638,7 @@ function findPeaks(smoothedCounts: number[], histogram: HueBin[]): HueBin[] {
 
 function getRepresentativeColor(pixels: PixelData[]): RgbColor {
   if (pixels.length === 0) {
-    return { r: 128, g: 128, b: 128 };
+    return DEFAULT_GRAY;
   }
 
   let totalWeight = 0;

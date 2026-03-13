@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import {
   hexToRgb,
   rgbToHsl,
+  rgbToOklch,
   generateColorHarmonies,
   type AppLanguage,
   type ColorInfo,
@@ -21,7 +22,8 @@ export function useColorDetail(
     const hex = processedColors[selectedColorIndex];
     const rgb = hexToRgb(hex);
     const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-    return { hex, rgb, hsl };
+    const oklch = rgbToOklch(rgb.r, rgb.g, rgb.b);
+    return { hex, rgb, hsl, oklch };
   }, [processedColors, selectedColorIndex]);
 
   const colorHarmonies = useMemo(

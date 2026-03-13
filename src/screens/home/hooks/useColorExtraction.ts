@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-native';
 
 import {
@@ -44,7 +44,7 @@ export function useColorExtraction({
         setCurrentColors(colors);
       } catch (error) {
         if (requestId === extractRequestRef.current) {
-          console.error('Error extracting colors:', error);
+          if (__DEV__) console.error('Error extracting colors:', error);
           Alert.alert(errorTitle, extractErrorMessage);
         }
       } finally {
@@ -64,7 +64,7 @@ export function useColorExtraction({
       setHistogram(histogramData);
     } catch (error) {
       if (requestId === histogramRequestRef.current) {
-        console.error('Histogram analysis error:', error);
+        if (__DEV__) console.error('Histogram analysis error:', error);
         setHistogram(null);
       }
     }
@@ -102,6 +102,13 @@ export function useColorExtraction({
     },
     [currentImageUri, doExtract, extractionMethod]
   );
+
+  // 앱 시작 시 이미지가 있지만 히스토그램이 없으면 자동 분석
+  useEffect(() => {
+    if (currentImageUri && !histogram) {
+      void analyzeHistogram(currentImageUri);
+    }
+  }, [currentImageUri]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     isExtracting,

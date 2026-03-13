@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ExtractionMethod } from '../lib/colorExtractor';
+import { cleanupManagedImageUri } from '../lib/managedImageUris';
 
 export interface SavedPalette {
   id: string;
@@ -35,6 +36,11 @@ interface PaletteState {
   clearCurrent: () => void;
 }
 
+const collectRetainedImageUris = (
+  savedPalettes: SavedPalette[],
+  currentImageUri?: string | null
+): Array<string | null | undefined> => [currentImageUri, ...savedPalettes.map((palette) => palette.imageUri)];
+
 export const usePaletteStore = create<PaletteState>()(
   persist(
     (set, get) => ({
@@ -42,14 +48,18 @@ export const usePaletteStore = create<PaletteState>()(
       currentColors: [],
       currentImageUri: null,
       selectedColorIndex: null,
-      colorCount: 5,
+      colorCount: 8,
       extractionMethod: 'histogram',
       savedPalettes: [],
 
       // Actions
       setCurrentColors: (colors) => set({ currentColors: colors, selectedColorIndex: null }),
 
-      setCurrentImageUri: (uri) => set({ currentImageUri: uri }),
+      setCurrentImageUri: (uri) => {
+        const { currentImageUri, savedPalettes } = get();
+        set({ currentImageUri: uri });
+        void cleanupManagedImageUri(currentImageUri, collectRetainedImageUris(savedPalettes, uri));
+      },
 
       setSelectedColorIndex: (index) => set({ selectedColorIndex: index }),
 
@@ -99,24 +109,37 @@ export const usePaletteStore = create<PaletteState>()(
       },
 
       deletePalette: (id) => {
-        const { savedPalettes } = get();
-        set({ savedPalettes: savedPalettes.filter(p => p.id !== id) });
+        const { savedPalettes, currentImageUri } = get();
+        const deletedPalette = savedPalettes.find((palette) => palette.id === id);
+        const nextSavedPalettes = savedPalettes.filter((palette) => palette.id !== id);
+        set({ savedPalettes: nextSavedPalettes });
+        void cleanupManagedImageUri(
+          deletedPalette?.imageUri,
+          collectRetainedImageUris(nextSavedPalettes, currentImageUri)
+        );
       },
 
       loadPalette: (palette) => {
+        const { currentImageUri, savedPalettes } = get();
         set({
           currentColors: [...palette.colors],
           currentImageUri: palette.imageUri,
           selectedColorIndex: null,
         });
+        void cleanupManagedImageUri(
+          currentImageUri,
+          collectRetainedImageUris(savedPalettes, palette.imageUri)
+        );
       },
 
       clearCurrent: () => {
+        const { currentImageUri, savedPalettes } = get();
         set({
           currentColors: [],
           currentImageUri: null,
           selectedColorIndex: null,
         });
+        void cleanupManagedImageUri(currentImageUri, collectRetainedImageUris(savedPalettes, null));
       },
     }),
     {

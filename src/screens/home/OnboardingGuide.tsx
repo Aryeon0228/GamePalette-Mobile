@@ -4,7 +4,6 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
-import { GlassPanel } from '../../components/GlassPanel';
 
 interface OnboardingGuideProps {
   theme: ThemeColors;
@@ -22,35 +21,31 @@ function OnboardingGuide({
   tapSwatchLabel,
 }: OnboardingGuideProps) {
   return (
-    <GlassPanel
-      intensity={40}
-      tint="light"
-      style={[styles.emptyGuideCard, { borderColor: theme.borderLight }]}
-    >
+    <View style={styles.emptyGuideCard}>
       <Text style={[styles.emptyGuideTitle, { color: theme.textPrimary }]}>
         {title}
       </Text>
       <View style={styles.emptyGuideRows}>
         <View style={styles.emptyGuideRow}>
-          <Ionicons name="image-outline" size={14} color={theme.accent} />
-          <Text style={[styles.emptyGuideText, { color: theme.textMuted }]}>
+          <Ionicons name="image-outline" size={14} color={theme.textMuted} />
+          <Text style={[styles.emptyGuideText, { color: theme.textSecondary }]}>
             {addImageLabel}
           </Text>
         </View>
         <View style={styles.emptyGuideRow}>
-          <Ionicons name="options-outline" size={14} color={theme.accent} />
-          <Text style={[styles.emptyGuideText, { color: theme.textMuted }]}>
+          <Ionicons name="options-outline" size={14} color={theme.textMuted} />
+          <Text style={[styles.emptyGuideText, { color: theme.textSecondary }]}>
             {expandSettingsLabel}
           </Text>
         </View>
         <View style={styles.emptyGuideRow}>
-          <Ionicons name="hand-left-outline" size={14} color={theme.accent} />
-          <Text style={[styles.emptyGuideText, { color: theme.textMuted }]}>
+          <Ionicons name="hand-left-outline" size={14} color={theme.textMuted} />
+          <Text style={[styles.emptyGuideText, { color: theme.textSecondary }]}>
             {tapSwatchLabel}
           </Text>
         </View>
       </View>
-    </GlassPanel>
+    </View>
   );
 }
 

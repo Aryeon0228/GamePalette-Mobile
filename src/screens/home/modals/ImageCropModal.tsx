@@ -250,13 +250,13 @@ export default function ImageCropModal({
 
   useEffect(() => {
     if (!visible || !imageUri || !imageFrame) return;
-    setSelectionMode('lasso');
+    setSelectionMode('rect');
     setLassoPoints([]);
     setCropRect({
-      x: imageFrame.width * 0.1,
-      y: imageFrame.height * 0.1,
-      width: imageFrame.width * 0.8,
-      height: imageFrame.height * 0.8,
+      x: 0,
+      y: 0,
+      width: imageFrame.width,
+      height: imageFrame.height,
     });
     dragState.current.mode = null;
     dragState.current.startRect = null;
@@ -452,7 +452,7 @@ export default function ImageCropModal({
       onRequestClose={onCancel}
       presentationStyle="fullScreen"
     >
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.isDark ? '#070b17' : '#f0f0f2' }]}>
         <View style={[styles.header, { borderBottomColor: theme.border }]}> 
           <TouchableOpacity
             style={[styles.headerButton, { backgroundColor: theme.backgroundTertiary }]}
@@ -542,7 +542,7 @@ export default function ImageCropModal({
         </View>
 
         <View style={styles.canvasOuter}>
-          <View style={styles.canvas} onLayout={onCanvasLayout}>
+          <View style={[styles.canvas, !theme.isDark && { backgroundColor: '#e0e0e2' }]} onLayout={onCanvasLayout}>
             {!!imageUri && !!imageFrame && (
               <Image
                 source={{ uri: imageUri }}
@@ -736,12 +736,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: 'Pretendard-Bold',
     fontWeight: '700',
   },
   subtitle: {
     marginTop: 2,
-    fontSize: 11,
+    fontSize: 12,
+    fontFamily: 'Pretendard-Medium',
     fontWeight: '500',
   },
   headerButton: {
@@ -756,7 +758,8 @@ const styles = StyleSheet.create({
     minWidth: 72,
   },
   headerButtonText: {
-    fontSize: 13,
+    fontSize: 14,
+    fontFamily: 'Pretendard-Bold',
     fontWeight: '700',
   },
   modeRow: {
@@ -776,7 +779,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   modeButtonText: {
-    fontSize: 12,
+    fontSize: 13,
+    fontFamily: 'Pretendard-Bold',
     fontWeight: '700',
   },
   redrawButton: {
@@ -788,7 +792,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   redrawButtonText: {
-    fontSize: 12,
+    fontSize: 13,
+    fontFamily: 'Pretendard-Bold',
     fontWeight: '700',
   },
   canvasOuter: {
@@ -817,7 +822,8 @@ const styles = StyleSheet.create({
   },
   lassoHintText: {
     color: 'rgba(255,255,255,0.85)',
-    fontSize: 12,
+    fontSize: 13,
+    fontFamily: 'Pretendard-SemiBold',
     fontWeight: '600',
     backgroundColor: 'rgba(0,0,0,0.42)',
     paddingHorizontal: 10,
@@ -897,11 +903,12 @@ const styles = StyleSheet.create({
   },
   helpText: {
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 13,
     lineHeight: 18,
     paddingHorizontal: 24,
     paddingTop: 10,
     paddingBottom: 24,
+    fontFamily: 'Pretendard-Medium',
     fontWeight: '500',
   },
 });

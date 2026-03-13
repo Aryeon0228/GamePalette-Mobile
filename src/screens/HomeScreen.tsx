@@ -1,5 +1,5 @@
 import Animated from 'react-native-reanimated';
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,15 +7,20 @@ import {
   Alert,
   ActionSheetIOS,
   Platform,
+  StyleSheet,
 } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import { shallow } from 'zustand/shallow';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SystemUI from 'expo-system-ui';
 
 import { usePaletteStore } from '../store/paletteStore';
 import { useThemeStore } from '../store/themeStore';
-import { COLOR_TOKENS } from '../constants/designTokens';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
+import { COLOR_TOKENS, BLUR_INTENSITY, OVERLAY_TOKENS } from '../constants/designTokens';
 import {
   toGrayscale,
   adjustColor,
@@ -25,14 +30,15 @@ import {
   ColorBlindnessType,
   type AppLanguage,
   type ColorInfo,
+  type ColorFormat,
 } from '../lib/colorUtils';
+import { ExtractionMethod } from '../lib/colorExtractor';
 import { StyleFilter, STYLE_PRESETS } from '../constants/stylePresets';
 import { styles } from './home/HomeScreen.styles';
 import { getHomeLocalization } from './home/homeLocalization';
 import { useColorExtraction } from './home/hooks/useColorExtraction';
 import { useImageImportAndCrop } from './home/hooks/useImageImportAndCrop';
 import { usePaletteExport } from './home/hooks/usePaletteExport';
-import { useAdvancedPanel } from './home/hooks/useAdvancedPanel';
 import { useCameraCapture } from './home/hooks/useCameraCapture';
 import { useColorDetail } from './home/hooks/useColorDetail';
 import { useToast } from './home/hooks/useToast';
@@ -40,10 +46,9 @@ import { useSectionEntrance } from './home/hooks/useSectionEntrance';
 import HomeHeader from './home/HomeHeader';
 import ImageCard from './home/ImageCard';
 import ActionBar from './home/ActionBar';
-import InlineSettingsPanel from './home/InlineSettingsPanel';
-import SettingsSummaryBar from './home/SettingsSummaryBar';
+import SettingsSummaryBar, { type SettingChipId } from './home/SettingsSummaryBar';
+import SettingsPanel from './home/SettingsPanel';
 import SwatchHint from './home/SwatchHint';
-import OnboardingGuide from './home/OnboardingGuide';
 import ColorPaletteSection from './home/ColorPaletteSection';
 import ColorDetailSection from './home/ColorDetailSection';
 import HistogramSection from './home/HistogramSection';
@@ -89,7 +94,7 @@ export default function HomeScreen({
   const [paletteName, setPaletteName] = useState('');
 
   // Color Format State
-  const [colorFormat, setColorFormat] = useState<'HEX' | 'RGB' | 'HSL'>('HEX');
+  const [colorFormat, setColorFormat] = useState<ColorFormat>('HEX');
 
   // Filter & Display State
   const [styleFilter, setStyleFilter] = useState<StyleFilter>('original');
@@ -108,10 +113,20 @@ export default function HomeScreen({
 
   // Toast & Hint State
   const { toastMessage, showToast } = useToast();
-  const [hasSeenColorTapHint, setHasSeenColorTapHint] = useState(false);
+  const [hasSeenColorTapHint, setHasSeenColorTapHint] = useState(true);
+
+  useEffect(() => {
+    AsyncStorage.getItem('hasSeenColorTapHint').then((v) => {
+      if (v !== 'true') setHasSeenColorTapHint(false);
+    });
+  }, []);
 
   // Theme & Store
   const theme = useThemeStore((state) => state.colors);
+
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync(theme.isDark ? '#1e2130' : '#f0f0f2');
+  }, [theme.isDark]);
   const {
     currentColors,
     currentImageUri,
@@ -121,7 +136,6 @@ export default function HomeScreen({
     setCurrentColors,
     setCurrentImageUri,
     setSelectedColorIndex,
-    setColorCount,
     setExtractionMethod,
     savePalette,
   } = usePaletteStore(
@@ -134,13 +148,11 @@ export default function HomeScreen({
       setCurrentColors: state.setCurrentColors,
       setCurrentImageUri: state.setCurrentImageUri,
       setSelectedColorIndex: state.setSelectedColorIndex,
-      setColorCount: state.setColorCount,
       setExtractionMethod: state.setExtractionMethod,
       savePalette: state.savePalette,
     }),
     shallow
   );
-
   // ============================================
   // COMPUTED VALUES
   // ============================================
@@ -172,10 +184,6 @@ export default function HomeScreen({
     if (colorBlindMode === 'none') return '';
     return cvdOptions.find((option) => option.type === colorBlindMode)?.label ?? '';
   }, [colorBlindMode, cvdOptions]);
-  const kmeansAccentColor = COLOR_TOKENS.accentMuted;
-  const styleChipColor = STYLE_PRESETS[styleFilter].color;
-  const methodChipColor = extractionMethod === 'histogram' ? COLOR_TOKENS.textMuted : kmeansAccentColor;
-  const countChipColor = COLOR_TOKENS.accentVariationLightness;
 
   const localization = getHomeLocalization(appLanguage);
 
@@ -185,7 +193,6 @@ export default function HomeScreen({
     extractColors,
     handleMethodChange,
     handleReExtract,
-    reExtractWithCount,
   } = useColorExtraction({
     colorCount,
     extractionMethod,
@@ -197,11 +204,12 @@ export default function HomeScreen({
     extractErrorMessage: localization.extractErrorMessage,
   });
 
-  const getFormattedColor = useCallback((info: ColorInfo, format: 'HEX' | 'RGB' | 'HSL'): string => {
+  const getFormattedColor = useCallback((info: ColorInfo, format: ColorFormat): string => {
     switch (format) {
       case 'HEX': return info.hex.toUpperCase();
-      case 'RGB': return `RGB(${info.rgb.r}, ${info.rgb.g}, ${info.rgb.b})`;
-      case 'HSL': return `HSL(${info.hsl.h}, ${info.hsl.s}%, ${info.hsl.l}%)`;
+      case 'RGB': return `${info.rgb.r}, ${info.rgb.g}, ${info.rgb.b}`;
+      case 'HSL': return `${info.hsl.h}°, ${info.hsl.s}%, ${info.hsl.l}%`;
+      case 'OKLCH': return `${info.oklch.l}%, ${info.oklch.c}, ${info.oklch.h}°`;
     }
   }, []);
 
@@ -222,13 +230,24 @@ export default function HomeScreen({
     Alert.alert(localization.errorTitle, localization.cameraErrorMessage);
   }, [localization.cameraErrorMessage, localization.errorTitle]);
 
-  const {
-    showAdvanced,
-    isAdvancedMounted,
-    advancedPanelAnim,
-    closeAdvancedPanel,
-    toggleAdvancedPanel,
-  } = useAdvancedPanel();
+  const [activeDropdown, setActiveDropdown] = useState<SettingChipId | null>(null);
+
+  const handleChipPress = useCallback((id: SettingChipId) => {
+    hapticLight();
+    if (id === 'style') {
+      const keys: StyleFilter[] = ['original', 'hypercasual', 'stylized', 'realistic'];
+      const idx = keys.indexOf(styleFilter);
+      setStyleFilter(keys[(idx + 1) % keys.length]);
+    } else if (id === 'method') {
+      const next: ExtractionMethod = extractionMethod === 'histogram' ? 'kmeans' : 'histogram';
+      handleMethodChange(next);
+    } else if (id === 'cvd') {
+      const keys: ColorBlindnessType[] = ['none', 'protanopia', 'deuteranopia', 'tritanopia'];
+      const idx = keys.indexOf(colorBlindMode);
+      setColorBlindMode(keys[(idx + 1) % keys.length]);
+    }
+    // 'bw' is handled by onToggleGrayscale directly
+  }, [hapticLight, styleFilter, extractionMethod, colorBlindMode, handleMethodChange]);
 
   const { showCamera, cameraRef, openCamera, closeCamera, takePicture } = useCameraCapture({
     onImageCaptured: extractColors,
@@ -285,29 +304,23 @@ export default function HomeScreen({
     }
   }, [localization.actionSheetLabels, localization.imageSourceDialogMessage, localization.imageSourceDialogTitle, hapticLight, openCamera, pickFromGallery]);
 
-  const handleColorCountStep = useCallback((direction: 'down' | 'up') => {
-    hapticLight();
-    const newCount = direction === 'down'
-      ? (colorCount <= 3 ? 8 : colorCount - 1)
-      : (colorCount >= 8 ? 3 : colorCount + 1);
-    setColorCount(newCount);
-    reExtractWithCount(newCount);
-  }, [colorCount, hapticLight, reExtractWithCount, setColorCount]);
-
   // ============================================
   // COLOR INTERACTION
   // ============================================
 
   const handleColorPress = useCallback((index: number) => {
     hapticLight();
-    setHasSeenColorTapHint(true);
-    if (isAdvancedMounted) closeAdvancedPanel();
+    if (!hasSeenColorTapHint) {
+      setHasSeenColorTapHint(true);
+      AsyncStorage.setItem('hasSeenColorTapHint', 'true');
+    }
+    if (activeDropdown) setActiveDropdown(null);
     if (selectedColorIndex === index) {
       setSelectedColorIndex(null);
     } else {
       setSelectedColorIndex(index);
     }
-  }, [closeAdvancedPanel, hapticLight, isAdvancedMounted, selectedColorIndex, setSelectedColorIndex]);
+  }, [activeDropdown, hapticLight, selectedColorIndex, setSelectedColorIndex]);
 
   const copyColor = useCallback(async (value: string, label?: string) => {
     await Clipboard.setStringAsync(value);
@@ -375,111 +388,109 @@ export default function HomeScreen({
   const handleReExtractPress = useCallback(() => { hapticLight(); void handleReExtract(); }, [handleReExtract, hapticLight]);
   const handleOpenCameraPress = useCallback(() => { hapticLight(); void openCamera(); }, [hapticLight, openCamera]);
   const handlePickFromGalleryPress = useCallback(() => { hapticLight(); void pickFromGallery(); }, [hapticLight, pickFromGallery]);
-  const handleToggleAdvancedPanel = useCallback(() => { hapticLight(); toggleAdvancedPanel(); }, [hapticLight, toggleAdvancedPanel]);
 
   // ============================================
   // RENDER
   // ============================================
 
   return (
-    <Animated.View style={[styles.container, { backgroundColor: theme.backgroundSecondary }]}>
-      <HomeHeader
-        language={appLanguage}
-        onShowInfo={handleShowInfo}
+    <Animated.View style={[styles.container]}>
+      <LinearGradient
+        colors={theme.isDark
+          ? ['#1e2130', '#1a1d2e']
+          : ['rgb(210, 210, 212)', 'rgb(200, 200, 198)']}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={StyleSheet.absoluteFillObject}
       />
-
       <ScrollView
         style={styles.content}
         showsVerticalScrollIndicator={false}
         scrollEnabled={true}
       >
-        <ImageCard
-          currentImageUri={currentImageUri}
-          showGrayscale={showGrayscale}
+        <HomeHeader
           language={appLanguage}
-          theme={theme}
-          isExtracting={isExtracting}
-          onImagePress={showImageSourceOptions}
-          onToggleGrayscale={handleToggleGrayscale}
-          onReExtractPress={handleReExtractPress}
-          onOpenCamera={handleOpenCameraPress}
-          onPickFromGallery={handlePickFromGalleryPress}
+          onShowInfo={handleShowInfo}
         />
-
-        <SettingsSummaryBar
-          theme={theme}
-          styleFilter={styleFilter}
-          styleChipColor={styleChipColor}
-          methodChipColor={methodChipColor}
-          countChipColor={countChipColor}
-          extractionMethodLabel={localization.extractionMethodLabels[extractionMethod]}
-          stylePresetChipLabel={localization.stylePresetChipLabels[styleFilter]}
-          colorCount={colorCount}
-          colorBlindMode={colorBlindMode}
-          cvdChipLabel={cvdChipLabel}
-          isAdvancedMounted={isAdvancedMounted}
-          onToggleAdvancedPanel={handleToggleAdvancedPanel}
-        />
-
-        {processedColors.length > 0 && selectedColorIndex === null && !hasSeenColorTapHint && (
-          <EntranceWrapper delay={100}>
-            <SwatchHint
+        <View style={[styles.sectorNeumorphLight,
+          theme.isDark && { shadowColor: '#5a68a0', shadowOpacity: 0.4 }
+        ]}>
+        <View style={[styles.imageGroupOuter,
+          theme.isDark && { shadowColor: '#000', shadowOpacity: 0.6 }
+        ]}>
+          <View style={[styles.imageGroupInner,
+            theme.isDark && { backgroundColor: theme.backgroundSecondary }
+          ]}>
+            <ImageCard
+              currentImageUri={currentImageUri}
+              showGrayscale={showGrayscale}
+              language={appLanguage}
               theme={theme}
-              title={localization.swatchHintTitle}
-              subtitle={localization.swatchHintSubtitle}
+              isExtracting={isExtracting}
+              onImagePress={showImageSourceOptions}
+              onReExtractPress={handleReExtractPress}
+              onOpenCamera={handleOpenCameraPress}
+              onPickFromGallery={handlePickFromGalleryPress}
             />
-          </EntranceWrapper>
-        )}
 
-        <ColorPaletteSection
-          theme={theme}
-          processedColors={processedColors}
-          styledColors={styledColors}
-          selectedColorIndex={selectedColorIndex}
-          colorBlindMode={colorBlindMode}
-          colorCount={colorCount}
-          onColorPress={handleColorPress}
-        />
+            <SettingsSummaryBar
+              onChipPress={handleChipPress}
+              styleFilter={styleFilter}
+              stylePresetChipLabel={localization.stylePresetChipLabels[styleFilter]}
+              isKorean={isKorean}
+              extractionMethod={extractionMethod}
+              colorBlindMode={colorBlindMode}
+              cvdChipLabel={cvdChipLabel}
+              showGrayscale={showGrayscale}
+              onToggleGrayscale={handleToggleGrayscale}
+              isDark={theme.isDark}
+            />
 
-        <InlineSettingsPanel
-          isMounted={isAdvancedMounted}
-          showAdvanced={showAdvanced}
-          theme={theme}
-          advancedPanelAnim={advancedPanelAnim}
-          isKorean={isKorean}
-          settingLabel={localization.settingLabel}
-          stylePresetLabel={localization.stylePresetLabel}
-          styleFilter={styleFilter}
-          stylePresetButtonLabels={localization.stylePresetButtonLabels}
-          stylePresetButtonLines={localization.stylePresetButtonLines}
-          onStyleFilterChange={setStyleFilter}
-          extractionMethodLabel={localization.extractionMethodLabel}
-          extractionMethod={extractionMethod}
-          extractionMethodLabels={localization.extractionMethodLabels}
-          methodDescriptions={localization.methodDescriptions}
-          kmeansAccentColor={kmeansAccentColor}
-          onMethodChange={handleMethodChange}
-          colorCountLabel={localization.colorCountLabel}
-          colorCount={colorCount}
-          onColorCountStep={handleColorCountStep}
-          colorVisionLabel={localization.colorVisionLabel}
-          cvdOptions={cvdOptions}
-          colorBlindMode={colorBlindMode}
-          onColorBlindModeChange={setColorBlindMode}
-          onClose={closeAdvancedPanel}
-        />
-
-        {!currentImageUri && processedColors.length === 0 && (
-          <EntranceWrapper delay={300}>
-            <OnboardingGuide
+            <SettingsPanel
+              isInline
               theme={theme}
-              title={localization.emptyGuideTitle}
-              addImageLabel={localization.emptyGuideAddImage}
-              expandSettingsLabel={localization.emptyGuideExpandSettings}
-              tapSwatchLabel={localization.emptyGuideTapSwatch}
+              activeDropdown={activeDropdown}
+              isKorean={isKorean}
+              styleFilter={styleFilter}
+              stylePresetButtonLabels={localization.stylePresetButtonLabels}
+              stylePresetButtonLines={localization.stylePresetButtonLines}
+              onStyleFilterChange={setStyleFilter}
+              extractionMethod={extractionMethod}
+              extractionMethodLabels={localization.extractionMethodLabels}
+              methodDescriptions={localization.methodDescriptions}
+              onMethodChange={handleMethodChange}
+              colorBlindMode={colorBlindMode}
+              cvdOptions={cvdOptions}
+              onColorBlindModeChange={setColorBlindMode}
             />
-          </EntranceWrapper>
-        )}
+          </View>
+        </View>
+        </View>
+
+
+        {/* SwatchHint removed */}
+
+        <View style={[styles.sectorNeumorphLight,
+          theme.isDark && { shadowColor: '#5a68a0', shadowOpacity: 0.4 }
+        ]}>
+        <View style={[styles.imageGroupOuter, styles.paletteGroupOuter,
+          theme.isDark && { shadowColor: '#000', shadowOpacity: 0.6 }
+        ]}>
+          <View style={[styles.paletteGroupInner,
+            theme.isDark && { backgroundColor: theme.backgroundSecondary }
+          ]}>
+            <ColorPaletteSection
+              theme={theme}
+              processedColors={processedColors}
+              styledColors={styledColors}
+              selectedColorIndex={selectedColorIndex}
+              colorBlindMode={colorBlindMode}
+              colorCount={colorCount}
+              onColorPress={handleColorPress}
+            />
+          </View>
+        </View>
+        </View>
 
         {colorInfo && selectedColorIndex !== null && (
           <EntranceWrapper delay={50}>
@@ -506,30 +517,44 @@ export default function HomeScreen({
         )}
 
         {histogram && currentImageUri && (
-          <EntranceWrapper delay={200}>
-            <HistogramSection
-              theme={theme}
-              histogram={histogram}
-              histogramTitle={localization.histogramTitle}
-              histogramContrastLabel={localization.histogramContrastLabel}
-              histogramDarkLabel={localization.histogramDarkLabel}
-              histogramMidLabel={localization.histogramMidLabel}
-              histogramBrightLabel={localization.histogramBrightLabel}
-              histogramAverageLabel={localization.histogramAverageLabel}
-            />
-          </EntranceWrapper>
+          <View style={[styles.sectorNeumorphLight,
+            theme.isDark && { shadowColor: '#5a68a0', shadowOpacity: 0.4 }
+          ]}>
+          <View style={[styles.imageGroupOuter, styles.paletteGroupOuter,
+            theme.isDark && { shadowColor: '#000', shadowOpacity: 0.6 }
+          ]}>
+            <View style={[styles.imageGroupInner,
+              theme.isDark && { backgroundColor: theme.backgroundSecondary }
+            ]}>
+              <HistogramSection
+                theme={theme}
+                histogram={histogram}
+                histogramTitle={localization.histogramTitle}
+                histogramContrastLabel={localization.histogramContrastLabel}
+                histogramDarkLabel={localization.histogramDarkLabel}
+                histogramMidLabel={localization.histogramMidLabel}
+                histogramBrightLabel={localization.histogramBrightLabel}
+                histogramAverageLabel={localization.histogramAverageLabel}
+              />
+            </View>
+          </View>
+          </View>
         )}
 
         {currentImageUri && <View style={{ height: 100 }} />}
       </ScrollView>
 
-      <ActionBar
-        theme={theme}
-        language={appLanguage}
-        onNavigateToLibrary={onNavigateToLibrary}
-        onSave={handleSave}
-        onExport={handleExport}
-      />
+      {processedColors.length > 0 && (
+        <EntranceWrapper delay={150}>
+          <ActionBar
+            theme={theme}
+            language={appLanguage}
+            onNavigateToLibrary={onNavigateToLibrary}
+            onSave={handleSave}
+            onExport={handleExport}
+          />
+        </EntranceWrapper>
+      )}
 
       <ColorDetailModal
         visible={showColorDetail && colorInfo !== null}
@@ -617,6 +642,7 @@ export default function HomeScreen({
       {toastMessage && (
         <View style={styles.toastContainer} pointerEvents="none">
           <View style={styles.toastContent}>
+            <BlurView intensity={BLUR_INTENSITY.glass} tint={theme.isDark ? "dark" : "light"} style={StyleSheet.absoluteFillObject} />
             <Ionicons name="checkmark-circle" size={16} color={COLOR_TOKENS.emerald} />
             <Text style={styles.toastText}>{toastMessage}</Text>
           </View>

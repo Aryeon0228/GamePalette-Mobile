@@ -48,7 +48,7 @@ export function useCameraCapture({
         onCaptureSuccess?.();
       }
     } catch (error) {
-      console.error('Camera error:', error);
+      if (__DEV__) console.error('Camera error:', error);
       onCaptureError();
     }
   }, [onBeforeCapture, onImageCaptured, onCaptureSuccess, onCaptureError]);

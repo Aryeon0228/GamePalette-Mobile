@@ -6,6 +6,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import UPNG from 'upng-js';
 
 import { type CropSelectionPayload, type NormalizedPoint } from '../modals/ImageCropModal';
+import { buildManagedMaskUri, cleanupManagedImageUri } from '../../../lib/managedImageUris';
 
 export interface CropSourceAsset {
   uri: string;
@@ -123,7 +124,7 @@ const createLassoMaskedImage = async (
   if (!FileSystem.cacheDirectory) {
     throw new Error('Cache directory is unavailable');
   }
-  const maskedUri = `${FileSystem.cacheDirectory}lasso-mask-${Date.now()}.png`;
+  const maskedUri = buildManagedMaskUri(FileSystem.cacheDirectory);
   await FileSystem.writeAsStringAsync(maskedUri, encodedBase64, {
     encoding: FileSystem.EncodingType.Base64,
   });
@@ -186,7 +187,7 @@ export function useImageImportAndCrop({
         setShowCropModal(true);
       }
     } catch (error) {
-      console.error('Gallery error:', error);
+      if (__DEV__) console.error('Gallery error:', error);
       Alert.alert(errorTitle, galleryErrorMessage);
     }
   }, [errorTitle, galleryErrorMessage, galleryPermissionMessage, permissionTitle]);
@@ -199,6 +200,8 @@ export function useImageImportAndCrop({
   const handleCropConfirm = useCallback(async (selection: CropSelectionPayload) => {
     if (!cropSourceAsset) return;
     setIsApplyingCrop(true);
+    let processedUri: string | null = null;
+    let transientCropUri: string | null = null;
     try {
       const cropped = await ImageManipulator.manipulateAsync(
         cropSourceAsset.uri,
@@ -208,16 +211,24 @@ export function useImageImportAndCrop({
           format: selection.mode === 'lasso' ? ImageManipulator.SaveFormat.PNG : ImageManipulator.SaveFormat.JPEG,
         }
       );
-      let processedUri = cropped.uri;
+      processedUri = cropped.uri;
       if (selection.mode === 'lasso' && selection.normalizedPath && selection.normalizedPath.length >= 3) {
         processedUri = await createLassoMaskedImage(cropped.uri, selection.normalizedPath);
+        transientCropUri = cropped.uri;
       }
       setShowCropModal(false);
       setCropSourceAsset(null);
       await onImageReady(processedUri);
+      if (transientCropUri) {
+        FileSystem.deleteAsync(transientCropUri, { idempotent: true }).catch(() => undefined);
+      }
       onCropSuccess();
     } catch (error) {
-      console.error('Crop error:', error);
+      if (transientCropUri) {
+        FileSystem.deleteAsync(transientCropUri, { idempotent: true }).catch(() => undefined);
+      }
+      void cleanupManagedImageUri(processedUri);
+      if (__DEV__) console.error('Crop error:', error);
       Alert.alert(errorTitle, cropErrorMessage);
     } finally {
       setIsApplyingCrop(false);

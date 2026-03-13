@@ -19,10 +19,19 @@ export interface HslColor {
   l: number;
 }
 
+export interface OklchColor {
+  l: number;  // 0–100 (perceptual lightness %)
+  c: number;  // 0–0.4  (chroma)
+  h: number;  // 0–360  (hue angle)
+}
+
+export type ColorFormat = 'HEX' | 'RGB' | 'HSL' | 'OKLCH';
+
 export interface ColorInfo {
   hex: string;
   rgb: RgbColor;
   hsl: HslColor;
+  oklch: OklchColor;
 }
 
 const HEX_SHORT_RE = /^#?([a-f\d]{3})$/i;
@@ -33,11 +42,22 @@ const RGB_HSL_CACHE = new Map<string, HslColor>();
 const HEX_LUMINANCE_CACHE = new Map<string, number>();
 
 function setLimitedCache<T>(cache: Map<string, T>, key: string, value: T): void {
-  if (cache.size >= MAX_CACHE_SIZE) {
+  if (cache.has(key)) {
+    cache.delete(key);
+  } else if (cache.size >= MAX_CACHE_SIZE) {
     const first = cache.keys().next().value as string | undefined;
     if (first) cache.delete(first);
   }
   cache.set(key, value);
+}
+
+function getLimitedCache<T>(cache: Map<string, T>, key: string): T | undefined {
+  const value = cache.get(key);
+  if (value !== undefined) {
+    cache.delete(key);
+    cache.set(key, value);
+  }
+  return value;
 }
 
 function normalizeHex(hex: string): string | null {
@@ -63,7 +83,7 @@ export function hexToRgb(hex: string): RgbColor {
     return { r: 0, g: 0, b: 0 };
   }
 
-  const cached = HEX_RGB_CACHE.get(normalized);
+  const cached = getLimitedCache(HEX_RGB_CACHE, normalized);
   if (cached) {
     return cached;
   }
@@ -100,7 +120,7 @@ export function rgbToHsl(r: number, g: number, b: number): HslColor {
   const cg = Math.max(0, Math.min(255, Math.round(g)));
   const cb = Math.max(0, Math.min(255, Math.round(b)));
   const cacheKey = `${cr},${cg},${cb}`;
-  const cached = RGB_HSL_CACHE.get(cacheKey);
+  const cached = getLimitedCache(RGB_HSL_CACHE, cacheKey);
   if (cached) {
     return cached;
   }
@@ -156,6 +176,80 @@ export function hslToRgb(h: number, s: number, l: number): RgbColor {
 }
 
 // ============================================
+// OKLCH CONVERSION (RGB ↔ Oklab ↔ OKLCH)
+// ============================================
+
+function oklabGammaToLinear(c: number): number {
+  return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+}
+
+function oklabLinearToGamma(c: number): number {
+  return c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
+}
+
+export function rgbToOklch(r: number, g: number, b: number): OklchColor {
+  // sRGB → Linear RGB
+  const lr = oklabGammaToLinear(r / 255);
+  const lg = oklabGammaToLinear(g / 255);
+  const lb = oklabGammaToLinear(b / 255);
+
+  // Linear RGB → LMS (using Oklab M1 matrix)
+  const l_ = 0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb;
+  const m_ = 0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb;
+  const s_ = 0.0883024619 * lr + 0.2220049888 * lg + 0.6396925393 * lb;
+
+  // Cube root
+  const l1 = Math.cbrt(l_);
+  const m1 = Math.cbrt(m_);
+  const s1 = Math.cbrt(s_);
+
+  // LMS → Oklab (using M2 matrix)
+  const L = 0.2104542553 * l1 + 0.7936177850 * m1 - 0.0040720468 * s1;
+  const a = 1.9779984951 * l1 - 2.4285922050 * m1 + 0.4505937099 * s1;
+  const bk = 0.0259040371 * l1 + 0.7827717662 * m1 - 0.8086757660 * s1;
+
+  // Oklab → OKLCH
+  const C = Math.sqrt(a * a + bk * bk);
+  let H = Math.atan2(bk, a) * (180 / Math.PI);
+  if (H < 0) H += 360;
+
+  return {
+    l: Math.round(L * 1000) / 10,   // 0–100 with 1 decimal
+    c: Math.round(C * 1000) / 1000,  // 3 decimal places
+    h: Math.round(H * 10) / 10,      // 1 decimal place
+  };
+}
+
+export function oklchToRgb(l: number, c: number, h: number): RgbColor {
+  // OKLCH → Oklab
+  const L = l / 100;
+  const hRad = (h * Math.PI) / 180;
+  const a = c * Math.cos(hRad);
+  const b = c * Math.sin(hRad);
+
+  // Oklab → LMS (inverse M2)
+  const l1 = L + 0.3963377774 * a + 0.2158037573 * b;
+  const m1 = L - 0.1055613458 * a - 0.0638541728 * b;
+  const s1 = L - 0.0894841775 * a - 1.2914855480 * b;
+
+  // Cube
+  const l_ = l1 * l1 * l1;
+  const m_ = m1 * m1 * m1;
+  const s_ = s1 * s1 * s1;
+
+  // LMS → Linear RGB (inverse M1)
+  const lr = +4.0767416621 * l_ - 3.3077115913 * m_ + 0.2309699292 * s_;
+  const lg = -1.2684380046 * l_ + 2.6097574011 * m_ - 0.3413193965 * s_;
+  const lb = -0.0041960863 * l_ - 0.7034186147 * m_ + 1.7076147010 * s_;
+
+  return {
+    r: Math.max(0, Math.min(255, Math.round(oklabLinearToGamma(lr) * 255))),
+    g: Math.max(0, Math.min(255, Math.round(oklabLinearToGamma(lg) * 255))),
+    b: Math.max(0, Math.min(255, Math.round(oklabLinearToGamma(lb) * 255))),
+  };
+}
+
+// ============================================
 // COLOR INFO & FORMATTING
 // ============================================
 
@@ -166,7 +260,8 @@ export function getColorInfo(hex: string): ColorInfo {
   const normalized = normalizeHex(hex) ?? hex;
   const rgb = hexToRgb(hex);
   const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-  return { hex: normalized, rgb, hsl };
+  const oklch = rgbToOklch(rgb.r, rgb.g, rgb.b);
+  return { hex: normalized, rgb, hsl, oklch };
 }
 
 /**
@@ -205,7 +300,7 @@ export function getLuminance(hex: string): number {
     return 0;
   }
 
-  const cached = HEX_LUMINANCE_CACHE.get(normalized);
+  const cached = getLimitedCache(HEX_LUMINANCE_CACHE, normalized);
   if (cached !== undefined) {
     return cached;
   }
@@ -495,7 +590,7 @@ const COLOR_BLINDNESS_BASE: Array<Omit<ColorBlindnessInfo, keyof ColorBlindnessT
 
 const COLOR_BLINDNESS_LABELS: Record<AppLanguage, Record<ColorBlindnessType, ColorBlindnessText>> = {
   en: {
-    none: { label: 'Normal', shortLabel: 'Off', description: 'Normal vision' },
+    none: { label: 'Default', shortLabel: 'Off', description: 'Default vision' },
     protanopia: { label: 'Protan', shortLabel: 'P', description: 'Red-weak' },
     deuteranopia: { label: 'Deutan', shortLabel: 'D', description: 'Green-weak' },
     tritanopia: { label: 'Tritan', shortLabel: 'T', description: 'Blue-weak' },

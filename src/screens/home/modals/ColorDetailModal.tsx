@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Modal, ScrollView, StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from '../HomeScreen.styles';
 import { ThemeColors } from '../../../store/themeStore';
+import { OVERLAY_TOKENS, BLUR_INTENSITY } from '../../../constants/designTokens';
 import {
   FORMAT_ACCENT_COLORS,
   VARIATION_TOGGLE_COLORS,
@@ -23,10 +25,10 @@ interface ColorDetailModalProps {
   visible: boolean;
   theme: ThemeColors;
   colorInfo: ColorInfo | null;
-  colorFormat: 'HEX' | 'RGB' | 'HSL';
-  onFormatChange: (format: 'HEX' | 'RGB' | 'HSL') => void;
+  colorFormat: 'HEX' | 'RGB' | 'HSL' | 'OKLCH';
+  onFormatChange: (format: 'HEX' | 'RGB' | 'HSL' | 'OKLCH') => void;
   onClose: () => void;
-  getFormattedColor: (info: ColorInfo, format: 'HEX' | 'RGB' | 'HSL') => string;
+  getFormattedColor: (info: ColorInfo, format: 'HEX' | 'RGB' | 'HSL' | 'OKLCH') => string;
   copyColor: (value: string, label?: string) => void;
   variationHueShift: boolean;
   onVariationHueShiftChange: (value: boolean) => void;
@@ -67,19 +69,42 @@ export default function ColorDetailModal({
       onRequestClose={onClose}
     >
       <View style={styles.colorDetailOverlay}>
-        <BlurView intensity={40} tint="light" style={StyleSheet.absoluteFill} />
+        <BlurView intensity={30} tint="dark" style={StyleSheet.absoluteFill} />
         <TouchableOpacity
           style={styles.colorDetailBackground}
           onPress={onClose}
         />
-        <View style={[styles.colorDetailContent, { backgroundColor: theme.backgroundSecondary }]}>
-          <View style={[styles.colorDetailHandle, { backgroundColor: theme.border }]} />
-
-          <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.colorDetailContentOuter}>
+          <BlurView
+            intensity={50}
+            tint="light"
+            style={[styles.colorDetailContent, { backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}
+          >
+            {/* 선택 컬러가 은은하게 번지는 배경 (BlurView 안쪽) */}
             {colorInfo && (
-              <>
-                {/* Color Preview + Copy */}
-                <View style={[styles.modalColorPreview, { backgroundColor: colorInfo.hex }]}
+              <LinearGradient
+                colors={[colorInfo.hex + '44', colorInfo.hex + '12', 'transparent']}
+                start={{ x: 0.5, y: 0 }}
+                end={{ x: 0.5, y: 0.5 }}
+                style={StyleSheet.absoluteFill}
+                pointerEvents="none"
+              />
+            )}
+            {/* 글라스 상단 하이라이트 */}
+            <LinearGradient
+              colors={['rgba(255,255,255,0.3)', 'rgba(255,255,255,0.05)', 'transparent']}
+              start={{ x: 0.5, y: 0 }}
+              end={{ x: 0.5, y: 0.35 }}
+              style={StyleSheet.absoluteFill}
+              pointerEvents="none"
+            />
+            <View style={[styles.colorDetailHandle, { backgroundColor: 'rgba(255,255,255,0.6)' }]} />
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {colorInfo && (
+                <>
+                  {/* Color Preview + Copy */}
+                  <View style={[styles.modalColorPreview, { backgroundColor: colorInfo.hex }]}
                 >
                   <Text
                     style={[
@@ -99,9 +124,9 @@ export default function ColorDetailModal({
                 </View>
 
                 {/* Format Segment Toggle */}
-                <View style={[styles.modalFormatSegment, { backgroundColor: theme.backgroundTertiary }]}
+                <View style={[styles.modalFormatSegment, { backgroundColor: 'rgba(255, 255, 255, 0.1)' }]}
                 >
-                  {(['HEX', 'RGB', 'HSL'] as const).map((fmt) => (
+                  {(['HEX', 'RGB', 'HSL', 'OKLCH'] as const).map((fmt) => (
                     <TouchableOpacity
                       key={fmt}
                       style={[
@@ -123,10 +148,10 @@ export default function ColorDetailModal({
                 </View>
 
                 {/* Variations */}
-                <View style={[styles.variationsSection, { backgroundColor: theme.backgroundTertiary }]}>
+                <View style={styles.variationsSection}>
                   <View style={styles.variationsHeader}>
                     <Text style={[styles.variationsSectionTitle, { color: theme.textPrimary }]}>{variationsLabel}</Text>
-                    <View style={[styles.hueShiftToggle, { backgroundColor: theme.backgroundSecondary }]}
+                    <View style={[styles.hueShiftToggle, { backgroundColor: 'rgba(0, 0, 0, 0.08)' }]}
                     >
                       <TouchableOpacity
                         style={[
@@ -181,7 +206,7 @@ export default function ColorDetailModal({
                 </View>
 
                 {/* Color Harmony */}
-                <View style={[styles.harmonySection, { backgroundColor: theme.backgroundTertiary }]}>
+                <View style={styles.harmonySection}>
                   <Text style={[styles.harmonySectionTitle, { color: theme.textPrimary }]}>{harmonyLabel}</Text>
 
                   <ScrollView
@@ -198,7 +223,7 @@ export default function ColorDetailModal({
                             backgroundColor:
                               selectedHarmony === harmony.type
                                 ? UNIFIED_EMPHASIS.activeButtonBg
-                                : theme.backgroundSecondary,
+                                : 'rgba(0, 0, 0, 0.06)',
                           },
                         ]}
                         onPress={() => {
@@ -253,10 +278,11 @@ export default function ColorDetailModal({
                   })()}
                 </View>
 
-                <View style={{ height: 20 }} />
-              </>
-            )}
-          </ScrollView>
+                  <View style={{ height: 20 }} />
+                </>
+              )}
+            </ScrollView>
+          </BlurView>
         </View>
       </View>
     </Modal>
