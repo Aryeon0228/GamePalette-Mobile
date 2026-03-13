@@ -2,7 +2,7 @@
   "expo": {
     "name": "Pixel Paw",
     "slug": "pixel-paw",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.studioaryeon.pixelpaw",
-      "buildNumber": "22",
+      "buildNumber": "23",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -28,7 +28,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0d0d1a"
       },
-      "package": "com.studioaryeon.pixelpaw"
+      "package": "com.studioaryeon.pixelpaw",
+      "versionCode": 23
     },
     "web": {
       "favicon": "./assets/favicon.png"
