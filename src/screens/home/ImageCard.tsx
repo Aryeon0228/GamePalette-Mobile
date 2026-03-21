@@ -8,6 +8,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring, runOnJS } from 
 import * as Haptics from 'expo-haptics';
 import Svg, { Defs, RadialGradient, Stop, Rect } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Grayscale } from 'react-native-color-matrix-image-filters';
 
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
@@ -92,15 +93,14 @@ function ImageCard({
         <GestureDetector gesture={panGesture}>
           <Animated.View style={{ width: '100%', height: '100%' }}>
             <View style={{ width: '100%', height: '100%' }}>
-              <Image
-                source={{ uri: currentImageUri }}
-                style={styles.image}
-                contentFit="cover"
-                cachePolicy="memory-disk"
-              />
-              {showGrayscale && (
-                <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(128,128,128,0.6)' }]} pointerEvents="none" />
-              )}
+              <Grayscale amount={showGrayscale ? 1 : 0}>
+                <Image
+                  source={{ uri: currentImageUri }}
+                  style={styles.image}
+                  contentFit="cover"
+                  cachePolicy="memory-disk"
+                />
+              </Grayscale>
             </View>
 
             <Animated.View style={[styles.loupe, animatedLoupeStyle]} pointerEvents="none">

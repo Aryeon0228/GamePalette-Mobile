@@ -61,19 +61,19 @@ export interface HomeLocalization {
 const KO_LOCALIZATION: HomeLocalization = {
   stylePresetChipLabels: {
     original: '원본',
-    hypercasual: '하이퍼',
-    stylized: '스타일',
-    realistic: '실사',
+    hypercasual: '화사하게',
+    stylized: '캐주얼하게',
+    realistic: '차분하게',
   },
   stylePresetButtonLabels: {
     original: '원본',
-    hypercasual: '하이퍼\n캐주얼',
-    stylized: '스타일\n라이즈드',
-    realistic: '실사',
+    hypercasual: '화사하게',
+    stylized: '캐주얼\n하게',
+    realistic: '차분하게',
   },
   stylePresetButtonLines: {
     original: 1,
-    hypercasual: 2,
+    hypercasual: 1,
     stylized: 2,
     realistic: 1,
   },
@@ -136,13 +136,13 @@ const KO_LOCALIZATION: HomeLocalization = {
 const EN_LOCALIZATION: HomeLocalization = {
   stylePresetChipLabels: {
     original: 'Original',
-    hypercasual: 'Hyper',
+    hypercasual: 'Pop',
     stylized: 'Stylized',
     realistic: 'Realistic',
   },
   stylePresetButtonLabels: {
     original: 'Original',
-    hypercasual: 'Hyper',
+    hypercasual: 'Pop',
     stylized: 'Stylized',
     realistic: 'Realistic',
   },

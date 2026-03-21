@@ -12,7 +12,7 @@ import { BouncyButton } from '../../components/BouncyButton';
 import { BLUR_INTENSITY, OVERLAY_TOKENS, getOverlayTokens, FONT_FAMILY, COLOR_TOKENS } from '../../constants/designTokens';
 
 const SUN_COLOR = '#E8A317';
-const MOON_COLOR = '#FBE896';
+const MOON_COLOR = '#EBD054';
 
 interface HomeHeaderProps {
   language: AppLanguage;

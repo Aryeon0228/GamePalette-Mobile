@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.studioaryeon.pixelpaw",
-      "buildNumber": "23",
+      "buildNumber": "24",
       "newArchEnabled": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
