@@ -134,7 +134,7 @@ function InlineSettingsPanel({
               <Ionicons
                 name={STYLE_PRESETS[filter].icon}
                 size={14}
-                color={styleFilter === filter ? '#FFFFFF' : STYLE_PRESETS[filter].color}
+                color={styleFilter === filter ? theme.textOnAccent : STYLE_PRESETS[filter].color}
               />
               <View style={[styles.advancedPresetLabelWrap, isKorean && styles.advancedPresetLabelWrapCompact]}>
                 <Text
@@ -142,7 +142,7 @@ function InlineSettingsPanel({
                   style={[
                     styles.advancedPresetText,
                     isKorean && styles.advancedPresetTextCompact,
-                    { color: styleFilter === filter ? '#FFFFFF' : STYLE_PRESETS[filter].color },
+                    { color: styleFilter === filter ? theme.textOnAccent : STYLE_PRESETS[filter].color },
                   ]}
                 >
                   {stylePresetButtonLabels[filter]}
@@ -166,7 +166,7 @@ function InlineSettingsPanel({
           pressedScale={0.95}
           hapticFeedback
         >
-          <Text style={[styles.advancedMethodTitle, { color: extractionMethod === 'histogram' ? '#FFFFFF' : theme.textPrimary }]}>
+          <Text style={[styles.advancedMethodTitle, { color: extractionMethod === 'histogram' ? theme.textOnAccent : theme.textPrimary }]}>
             {extractionMethodLabels.histogram}
           </Text>
           <Text style={[styles.advancedMethodDesc, { color: extractionMethod === 'histogram' ? OVERLAY_TOKENS.textOnMethodDesc : theme.textMuted }]}>
@@ -182,7 +182,7 @@ function InlineSettingsPanel({
           pressedScale={0.95}
           hapticFeedback
         >
-          <Text style={[styles.advancedMethodTitle, { color: extractionMethod === 'kmeans' ? '#FFFFFF' : theme.textPrimary }]}>
+          <Text style={[styles.advancedMethodTitle, { color: extractionMethod === 'kmeans' ? theme.textOnAccent : theme.textPrimary }]}>
             {extractionMethodLabels.kmeans}
           </Text>
           <Text style={[styles.advancedMethodDesc, { color: extractionMethod === 'kmeans' ? OVERLAY_TOKENS.textOnMethodDesc : theme.textMuted }]}>

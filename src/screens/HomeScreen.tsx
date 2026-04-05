@@ -125,7 +125,7 @@ export default function HomeScreen({
   const theme = useThemeStore((state) => state.colors);
 
   useEffect(() => {
-    SystemUI.setBackgroundColorAsync(theme.isDark ? '#1e2130' : '#f0f0f2');
+    SystemUI.setBackgroundColorAsync(theme.gradientStart);
   }, [theme.isDark]);
   const {
     currentColors,
@@ -396,9 +396,7 @@ export default function HomeScreen({
   return (
     <Animated.View style={[styles.container]}>
       <LinearGradient
-        colors={theme.isDark
-          ? ['#1e2130', '#1a1d2e']
-          : ['rgb(210, 210, 212)', 'rgb(200, 200, 198)']}
+        colors={[theme.gradientStart, theme.gradientEnd]}
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
         style={StyleSheet.absoluteFillObject}
@@ -413,10 +411,10 @@ export default function HomeScreen({
           onShowInfo={handleShowInfo}
         />
         <View style={[styles.sectorNeumorphLight,
-          theme.isDark && { shadowColor: '#5a68a0', shadowOpacity: 0.4 }
+          theme.isDark && { shadowColor: theme.shadowGlow, shadowOpacity: 0.4 }
         ]}>
         <View style={[styles.imageGroupOuter,
-          theme.isDark && { shadowColor: '#000', shadowOpacity: 0.6 }
+          theme.isDark && { shadowColor: theme.shadowDrop, shadowOpacity: 0.6 }
         ]}>
           <View style={[styles.imageGroupInner,
             theme.isDark && { backgroundColor: theme.backgroundSecondary }
@@ -471,10 +469,10 @@ export default function HomeScreen({
         {/* SwatchHint removed */}
 
         <View style={[styles.sectorNeumorphLight,
-          theme.isDark && { shadowColor: '#5a68a0', shadowOpacity: 0.4 }
+          theme.isDark && { shadowColor: theme.shadowGlow, shadowOpacity: 0.4 }
         ]}>
         <View style={[styles.imageGroupOuter, styles.paletteGroupOuter,
-          theme.isDark && { shadowColor: '#000', shadowOpacity: 0.6 }
+          theme.isDark && { shadowColor: theme.shadowDrop, shadowOpacity: 0.6 }
         ]}>
           <View style={[styles.paletteGroupInner,
             theme.isDark && { backgroundColor: theme.backgroundSecondary }
@@ -518,10 +516,10 @@ export default function HomeScreen({
 
         {histogram && currentImageUri && (
           <View style={[styles.sectorNeumorphLight,
-            theme.isDark && { shadowColor: '#5a68a0', shadowOpacity: 0.4 }
+            theme.isDark && { shadowColor: theme.shadowGlow, shadowOpacity: 0.4 }
           ]}>
           <View style={[styles.imageGroupOuter, styles.paletteGroupOuter,
-            theme.isDark && { shadowColor: '#000', shadowOpacity: 0.6 }
+            theme.isDark && { shadowColor: theme.shadowDrop, shadowOpacity: 0.6 }
           ]}>
             <View style={[styles.imageGroupInner,
               theme.isDark && { backgroundColor: theme.backgroundSecondary }

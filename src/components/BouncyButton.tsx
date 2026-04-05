@@ -43,6 +43,7 @@ export interface BouncyButtonProps {
     pressedScale?: number;
     restScale?: number;
     hapticFeedback?: boolean;
+    disabled?: boolean;
     isBreathing?: boolean;
     isFloating?: boolean;
     floatingDistance?: number;
@@ -59,6 +60,7 @@ export function BouncyButton({
     pressedScale = 0.94,
     restScale = 1,
     hapticFeedback = false,
+    disabled = false,
     isBreathing = false,
     isFloating = false,
     floatingDistance = 4,
@@ -153,6 +155,7 @@ export function BouncyButton({
             onPressIn={handlePressIn}
             onPressOut={handlePressOut}
             onPress={onPress}
+            disabled={disabled}
         >
             <View style={{ flex: 1 }}>
                 {showShadow && (

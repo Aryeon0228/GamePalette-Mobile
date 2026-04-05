@@ -22,6 +22,12 @@ export interface ThemeColors {
 
   buttonBg: string;
   modalOverlay: string;
+
+  textOnAccent: string;
+  shadowGlow: string;
+  shadowDrop: string;
+  gradientStart: string;
+  gradientEnd: string;
 }
 
 export const getThemeColors = (isDark: boolean): ThemeColors => {
@@ -42,6 +48,11 @@ export const getThemeColors = (isDark: boolean): ThemeColors => {
       backgroundDepressed: '#222538',
       buttonBg:            '#303348',
       modalOverlay:        'rgba(0, 0, 0, 0.6)',
+      textOnAccent:        '#FFFFFF',
+      shadowGlow:          '#5a68a0',
+      shadowDrop:          '#000000',
+      gradientStart:       '#1e2130',
+      gradientEnd:         '#1a1d2e',
     }
     : {
       isDark,
@@ -59,6 +70,11 @@ export const getThemeColors = (isDark: boolean): ThemeColors => {
       backgroundDepressed: COLOR_TOKENS.backgroundControl,
       buttonBg: COLOR_TOKENS.backgroundSurface,
       modalOverlay: OVERLAY_TOKENS.scrimLight,
+      textOnAccent: '#FFFFFF',
+      shadowGlow: '#FFFFFF',
+      shadowDrop: '#000000',
+      gradientStart: 'rgb(210, 210, 212)',
+      gradientEnd: 'rgb(200, 200, 198)',
     };
 };
 

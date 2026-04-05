@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Easing, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
-import { COLOR_TOKENS, OVERLAY_TOKENS } from '../constants/designTokens';
+import { COLOR_TOKENS, OVERLAY_TOKENS, FONT_FAMILY } from '../constants/designTokens';
 
 interface SplashScreenProps {
   onFinish: () => void;
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   },
   brandSparkle: {
     color: COLOR_TOKENS.brandSparkle,
-    fontFamily: 'Pretendard-Bold',
+    fontFamily: FONT_FAMILY.bold,
     fontSize: 15,
     lineHeight: 16,
     textShadowColor: OVERLAY_TOKENS.splashSparkleGlow,
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
   },
   brandTitle: {
     color: COLOR_TOKENS.brandTitleText,
-    fontFamily: 'Pretendard-Bold',
+    fontFamily: FONT_FAMILY.bold,
     fontSize: 54,
     letterSpacing: -0.7,
     textShadowColor: OVERLAY_TOKENS.splashTitleShadow,
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
   brandSubtitle: {
     marginTop: 10,
     color: OVERLAY_TOKENS.splashSubtitle,
-    fontFamily: 'Pretendard-Medium',
+    fontFamily: FONT_FAMILY.medium,
     fontSize: 16,
     letterSpacing: 0.6,
   },

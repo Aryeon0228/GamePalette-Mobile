@@ -8,7 +8,7 @@ import Svg, { Defs, RadialGradient as SvgRadialGradient, Stop, Rect } from 'reac
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
 import { StyleFilter, STYLE_FILTER_KEYS, STYLE_PRESETS } from '../../constants/stylePresets';
-import { COLOR_TOKENS, OVERLAY_TOKENS, BLUR_INTENSITY } from '../../constants/designTokens';
+import { COLOR_TOKENS, OVERLAY_TOKENS, BLUR_INTENSITY, FONT_FAMILY } from '../../constants/designTokens';
 import { ExtractionMethod } from '../../lib/colorExtractor';
 import { ColorBlindnessInfo, ColorBlindnessType } from '../../lib/colorUtils';
 import { BouncyButton } from '../../components/BouncyButton';
@@ -82,7 +82,7 @@ function SettingsPanel({
                   <Ionicons
                     name={STYLE_PRESETS[filter].icon}
                     size={14}
-                    color={styleFilter === filter ? '#FFFFFF' : theme.accent}
+                    color={styleFilter === filter ? theme.textOnAccent : theme.accent}
                   />
                   <View style={[styles.advancedPresetLabelWrap, isKorean && styles.advancedPresetLabelWrapCompact]}>
                     <Text
@@ -90,7 +90,7 @@ function SettingsPanel({
                       style={[
                         styles.advancedPresetText,
                         isKorean && styles.advancedPresetTextCompact,
-                        { color: styleFilter === filter ? '#FFFFFF' : theme.accent },
+                        { color: styleFilter === filter ? theme.textOnAccent : theme.accent },
                       ]}
                     >
                       {stylePresetButtonLabels[filter]}
@@ -118,7 +118,7 @@ function SettingsPanel({
                         ? {
                             backgroundColor: theme.isDark ? theme.backgroundTertiary : 'rgb(250, 252, 255)',
                             borderWidth: 1.5,
-                            borderColor: theme.isDark ? 'rgba(93, 184, 232, 0.3)' : 'rgba(255,255,255,0.8)',
+                            borderColor: theme.isDark ? theme.accent + '4D' : 'rgba(255,255,255,0.8)',
                           }
                         : { backgroundColor: theme.isDark ? theme.backgroundDepressed : 'rgb(218, 218, 222)' },
                     ]}
@@ -166,10 +166,10 @@ function SettingsPanel({
                         />
                       </View>
                     )}
-                    <Text style={[styles.advancedMethodTitle, { color: isActive ? (theme.isDark ? '#5db8e8' : '#1976a8') : theme.textMuted }]}>
+                    <Text style={[styles.advancedMethodTitle, { color: isActive ? theme.accent : theme.textMuted }]}>
                       {extractionMethodLabels[method]}
                     </Text>
-                    <Text style={[styles.advancedMethodDesc, { color: isActive ? (theme.isDark ? '#8ec8e8' : '#4a9aba') : theme.textMuted }]}>
+                    <Text style={[styles.advancedMethodDesc, { color: isActive ? theme.accentLight : theme.textMuted }]}>
                       {methodDescriptions[method]}
                     </Text>
                   </BouncyButton>
@@ -230,10 +230,10 @@ function SettingsPanel({
 
   return (
     <View style={[styles.sectorNeumorphLight,
-      theme.isDark && { shadowColor: '#2a2d45', shadowOpacity: 0.5 }
+      theme.isDark && { shadowColor: theme.shadowGlow, shadowOpacity: 0.5 }
     ]}>
       <View style={[styles.imageGroupOuter, styles.paletteGroupOuter,
-        theme.isDark && { shadowColor: '#000', shadowOpacity: 0.4 }
+        theme.isDark && { shadowColor: theme.shadowDrop, shadowOpacity: 0.4 }
       ]}>
         <View style={[styles.imageGroupInner, { overflow: 'hidden' },
           theme.isDark && { backgroundColor: theme.backgroundSecondary }
@@ -281,7 +281,7 @@ const panelStyles = StyleSheet.create({
   },
   cvdLabel: {
     fontSize: 11,
-    fontFamily: 'Pretendard-SemiBold',
+    fontFamily: FONT_FAMILY.semiBold,
     fontWeight: '600',
   },
 });

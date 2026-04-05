@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Image as RNImage } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
@@ -93,14 +93,22 @@ function ImageCard({
         <GestureDetector gesture={panGesture}>
           <Animated.View style={{ width: '100%', height: '100%' }}>
             <View style={{ width: '100%', height: '100%' }}>
-              <Grayscale amount={showGrayscale ? 1 : 0}>
+              {showGrayscale ? (
+                <Grayscale amount={1}>
+                  <RNImage
+                    source={{ uri: currentImageUri }}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />
+                </Grayscale>
+              ) : (
                 <Image
                   source={{ uri: currentImageUri }}
                   style={styles.image}
                   contentFit="cover"
                   cachePolicy="memory-disk"
                 />
-              </Grayscale>
+              )}
             </View>
 
             <Animated.View style={[styles.loupe, animatedLoupeStyle]} pointerEvents="none">
@@ -115,7 +123,7 @@ function ImageCard({
           pressedScale={0.9}
           hapticFeedback
         >
-          <Ionicons name="camera-reverse-outline" size={13} color="#fff" style={{ marginRight: 4 }} />
+          <Ionicons name="camera-reverse-outline" size={13} color={theme.textOnAccent} style={{ marginRight: 4 }} />
           <Text style={styles.sourceImageText}>{isKorean ? '변경' : 'Change'}</Text>
         </BouncyButton>
 
@@ -126,13 +134,13 @@ function ImageCard({
           hapticFeedback
           isBreathing={!isExtracting}
         >
-          <Ionicons name="refresh" size={18} color="#fff" />
+          <Ionicons name="refresh" size={18} color={theme.textOnAccent} />
         </BouncyButton>
 
 
         {isExtracting && (
           <View style={styles.loadingOverlay}>
-            <ActivityIndicator size="large" color="#fff" />
+            <ActivityIndicator size="large" color={theme.textOnAccent} />
             <Text style={styles.loadingText}>
               {isKorean ? '색상을 추출하는 중...' : 'Extracting colors...'}
             </Text>
@@ -145,7 +153,7 @@ function ImageCard({
   return (
     <View style={styles.imageCardEmptyBorder}>
       <View style={[styles.imageCardEmpty,
-        theme.isDark && { backgroundColor: 'rgba(38, 41, 64, 0.8)' }
+        theme.isDark && { backgroundColor: theme.backgroundSecondary + 'CC' }
       ]}>
         {/* 배경: 보라→파랑→초록 대각선 */}
         <LinearGradient
@@ -195,9 +203,9 @@ function ImageCard({
         <View style={styles.imageSourceCardGlow}>
           <BouncyButton
             style={[styles.imageSourceCard, {
-              backgroundColor: theme.isDark ? 'rgba(55, 60, 100, 0.6)' : 'rgb(245, 245, 252)',
+              backgroundColor: theme.isDark ? theme.backgroundTertiary + '99' : 'rgb(245, 245, 252)',
               borderWidth: 1.5,
-              borderColor: theme.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.5)',
+              borderColor: theme.isDark ? theme.border + '18' : 'rgba(255,255,255,0.5)',
               overflow: 'hidden',
             }]}
             onPress={onOpenCamera}
@@ -220,8 +228,8 @@ function ImageCard({
                 <Rect x="0" y="0" width="100%" height="100%" fill="url(#cameraGrad)" />
               </Svg>
             )}
-            <Ionicons name="camera-outline" size={26} color={theme.isDark ? "rgb(160, 170, 220)" : "rgb(120, 130, 170)"} />
-            <Text style={[styles.imageSourceCardText, theme.isDark && { color: 'rgb(155, 165, 205)' }]}>
+            <Ionicons name="camera-outline" size={26} color={theme.isDark ? theme.accentLight : theme.textSecondary} />
+            <Text style={[styles.imageSourceCardText, theme.isDark && { color: theme.textSecondary }]}>
               {isKorean ? '카메라' : 'Camera'}
             </Text>
           </BouncyButton>
@@ -229,9 +237,9 @@ function ImageCard({
         <View style={styles.imageSourceCardGlow}>
           <BouncyButton
             style={[styles.imageSourceCard, {
-              backgroundColor: theme.isDark ? 'rgba(48, 58, 95, 0.6)' : 'rgb(243, 245, 252)',
+              backgroundColor: theme.isDark ? theme.backgroundTertiary + '99' : 'rgb(243, 245, 252)',
               borderWidth: 1.5,
-              borderColor: theme.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.5)',
+              borderColor: theme.isDark ? theme.border + '18' : 'rgba(255,255,255,0.5)',
               overflow: 'hidden',
             }]}
             onPress={onPickFromGallery}
@@ -254,8 +262,8 @@ function ImageCard({
                 <Rect x="0" y="0" width="100%" height="100%" fill="url(#galleryGrad)" />
               </Svg>
             )}
-            <Ionicons name="images-outline" size={26} color={theme.isDark ? "rgb(148, 172, 220)" : "rgb(115, 135, 172)"} />
-            <Text style={[styles.imageSourceCardText, theme.isDark && { color: 'rgb(148, 168, 208)' }]}>
+            <Ionicons name="images-outline" size={26} color={theme.isDark ? theme.accentLight : theme.textSecondary} />
+            <Text style={[styles.imageSourceCardText, theme.isDark && { color: theme.textSecondary }]}>
               {isKorean ? '갤러리' : 'Gallery'}
             </Text>
           </BouncyButton>

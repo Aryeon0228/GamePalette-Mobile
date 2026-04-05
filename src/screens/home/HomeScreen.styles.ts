@@ -19,32 +19,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 10,
   },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  headerLogoMark: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerLogoImage: {
-    width: 22,
-    height: 22,
-  },
-  headerLogoFallbackIcon: {
-    opacity: 0.95,
-  },
-  headerSubtitle: {
-    fontSize: 12,
-    fontFamily: F.medium,
-    fontWeight: '500',
-    letterSpacing: 0.3,
-    marginTop: 2,
-  },
   headerTitle: {
     fontSize: 20,
     fontFamily: F.bold,
@@ -55,18 +29,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-  },
-  title: {
-    fontSize: 23,
-    fontFamily: 'Pretendard-Bold',
-    color: C.textPrimary,
-    letterSpacing: -0.3,
-  },
-  headerButton: {
-    padding: 8,
-    backgroundColor: C.backgroundElevated,
-    borderRadius: 6,
-    ...SHADOW_TOKENS.subtle,
   },
   headerButtonNeumorphLight: {
     borderRadius: 999,
@@ -205,25 +167,6 @@ export const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: '#fff',
   },
-  valueOverlayButton: {
-    position: 'absolute',
-    bottom: 12,
-    left: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    minHeight: 36,
-    paddingHorizontal: 12,
-    borderRadius: 18,
-  },
-  valueOverlayButtonText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontFamily: F.bold,
-    fontWeight: '700',
-    letterSpacing: 0.35,
-  },
   imageCardEmptyBorder: {
     backgroundColor: 'transparent',
     borderRadius: 16,
@@ -267,70 +210,6 @@ export const styles = StyleSheet.create({
     color: 'rgb(130, 130, 140)',
   },
 
-  // Style Filters - Icon Grid
-  styleFiltersContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 4,
-    gap: 6,
-  },
-  styleFilterButton: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-    borderRadius: 6,
-    backgroundColor: C.backgroundElevated,
-    gap: 4,
-    ...SHADOW_TOKENS.none,
-  },
-  styleFilterText: {
-    fontSize: 12,
-    color: C.textSecondary,
-    fontFamily: F.bold,
-    fontWeight: '700',
-    letterSpacing: 0.2,
-  },
-
-  // CVD Simulation Row
-  cvdRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    marginHorizontal: 16,
-    marginBottom: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
-    gap: 4,
-  },
-  cvdLabel: {
-    fontSize: 11,
-    fontFamily: F.semiBold,
-    fontWeight: '600' as const,
-    marginRight: 6,
-  },
-  cvdToggleGroup: {
-    flex: 1,
-    flexDirection: 'row' as const,
-    gap: 3,
-    backgroundColor: C.backgroundSurfaceAlt,
-    borderRadius: 5,
-    padding: 3,
-  },
-  cvdOption: {
-    flex: 1,
-    paddingVertical: 6,
-    borderRadius: 4,
-    alignItems: 'center' as const,
-  },
-  cvdOptionText: {
-    fontSize: 12,
-    fontFamily: F.semiBold,
-    fontWeight: '600' as const,
-  },
-
   // Color Cards
   colorCardsContainer: {
     flexDirection: 'row',
@@ -338,28 +217,6 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     gap: 4,
     overflow: 'hidden',
-  },
-  paletteStepperRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    paddingBottom: 10,
-  },
-  paletteStepperBtn: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  paletteStepperCount: {
-    fontSize: 13,
-    fontFamily: F.semiBold,
-    fontWeight: '600',
-    minWidth: 16,
-    textAlign: 'center',
-    lineHeight: 26,
   },
   colorCard: {
     flex: 1,
@@ -401,26 +258,6 @@ export const styles = StyleSheet.create({
     borderRadius: 6,
     overflow: 'hidden',
   },
-  swatchInsetShadowTop: {
-    position: 'absolute' as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '40%',
-    backgroundColor: 'rgba(0,0,0,0.18)',
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
-  },
-  swatchInsetHighlightBottom: {
-    position: 'absolute' as const,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '35%',
-    backgroundColor: 'rgba(255,255,255,0.22)',
-    borderBottomLeftRadius: 6,
-    borderBottomRightRadius: 6,
-  },
   cvdSplitOriginal: {
     position: 'absolute',
     top: 0,
@@ -454,98 +291,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  // Settings Row (2-row layout)
-  settingsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 16,
-    marginTop: 8,
-    marginBottom: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 7,
-    gap: 10,
-  },
-  settingsColumn: {
-    flex: 1,
-    gap: 4,
-  },
-  algorithmToggle: {
-    flexDirection: 'row' as const,
-    gap: 2,
-    backgroundColor: C.backgroundSurfaceAlt,
-    borderRadius: 6,
-    padding: 3,
-  },
-  algorithmOption: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 5,
-  },
-  algorithmOptionText: {
-    fontSize: 13,
-    fontFamily: F.semiBold,
-    fontWeight: '600' as const,
-  },
-  algorithmDesc: {
-    fontSize: 11,
-    fontFamily: F.medium,
-    fontWeight: '500' as const,
-    marginLeft: 6,
-  },
-  valueCheckButton: {
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 5,
-    gap: 1,
-  },
-  valueCheckText: {
-    fontSize: 13,
-    fontFamily: F.semiBold,
-    fontWeight: '600' as const,
-  },
-  valueCheckSubtext: {
-    fontSize: 10,
-    fontFamily: F.medium,
-    fontWeight: '500' as const,
-  },
-  settingsColorColumn: {
-    alignItems: 'center' as const,
-    gap: 4,
-  },
-  settingsColorStepper: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: 4,
-  },
-  settingsDropdownLabel: {
-    fontSize: 11,
-    fontFamily: F.medium,
-    fontWeight: '500' as const,
-  },
-  colorStepperBtn: {
-    width: 26,
-    height: 26,
-    borderRadius: 4,
-    justifyContent: 'center' as const,
-    alignItems: 'center' as const,
-  },
-  colorCountBadge: {
-    width: 28,
-    height: 26,
-    borderRadius: 4,
-    justifyContent: 'center' as const,
-    alignItems: 'center' as const,
-  },
-  colorCountBadgeText: {
-    fontSize: 14,
-    fontFamily: F.bold,
-    fontWeight: '700' as const,
-    color: '#FFFFFF',
-  },
-
   // Inline Color Detail
   inlineColorDetailOuter: {
     marginHorizontal: 16,
@@ -557,39 +302,6 @@ export const styles = StyleSheet.create({
   inlineColorDetail: {
     borderRadius: 10,
     padding: 12,
-  },
-  inlineColorDetailHeader: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  inlineColorSwatch: {
-    width: 60,
-    height: 60,
-    borderRadius: 5,
-  },
-  inlineColorValues: {
-    flex: 1,
-    gap: 4,
-  },
-  inlineColorValueRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 4,
-    gap: 8,
-    minHeight: 44,
-  },
-  inlineColorLabel: {
-    fontSize: 11,
-    fontFamily: F.semiBold,
-    fontWeight: '600',
-    width: 28,
-  },
-  inlineColorValue: {
-    flex: 1,
-    fontSize: 13,
-    fontFamily: 'monospace',
   },
   inlineColorPreview: {
     borderRadius: 6,
@@ -697,37 +409,6 @@ export const styles = StyleSheet.create({
     paddingBottom: 12,
   },
 
-  // Slider - Inline
-  sliderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  sliderLabel: {
-    color: C.textSecondary,
-    fontSize: 13,
-    fontFamily: F.medium,
-    fontWeight: '500',
-    marginRight: 10,
-  },
-  sliderInline: {
-    flex: 1,
-    height: 32,
-  },
-  countBadge: {
-    backgroundColor: C.accentPrimary,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 3,
-    marginLeft: 8,
-  },
-  countBadgeText: {
-    color: '#FFFFFF',
-    fontSize: 13,
-    fontFamily: F.semiBold,
-    fontWeight: '600',
-  },
-
   // Action Bar
   actionBar: {
     flexDirection: 'row',
@@ -779,8 +460,6 @@ export const styles = StyleSheet.create({
     fontFamily: F.bold,
     fontWeight: '700',
   },
-  // exportButton: same as actionButton — use actionButton directly
-  exportButton: {} as any,
   exportButtonText: {
     color: C.accentPrimary,
     fontSize: 14,
@@ -817,43 +496,6 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 12,
     marginBottom: 16,
-  },
-  colorDetailHeader: {
-    flexDirection: 'row',
-    marginBottom: 16,
-  },
-  colorDetailSwatch: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
-    ...SHADOW_TOKENS.subtle,
-  },
-  colorDetailValues: {
-    flex: 1,
-    marginLeft: 12,
-    justifyContent: 'center',
-    gap: 6,
-  },
-  colorValueCompact: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: C.backgroundSurfaceAlt,
-    borderRadius: 4,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-  },
-  colorValueCompactLabel: {
-    fontSize: 11,
-    fontFamily: F.semiBold,
-    fontWeight: '600',
-    color: C.textSubtle,
-    width: 28,
-  },
-  colorValueCompactText: {
-    flex: 1,
-    fontSize: 13,
-    color: C.textPrimary,
-    fontFamily: 'monospace',
   },
   // Modal Color Preview
   modalColorPreview: {
@@ -962,19 +604,6 @@ export const styles = StyleSheet.create({
     fontFamily: 'monospace',
     marginTop: 3,
   },
-  variationLabel: {
-    fontSize: 10,
-    fontFamily: F.regular,
-    color: C.textMuted,
-  },
-  variationsHint: {
-    fontSize: 11,
-    fontFamily: F.regular,
-    color: C.textSubtle,
-    textAlign: 'center',
-    marginTop: 4,
-  },
-
   // Color Harmony
   harmonySection: {
     backgroundColor: O.glassSectionBg,
@@ -1028,13 +657,6 @@ export const styles = StyleSheet.create({
     fontFamily: F.semiBold,
     fontWeight: '600',
     color: C.textSubtle,
-  },
-  harmonyDescription: {
-    fontSize: 12,
-    fontFamily: F.regular,
-    color: C.textSecondary,
-    marginBottom: 12,
-    textAlign: 'center',
   },
   harmonyColorsRow: {
     flexDirection: 'row',
@@ -1156,101 +778,6 @@ export const styles = StyleSheet.create({
   },
   exportPreviewScroll: {
     maxHeight: 500,
-  },
-
-  // Palette Card for export
-  paletteCard: {
-    backgroundColor: C.backgroundElevated,
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    ...SHADOW_TOKENS.none,
-  },
-  paletteCardImage: {
-    width: '100%',
-    height: 160,
-    borderRadius: 6,
-    marginBottom: 12,
-  },
-  paletteCardSwatches: {
-    flexDirection: 'row',
-    gap: 6,
-    marginBottom: 12,
-  },
-  paletteCardSwatch: {
-    flex: 1,
-    height: 40,
-    borderRadius: 4,
-  },
-  paletteCardName: {
-    fontSize: 19,
-    fontFamily: F.bold,
-    fontWeight: 'bold',
-    color: C.textPrimary,
-    marginBottom: 2,
-  },
-  paletteCardLabel: {
-    fontSize: 12,
-    fontFamily: F.regular,
-    color: C.textMuted,
-    letterSpacing: 1,
-    marginBottom: 12,
-  },
-  paletteCardColors: {
-    gap: 8,
-  },
-  paletteCardColorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  paletteCardColorDot: {
-    width: 28,
-    height: 28,
-    borderRadius: 3,
-  },
-  paletteCardColorInfo: {
-    flex: 1,
-  },
-  paletteCardHex: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: C.textPrimary,
-    fontFamily: 'monospace',
-  },
-  paletteCardRgb: {
-    fontSize: 12,
-    color: C.textSecondary,
-    fontFamily: 'monospace',
-  },
-  paletteCardWatermark: {
-    textAlign: 'center',
-    fontSize: 11,
-    fontFamily: F.regular,
-    color: C.textGhost,
-    marginTop: 12,
-  },
-  paletteCardHistogram: {
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: C.borderSubtle,
-  },
-  paletteCardHistogramRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 6,
-  },
-  paletteCardHistogramLabel: {
-    fontSize: 12,
-    fontFamily: F.regular,
-    color: C.textMuted,
-  },
-  paletteCardHistogramValue: {
-    fontSize: 12,
-    color: C.textSecondary,
-    fontFamily: 'monospace',
   },
 
   // SNS Card Type Selector
@@ -1706,15 +1233,6 @@ export const styles = StyleSheet.create({
     borderRadius: 1,
     minHeight: 2,
   },
-  histogramBarEmpty: {
-    height: 8,
-    backgroundColor: C.borderNeutral,
-  },
-  histogramEmptyText: {
-    fontSize: 12,
-    fontFamily: F.regular,
-    color: C.textMuted,
-  },
   histogramScale: {
     marginTop: 6,
   },
@@ -1969,64 +1487,6 @@ export const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     gap: 6,
   },
-  summaryChipsScroll: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingRight: 4,
-  },
-  summaryChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 5,
-    gap: 5,
-  },
-  summaryChipText: {
-    fontSize: 12,
-    fontFamily: F.semiBold,
-    fontWeight: '600',
-  },
-  // Inline control bar styles
-  inlineSegment: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(0,0,0,0.06)',
-    borderRadius: 8,
-    padding: 2,
-  },
-  inlineSegmentButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  inlineSegmentButtonActive: {
-    backgroundColor: 'rgba(255,255,255,0.5)',
-  },
-  inlineSegmentText: {
-    fontSize: 13,
-    fontFamily: F.semiBold,
-    fontWeight: '600',
-  },
-  inlineSegmentTextActive: {
-    fontFamily: F.bold,
-    fontWeight: '700',
-  },
-  inlineGearBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    backgroundColor: 'rgba(0,0,0,0.06)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  summaryEditButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   swatchHintCard: {
     marginHorizontal: 16,
     marginTop: 2,
@@ -2083,11 +1543,6 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 2,
   },
-  inlineSettingsSubtitle: {
-    fontSize: 12,
-    fontFamily: F.medium,
-    fontWeight: '500',
-  },
   inlineSettingsCloseBtn: {
     width: 30,
     height: 30,
@@ -2135,43 +1590,6 @@ export const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
-  // Advanced Settings Sheet
-  advancedOverlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  advancedBackground: {
-    flex: 1,
-  },
-  advancedContent: {
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-    maxHeight: '80%',
-  },
-  advancedHandle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    alignSelf: 'center',
-    marginTop: 12,
-    marginBottom: 16,
-  },
-  advancedHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  advancedTitle: {
-    fontSize: 22,
-    fontFamily: F.bold,
-    fontWeight: '700',
-  },
-  advancedScroll: {
-    maxHeight: 500,
-  },
   advancedSectionLabel: {
     fontSize: 12,
     fontFamily: F.semiBold,
@@ -2278,38 +1696,6 @@ export const styles = StyleSheet.create({
     fontFamily: F.bold,
     fontWeight: '700',
     color: '#FFFFFF',
-  },
-  advancedToggleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 14,
-    borderTopWidth: 1,
-    borderTopColor: C.borderSoft,
-    marginBottom: 16,
-  },
-  advancedToggleLabel: {
-    fontSize: 16,
-    fontFamily: F.semiBold,
-    fontWeight: '600',
-  },
-  advancedToggleDesc: {
-    fontSize: 12,
-    fontFamily: F.regular,
-    marginTop: 2,
-  },
-  advancedToggleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 4,
-    gap: 4,
-  },
-  advancedToggleButtonText: {
-    fontSize: 14,
-    fontFamily: F.semiBold,
-    fontWeight: '600',
   },
   advancedCvdGrid: {
     flexDirection: 'row',

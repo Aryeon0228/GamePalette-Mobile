@@ -33,10 +33,10 @@ function HomeHeader({
       </Text>
       <View style={styles.headerRight}>
         <View style={[styles.headerButtonNeumorphLight,
-          isDark && { shadowColor: '#2a2d45', shadowOpacity: 0.3 }
+          isDark && { shadowColor: colors.shadowGlow, shadowOpacity: 0.3 }
         ]}>
           <View style={[styles.headerButtonNeumorphDark,
-            isDark && { shadowColor: '#000', shadowOpacity: 0.5 }
+            isDark && { shadowColor: colors.shadowDrop, shadowOpacity: 0.5 }
           ]}>
             <BouncyButton
               style={styles.headerButtonPill}
@@ -50,7 +50,7 @@ function HomeHeader({
                 style={[styles.headerButtonPillBlur,
                   isDark && {
                     backgroundColor: overlayTokens.darkBlurSurface,
-                    borderColor: 'rgba(255,255,255,0.10)',
+                    borderColor: overlayTokens.blurBorder,
                   }
                 ]}
               >
@@ -77,10 +77,10 @@ function HomeHeader({
           </View>
         </View>
         <View style={[styles.headerButtonNeumorphLight,
-          isDark && { shadowColor: '#2a2d45', shadowOpacity: 0.3 }
+          isDark && { shadowColor: colors.shadowGlow, shadowOpacity: 0.3 }
         ]}>
           <View style={[styles.headerButtonNeumorphDark,
-            isDark && { shadowColor: '#000', shadowOpacity: 0.5 }
+            isDark && { shadowColor: colors.shadowDrop, shadowOpacity: 0.5 }
           ]}>
             <BouncyButton
               style={styles.headerButtonPill}
@@ -94,7 +94,7 @@ function HomeHeader({
                 style={[styles.headerButtonPillBlur,
                   isDark && {
                     backgroundColor: overlayTokens.darkBlurSurface,
-                    borderColor: 'rgba(255,255,255,0.10)',
+                    borderColor: overlayTokens.blurBorder,
                   }
                 ]}
               >

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Alert, View, Text, TouchableOpacity, Modal, Linking, Image, StyleSheet as RNStyleSheet } from 'react-native';
+import { Alert, View, Text, Modal, Linking, Image, StyleSheet as RNStyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
+import { BouncyButton } from '../../../components/BouncyButton';
 
 import { styles } from '../HomeScreen.styles';
 import { ThemeColors } from '../../../store/themeStore';
@@ -89,7 +90,9 @@ export default function InfoModal({
             <Text style={[styles.infoModalVersionNum, { color: theme.textMuted }]}>v{appVersion}</Text>
           </View>
 
-          <TouchableOpacity
+          <BouncyButton
+            pressedScale={0.93}
+            hapticFeedback
             style={[styles.infoModalButton, { backgroundColor: theme.backgroundTertiary }]}
             onPress={handleFeedbackPress}
           >
@@ -97,14 +100,16 @@ export default function InfoModal({
             <Text style={[styles.infoModalButtonText, { color: theme.textPrimary }]}>
               {feedbackLabel}
             </Text>
-          </TouchableOpacity>
+          </BouncyButton>
 
           <View style={styles.infoModalLanguageSection}>
             <Text style={[styles.infoModalLanguageLabel, { color: theme.textMuted }]}>
               {languageLabel}
             </Text>
             <View style={styles.infoModalLanguageToggleRow}>
-              <TouchableOpacity
+              <BouncyButton
+                pressedScale={0.93}
+                hapticFeedback
                 style={[
                   styles.infoModalLanguageButton,
                   {
@@ -119,13 +124,15 @@ export default function InfoModal({
                 <Text
                   style={[
                     styles.infoModalLanguageButtonText,
-                    { color: language === 'ko' ? '#fff' : theme.textSecondary },
+                    { color: language === 'ko' ? theme.textOnAccent : theme.textSecondary },
                   ]}
                 >
                   한국어
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              </BouncyButton>
+              <BouncyButton
+                pressedScale={0.93}
+                hapticFeedback
                 style={[
                   styles.infoModalLanguageButton,
                   {
@@ -140,12 +147,12 @@ export default function InfoModal({
                 <Text
                   style={[
                     styles.infoModalLanguageButtonText,
-                    { color: language === 'en' ? '#fff' : theme.textSecondary },
+                    { color: language === 'en' ? theme.textOnAccent : theme.textSecondary },
                   ]}
                 >
                   English
                 </Text>
-              </TouchableOpacity>
+              </BouncyButton>
             </View>
           </View>
 
@@ -153,7 +160,9 @@ export default function InfoModal({
             {footerLabel}
           </Text>
 
-          <TouchableOpacity
+          <BouncyButton
+            pressedScale={0.93}
+            hapticFeedback
             style={[styles.infoModalCloseButton, { backgroundColor: theme.accent }]}
             onPress={() => {
               onHapticLight();
@@ -161,7 +170,7 @@ export default function InfoModal({
             }}
           >
             <Text style={styles.infoModalCloseButtonText}>{closeLabel}</Text>
-          </TouchableOpacity>
+          </BouncyButton>
         </View>
       </View>
     </Modal>

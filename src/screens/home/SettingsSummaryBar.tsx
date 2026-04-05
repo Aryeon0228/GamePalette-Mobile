@@ -11,7 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Defs, RadialGradient, Stop, Rect } from 'react-native-svg';
 import * as Haptics from 'expo-haptics';
 import { styles } from './HomeScreen.styles';
-import { FONT_FAMILY } from '../../constants/designTokens';
+import { FONT_FAMILY, COLOR_TOKENS, CVD_COLORS } from '../../constants/designTokens';
 import { ExtractionMethod } from '../../lib/colorExtractor';
 import { ColorBlindnessType } from '../../lib/colorUtils';
 import { StyleFilter } from '../../constants/stylePresets';
@@ -273,25 +273,10 @@ const CVD_LABELS_EN: Record<ColorBlindnessType, string> = {
   tritanopia: 'Tritan',
 };
 
-// CVD confused-pair colors for text + glow
-const CVD_TEXT_COLORS_LIGHT: Record<ColorBlindnessType, string | undefined> = {
-  none: 'rgba(60, 60, 67, 0.3)',
-  protanopia: '#D64040',
-  deuteranopia: '#22944E',
-  tritanopia: '#3478F6',
-};
-const CVD_TEXT_COLORS_DARK: Record<ColorBlindnessType, string | undefined> = {
-  none: 'rgba(210, 215, 230, 0.35)',
-  protanopia: '#FF6B6B',
-  deuteranopia: '#4ADE80',
-  tritanopia: '#60A5FA',
-};
-const CVD_GLOW_COLORS: Record<ColorBlindnessType, string[] | undefined> = {
-  none: undefined,
-  protanopia: ['#ef4444', '#22c55e'],
-  deuteranopia: ['#22c55e', '#ef4444'],
-  tritanopia: ['#3b82f6', '#eab308'],
-};
+// CVD confused-pair colors — sourced from design tokens
+const CVD_TEXT_COLORS_LIGHT = CVD_COLORS.textLight;
+const CVD_TEXT_COLORS_DARK = CVD_COLORS.textDark;
+const CVD_GLOW_COLORS = CVD_COLORS.glow;
 
 function SettingsSummaryBar({
   onChipPress,
@@ -342,9 +327,9 @@ function SettingsSummaryBar({
             onPress={handleMethodPress}
             isDark={isDark}
             textColor={isDark
-              ? (extractionMethod === 'kmeans' ? '#FF80B0' : '#60A5FA')
-              : (extractionMethod === 'kmeans' ? '#D64080' : '#3478F6')}
-            glowColors={extractionMethod === 'kmeans' ? ['#D64080'] : ['#3478F6']}
+              ? (extractionMethod === 'kmeans' ? COLOR_TOKENS.methodKmeansDark : COLOR_TOKENS.methodHistogramDark)
+              : (extractionMethod === 'kmeans' ? COLOR_TOKENS.methodKmeansLight : COLOR_TOKENS.methodHistogramLight)}
+            glowColors={extractionMethod === 'kmeans' ? [COLOR_TOKENS.methodKmeansLight] : [COLOR_TOKENS.methodHistogramLight]}
           />
           <SlotReel
             currentValue={cvdLabel}

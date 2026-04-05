@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal, TextInput, StyleSheet } from 'react-native';
+import { View, Text, Modal, TextInput, StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
+import { BouncyButton } from '../../../components/BouncyButton';
 
 import { styles } from '../HomeScreen.styles';
 import { ThemeColors } from '../../../store/themeStore';
@@ -52,22 +53,26 @@ export default function SavePaletteModal({
             autoFocus
           />
           <View style={styles.modalButtons}>
-            <TouchableOpacity
+            <BouncyButton
+              pressedScale={0.93}
+              hapticFeedback
               style={[styles.modalButton, { backgroundColor: theme.buttonBg }]}
               onPress={onClose}
             >
               <Text style={[styles.modalButtonText, { color: theme.textSecondary }]}>
                 {isKorean ? '취소' : 'Cancel'}
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </BouncyButton>
+            <BouncyButton
+              pressedScale={0.93}
+              hapticFeedback
               style={[styles.modalButton, styles.modalButtonPrimary]}
               onPress={onConfirm}
             >
               <Text style={[styles.modalButtonText, styles.modalButtonTextPrimary]}>
                 {isKorean ? '저장' : 'Save'}
               </Text>
-            </TouchableOpacity>
+            </BouncyButton>
           </View>
         </View>
       </View>

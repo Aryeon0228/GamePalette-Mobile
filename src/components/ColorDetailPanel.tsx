@@ -15,7 +15,7 @@ import {
   getContrastColor,
   generateValueVariations,
 } from '../lib/styleFilters';
-import { COLOR_TOKENS, SHADOW_TOKENS, RADIUS_TOKENS } from '../constants/designTokens';
+import { COLOR_TOKENS, SHADOW_TOKENS, RADIUS_TOKENS, FONT_FAMILY } from '../constants/designTokens';
 
 const C = COLOR_TOKENS;
 
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   colorValue: {
     fontSize: 20,
     fontWeight: '600',
-    fontFamily: 'monospace',
+    fontFamily: FONT_FAMILY.mono,
   },
   controls: {
     flexDirection: 'row',

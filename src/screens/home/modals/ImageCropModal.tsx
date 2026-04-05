@@ -12,6 +12,7 @@ import {
 
 import { ThemeColors } from '../../../store/themeStore';
 import { type AppLanguage } from '../../../lib/colorUtils';
+import { FONT_FAMILY } from '../../../constants/designTokens';
 
 export interface CropArea {
   originX: number;
@@ -452,7 +453,7 @@ export default function ImageCropModal({
       onRequestClose={onCancel}
       presentationStyle="fullScreen"
     >
-      <View style={[styles.container, { backgroundColor: theme.isDark ? '#070b17' : '#f0f0f2' }]}>
+      <View style={[styles.container, { backgroundColor: theme.isDark ? theme.background : theme.backgroundTertiary }]}>
         <View style={[styles.header, { borderBottomColor: theme.border }]}> 
           <TouchableOpacity
             style={[styles.headerButton, { backgroundColor: theme.backgroundTertiary }]}
@@ -485,7 +486,7 @@ export default function ImageCropModal({
             <Text
               style={[
                 styles.headerButtonText,
-                { color: !canApply || isApplying ? theme.textSecondary : '#fff' },
+                { color: !canApply || isApplying ? theme.textSecondary : theme.textOnAccent },
               ]}
             >
               {isApplying ? applyingLabel : applyLabel}
@@ -506,7 +507,7 @@ export default function ImageCropModal({
             <Text
               style={[
                 styles.modeButtonText,
-                { color: selectionMode === 'lasso' ? '#fff' : theme.textSecondary },
+                { color: selectionMode === 'lasso' ? theme.textOnAccent : theme.textSecondary },
               ]}
             >
               {lassoModeLabel}
@@ -524,7 +525,7 @@ export default function ImageCropModal({
             <Text
               style={[
                 styles.modeButtonText,
-                { color: selectionMode === 'rect' ? '#fff' : theme.textSecondary },
+                { color: selectionMode === 'rect' ? theme.textOnAccent : theme.textSecondary },
               ]}
             >
               {rectModeLabel}
@@ -542,7 +543,7 @@ export default function ImageCropModal({
         </View>
 
         <View style={styles.canvasOuter}>
-          <View style={[styles.canvas, !theme.isDark && { backgroundColor: '#e0e0e2' }]} onLayout={onCanvasLayout}>
+          <View style={[styles.canvas, !theme.isDark && { backgroundColor: theme.backgroundTertiary }]} onLayout={onCanvasLayout}>
             {!!imageUri && !!imageFrame && (
               <Image
                 source={{ uri: imageUri }}
@@ -719,7 +720,7 @@ export default function ImageCropModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#070b17',
+    backgroundColor: '#1e2130',
   },
   header: {
     paddingTop: 58,
@@ -737,13 +738,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 17,
-    fontFamily: 'Pretendard-Bold',
+    fontFamily: FONT_FAMILY.bold,
     fontWeight: '700',
   },
   subtitle: {
     marginTop: 2,
     fontSize: 12,
-    fontFamily: 'Pretendard-Medium',
+    fontFamily: FONT_FAMILY.medium,
     fontWeight: '500',
   },
   headerButton: {
@@ -759,7 +760,7 @@ const styles = StyleSheet.create({
   },
   headerButtonText: {
     fontSize: 14,
-    fontFamily: 'Pretendard-Bold',
+    fontFamily: FONT_FAMILY.bold,
     fontWeight: '700',
   },
   modeRow: {
@@ -780,7 +781,7 @@ const styles = StyleSheet.create({
   },
   modeButtonText: {
     fontSize: 13,
-    fontFamily: 'Pretendard-Bold',
+    fontFamily: FONT_FAMILY.bold,
     fontWeight: '700',
   },
   redrawButton: {
@@ -793,7 +794,7 @@ const styles = StyleSheet.create({
   },
   redrawButtonText: {
     fontSize: 13,
-    fontFamily: 'Pretendard-Bold',
+    fontFamily: FONT_FAMILY.bold,
     fontWeight: '700',
   },
   canvasOuter: {
@@ -823,7 +824,7 @@ const styles = StyleSheet.create({
   lassoHintText: {
     color: 'rgba(255,255,255,0.85)',
     fontSize: 13,
-    fontFamily: 'Pretendard-SemiBold',
+    fontFamily: FONT_FAMILY.semiBold,
     fontWeight: '600',
     backgroundColor: 'rgba(0,0,0,0.42)',
     paddingHorizontal: 10,
@@ -908,7 +909,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 10,
     paddingBottom: 24,
-    fontFamily: 'Pretendard-Medium',
+    fontFamily: FONT_FAMILY.medium,
     fontWeight: '500',
   },
 });

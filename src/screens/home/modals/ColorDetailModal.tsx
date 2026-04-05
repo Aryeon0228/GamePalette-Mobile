@@ -3,10 +3,11 @@ import { View, Text, TouchableOpacity, Modal, ScrollView, StyleSheet } from 'rea
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { BouncyButton } from '../../../components/BouncyButton';
 
 import { styles } from '../HomeScreen.styles';
 import { ThemeColors } from '../../../store/themeStore';
-import { OVERLAY_TOKENS, BLUR_INTENSITY } from '../../../constants/designTokens';
+import { COLOR_TOKENS, OVERLAY_TOKENS, BLUR_INTENSITY } from '../../../constants/designTokens';
 import {
   FORMAT_ACCENT_COLORS,
   VARIATION_TOGGLE_COLORS,
@@ -109,26 +110,30 @@ export default function ColorDetailModal({
                   <Text
                     style={[
                       styles.modalColorPreviewValue,
-                      { color: getLuminance(colorInfo.hex) > 140 ? '#000' : '#fff' },
+                      { color: getLuminance(colorInfo.hex) > 140 ? COLOR_TOKENS.textPrimary : '#FFFFFF' },
                     ]}
                   >
                     {getFormattedColor(colorInfo, colorFormat)}
                   </Text>
-                  <TouchableOpacity
+                  <BouncyButton
+                    pressedScale={0.93}
+                    hapticFeedback
                     style={styles.modalColorCopyButton}
                     onPress={() => copyColor(getFormattedColor(colorInfo, colorFormat), colorFormat)}
                   >
-                    <Ionicons name="copy-outline" size={18} color="#fff" />
+                    <Ionicons name="copy-outline" size={18} color={theme.textOnAccent} />
                     <Text style={styles.modalColorCopyText}>{copyLabel}</Text>
-                  </TouchableOpacity>
+                  </BouncyButton>
                 </View>
 
                 {/* Format Segment Toggle */}
                 <View style={[styles.modalFormatSegment, { backgroundColor: 'rgba(255, 255, 255, 0.1)' }]}
                 >
                   {(['HEX', 'RGB', 'HSL', 'OKLCH'] as const).map((fmt) => (
-                    <TouchableOpacity
+                    <BouncyButton
                       key={fmt}
+                      pressedScale={0.93}
+                      hapticFeedback
                       style={[
                         styles.modalFormatSegmentButton,
                         colorFormat === fmt && { backgroundColor: FORMAT_ACCENT_COLORS[fmt] },
@@ -138,12 +143,12 @@ export default function ColorDetailModal({
                       <Text
                         style={[
                           styles.modalFormatSegmentText,
-                          { color: colorFormat === fmt ? '#fff' : theme.textMuted },
+                          { color: colorFormat === fmt ? theme.textOnAccent : theme.textMuted },
                         ]}
                       >
                         {fmt}
                       </Text>
-                    </TouchableOpacity>
+                    </BouncyButton>
                   ))}
                 </View>
 
@@ -153,7 +158,9 @@ export default function ColorDetailModal({
                     <Text style={[styles.variationsSectionTitle, { color: theme.textPrimary }]}>{variationsLabel}</Text>
                     <View style={[styles.hueShiftToggle, { backgroundColor: 'rgba(0, 0, 0, 0.08)' }]}
                     >
-                      <TouchableOpacity
+                      <BouncyButton
+                        pressedScale={0.93}
+                        hapticFeedback
                         style={[
                           styles.hueShiftOption,
                           !variationHueShift && { backgroundColor: VARIATION_TOGGLE_COLORS.lightness },
@@ -163,13 +170,15 @@ export default function ColorDetailModal({
                         <Text
                           style={[
                             styles.hueShiftOptionText,
-                            { color: !variationHueShift ? '#fff' : theme.textMuted },
+                            { color: !variationHueShift ? theme.textOnAccent : theme.textMuted },
                           ]}
                         >
                           {lightnessLabel}
                         </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
+                      </BouncyButton>
+                      <BouncyButton
+                        pressedScale={0.93}
+                        hapticFeedback
                         style={[
                           styles.hueShiftOption,
                           variationHueShift && { backgroundColor: VARIATION_TOGGLE_COLORS.hueShift },
@@ -179,19 +188,21 @@ export default function ColorDetailModal({
                         <Text
                           style={[
                             styles.hueShiftOptionText,
-                            { color: variationHueShift ? '#fff' : theme.textMuted },
+                            { color: variationHueShift ? theme.textOnAccent : theme.textMuted },
                           ]}
                         >
                           {hueShiftLabel}
                         </Text>
-                      </TouchableOpacity>
+                      </BouncyButton>
                     </View>
                   </View>
 
                   <View style={styles.variationStrip}>
                     {generateColorVariations(colorInfo.hex, variationHueShift).map((v, i) => (
-                      <TouchableOpacity
+                      <BouncyButton
                         key={i}
+                        pressedScale={0.93}
+                        hapticFeedback
                         style={[
                           styles.variationCell,
                           v.label === 'Base' && styles.variationCellBase,
@@ -200,7 +211,7 @@ export default function ColorDetailModal({
                       >
                         <View style={[styles.variationColor, { backgroundColor: v.hex }]} />
                         <Text style={[styles.variationHex, { color: theme.textMuted }]}>{v.hex}</Text>
-                      </TouchableOpacity>
+                      </BouncyButton>
                     ))}
                   </View>
                 </View>
@@ -215,15 +226,17 @@ export default function ColorDetailModal({
                     style={styles.harmonyTypesScroll}
                   >
                     {generateColorHarmonies(colorInfo.hex, language).map((harmony) => (
-                      <TouchableOpacity
+                      <BouncyButton
                         key={harmony.type}
+                        pressedScale={0.93}
+                        hapticFeedback
                         style={[
                           styles.harmonyTypeButton,
                           {
                             backgroundColor:
                               selectedHarmony === harmony.type
                                 ? UNIFIED_EMPHASIS.activeButtonBg
-                                : 'rgba(0, 0, 0, 0.06)',
+                                : theme.backgroundTertiary,
                           },
                         ]}
                         onPress={() => {
@@ -234,12 +247,12 @@ export default function ColorDetailModal({
                         <Text
                           style={[
                             styles.harmonyTypeText,
-                            { color: selectedHarmony === harmony.type ? '#fff' : theme.textMuted },
+                            { color: selectedHarmony === harmony.type ? theme.textOnAccent : theme.textMuted },
                           ]}
                         >
                           {harmony.name}
                         </Text>
-                      </TouchableOpacity>
+                      </BouncyButton>
                     ))}
                   </ScrollView>
 
@@ -257,8 +270,10 @@ export default function ColorDetailModal({
                         </Text>
                         <View style={styles.harmonyColorsRow}>
                           {currentHarmony.colors.map((color, i) => (
-                            <TouchableOpacity
+                            <BouncyButton
                               key={i}
+                              pressedScale={0.93}
+                              hapticFeedback
                               style={styles.harmonyColorItem}
                               onPress={() => copyColor(color.hex)}
                             >
@@ -270,7 +285,7 @@ export default function ColorDetailModal({
                                 ]}
                               />
                               <Text style={[styles.harmonyColorHex, { color: theme.textMuted }]}>{color.hex}</Text>
-                            </TouchableOpacity>
+                            </BouncyButton>
                           ))}
                         </View>
                       </>

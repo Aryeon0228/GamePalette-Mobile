@@ -7,7 +7,7 @@ import Svg, { Circle, Line, Defs, LinearGradient as SvgLinearGradient, RadialGra
 
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
-import { COLOR_TOKENS, OVERLAY_TOKENS } from '../../constants/designTokens';
+import { COLOR_TOKENS, OVERLAY_TOKENS, FONT_FAMILY } from '../../constants/designTokens';
 import { BouncyButton } from '../../components/BouncyButton';
 import {
   FORMAT_ACCENT_COLORS,
@@ -175,9 +175,9 @@ function ColorDetailSection({
     const isLight = getLuminance(colorInfo.hex) > 140;
     return {
       isLight,
-      fgColor: isLight ? '#000' : '#fff',
+      fgColor: isLight ? COLOR_TOKENS.textPrimary : '#FFFFFF',
       fgMuted: isLight ? OVERLAY_TOKENS.darkOnColorButton : OVERLAY_TOKENS.textOnColorPrimary,
-      shadowColor: isLight ? 'rgba(255,255,255,0.5)' : OVERLAY_TOKENS.scrimDark,
+      shadowColor: isLight ? OVERLAY_TOKENS.glassWhiteFaint : OVERLAY_TOKENS.scrimDark,
       trackBg: isLight ? OVERLAY_TOKENS.darkOnColorTrack : OVERLAY_TOKENS.darkOnColorMedium,
       copyBg: isLight ? OVERLAY_TOKENS.darkOnColorLight : OVERLAY_TOKENS.darkOnColor,
     };
@@ -192,7 +192,7 @@ function ColorDetailSection({
     <BlurView
       intensity={theme.isDark ? 10 : 15}
       tint={theme.isDark ? 'dark' : 'light'}
-      style={[styles.inlineColorDetail, { backgroundColor: theme.isDark ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.02)', overflow: 'hidden' }]}
+      style={[styles.inlineColorDetail, { backgroundColor: theme.isDark ? OVERLAY_TOKENS.darkOnColorLight : 'rgba(255, 255, 255, 0.02)', overflow: 'hidden' }]}
     >
       {/* 선택 컬러 번짐 */}
       <LinearGradient
@@ -219,7 +219,7 @@ function ColorDetailSection({
             <View style={styles.previewTopRow}>
               <View style={{ flex: 1 }}>
                 {colorFormat !== 'HEX' && (
-                  <Text style={{ fontSize: 10, fontFamily: 'monospace', fontWeight: '600', color: previewTone.fgMuted, marginBottom: 1 }}>
+                  <Text style={{ fontSize: 10, fontFamily: FONT_FAMILY.mono, fontWeight: '600', color: previewTone.fgMuted, marginBottom: 1 }}>
                     {colorFormat}
                   </Text>
                 )}
@@ -372,7 +372,7 @@ function ColorDetailSection({
           >
             <Text style={[
               styles.formatSegmentText,
-              { color: colorFormat === fmt ? '#FFFFFF' : theme.textMuted },
+              { color: colorFormat === fmt ? theme.textOnAccent : theme.textMuted },
             ]}>
               {fmt}
             </Text>
@@ -397,7 +397,7 @@ function ColorDetailSection({
               <Text
                 style={[
                   styles.hueShiftOptionText,
-                  { color: !variationHueShift ? '#FFFFFF' : theme.textMuted },
+                  { color: !variationHueShift ? theme.textOnAccent : theme.textMuted },
                 ]}
               >
                 {lightnessLabel}
@@ -415,7 +415,7 @@ function ColorDetailSection({
               <Text
                 style={[
                   styles.hueShiftOptionText,
-                  { color: variationHueShift ? '#FFFFFF' : theme.textMuted },
+                  { color: variationHueShift ? theme.textOnAccent : theme.textMuted },
                 ]}
               >
                 {hueShiftLabel}
@@ -488,7 +488,7 @@ function ColorDetailSection({
                   <Text
                     style={[
                       styles.harmonyTypeText,
-                      { color: selectedHarmony === harmony.type ? '#FFFFFF' : theme.textMuted },
+                      { color: selectedHarmony === harmony.type ? theme.textOnAccent : theme.textMuted },
                     ]}
                   >
                     {harmony.name}
@@ -513,7 +513,7 @@ function ColorDetailSection({
               isDark={theme.isDark}
             />
             <View style={styles.harmonyRightColumn}>
-              <Text style={[styles.harmonyDesc, { color: theme.textSubtle }]} numberOfLines={1}>
+              <Text style={[styles.harmonyDesc, { color: theme.textMuted }]} numberOfLines={1}>
                 {currentHarmony.description}
               </Text>
               <View style={styles.harmonyColorsRow}>
@@ -535,7 +535,7 @@ function ColorDetailSection({
                     <Text style={[styles.harmonyColorHex, { color: theme.textMuted }]}>
                       {harmonyColor.hex.toUpperCase()}
                     </Text>
-                    <Text style={[styles.harmonyColorAngle, { color: theme.textSubtle }]}>
+                    <Text style={[styles.harmonyColorAngle, { color: theme.textMuted }]}>
                       {harmonyColor.angle}°
                     </Text>
                   </BouncyButton>

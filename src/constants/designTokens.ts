@@ -82,6 +82,12 @@ export const COLOR_TOKENS = {
   // Splash/brand decorative
   brandSparkle: '#f7d77f',
   brandTitleText: '#f8f9ff',
+
+  // Extraction method accent colors
+  methodHistogramLight: '#3478F6',
+  methodHistogramDark: '#60A5FA',
+  methodKmeansLight: '#D64080',
+  methodKmeansDark: '#FF80B0',
 } as const;
 
 export const OVERLAY_TOKENS = {
@@ -145,6 +151,9 @@ export const OVERLAY_TOKENS = {
 
   // Dark blur surface (dark mode only, light value unused)
   darkBlurSurface: 'rgba(255, 255, 255, 0.9)',
+
+  // Action bar background
+  actionBarBg: 'rgba(255, 255, 255, 0.1)',
 
   // Glass section background
   glassSectionBg: 'rgba(255, 255, 255, 0.12)',
@@ -330,6 +339,8 @@ export function getOverlayTokens(isDark: boolean) {
     blurSurfaceLight: 'rgba(30, 33, 48, 0.7)',
     blurBorder: 'rgba(255, 255, 255, 0.08)',
     blurBorderStrong: 'rgba(255, 255, 255, 0.12)',
+    // Action bar background
+    actionBarBg: 'rgba(30, 33, 48, 0.8)',
     // Glass gradient
     glassGradientTop: 'rgba(255,255,255,0.08)',
     glassGradientMid: 'rgba(255,255,255,0.0)',
@@ -364,6 +375,32 @@ export function getChipThemes(isDark: boolean) {
     gray: accent,
   };
 }
+
+/** CVD (Color Vision Deficiency) confused-pair colors for text and glow effects */
+export const CVD_COLORS: {
+  textLight: Record<string, string | undefined>;
+  textDark: Record<string, string | undefined>;
+  glow: Record<string, string[] | undefined>;
+} = {
+  textLight: {
+    none: 'rgba(60, 60, 67, 0.3)',
+    protanopia: '#D64040',
+    deuteranopia: '#22944E',
+    tritanopia: '#3478F6',
+  },
+  textDark: {
+    none: 'rgba(210, 215, 230, 0.35)',
+    protanopia: '#FF6B6B',
+    deuteranopia: '#4ADE80',
+    tritanopia: '#60A5FA',
+  },
+  glow: {
+    none: undefined,
+    protanopia: ['#ef4444', '#22c55e'],
+    deuteranopia: ['#22c55e', '#ef4444'],
+    tritanopia: ['#3b82f6', '#eab308'],
+  },
+};
 
 export type ColorToken = keyof typeof COLOR_TOKENS;
 export type SpacingToken = keyof typeof SPACING_TOKENS;

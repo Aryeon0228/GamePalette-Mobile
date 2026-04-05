@@ -4,6 +4,7 @@ import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import ViewShot from 'react-native-view-shot';
+import { BouncyButton } from '../../../components/BouncyButton';
 
 import { styles } from '../HomeScreen.styles';
 import { ThemeColors } from '../../../store/themeStore';
@@ -206,7 +207,9 @@ export default function ExportModal({
           >
             {/* SNS Card Type Selector */}
             <View style={styles.snsTypeSelector}>
-              <TouchableOpacity
+              <BouncyButton
+                pressedScale={0.93}
+                hapticFeedback
                 style={[
                   styles.snsTypeButton,
                   {
@@ -223,12 +226,12 @@ export default function ExportModal({
                 <Ionicons
                   name="logo-instagram"
                   size={18}
-                  color={snsCardType === 'instagram' ? '#fff' : theme.textSecondary}
+                  color={snsCardType === 'instagram' ? theme.textOnAccent : theme.textSecondary}
                 />
                 <Text
                   style={[
                     styles.snsTypeText,
-                    { color: snsCardType === 'instagram' ? '#fff' : theme.textSecondary },
+                    { color: snsCardType === 'instagram' ? theme.textOnAccent : theme.textSecondary },
                   ]}
                 >
                   Instagram
@@ -237,8 +240,10 @@ export default function ExportModal({
                 >
                   1:1
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              </BouncyButton>
+              <BouncyButton
+                pressedScale={0.93}
+                hapticFeedback
                 style={[
                   styles.snsTypeButton,
                   {
@@ -255,12 +260,12 @@ export default function ExportModal({
                 <Ionicons
                   name="logo-twitter"
                   size={18}
-                  color={snsCardType === 'twitter' ? '#fff' : theme.textSecondary}
+                  color={snsCardType === 'twitter' ? theme.textOnAccent : theme.textSecondary}
                 />
                 <Text
                   style={[
                     styles.snsTypeText,
-                    { color: snsCardType === 'twitter' ? '#fff' : theme.textSecondary },
+                    { color: snsCardType === 'twitter' ? theme.textOnAccent : theme.textSecondary },
                   ]}
                 >
                   Twitter
@@ -269,44 +274,50 @@ export default function ExportModal({
                 >
                   16:9
                 </Text>
-              </TouchableOpacity>
+              </BouncyButton>
             </View>
 
             {/* Card Options */}
             <View style={styles.cardOptionsRow}>
-              <TouchableOpacity
+              <BouncyButton
+                pressedScale={0.93}
+                hapticFeedback
                 style={[
                   styles.cardOptionButton,
                   { backgroundColor: cardShowHex ? cardOptionColors.hex : theme.backgroundTertiary },
                 ]}
                 onPress={() => onCardShowHexChange(!cardShowHex)}
               >
-                <Text style={[styles.cardOptionText, { color: cardShowHex ? '#fff' : theme.textSecondary }]}>
+                <Text style={[styles.cardOptionText, { color: cardShowHex ? theme.textOnAccent : theme.textSecondary }]}>
                   HEX
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              </BouncyButton>
+              <BouncyButton
+                pressedScale={0.93}
+                hapticFeedback
                 style={[
                   styles.cardOptionButton,
                   { backgroundColor: cardShowStats ? cardOptionColors.stats : theme.backgroundTertiary },
                 ]}
                 onPress={() => onCardShowStatsChange(!cardShowStats)}
               >
-                <Text style={[styles.cardOptionText, { color: cardShowStats ? '#fff' : theme.textSecondary }]}>
+                <Text style={[styles.cardOptionText, { color: cardShowStats ? theme.textOnAccent : theme.textSecondary }]}>
                   {statsLabel}
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              </BouncyButton>
+              <BouncyButton
+                pressedScale={0.93}
+                hapticFeedback
                 style={[
                   styles.cardOptionButton,
                   { backgroundColor: cardShowHistogram ? cardOptionColors.histogram : theme.backgroundTertiary },
                 ]}
                 onPress={() => onCardShowHistogramChange(!cardShowHistogram)}
               >
-                <Text style={[styles.cardOptionText, { color: cardShowHistogram ? '#fff' : theme.textSecondary }]}>
+                <Text style={[styles.cardOptionText, { color: cardShowHistogram ? theme.textOnAccent : theme.textSecondary }]}>
                   {histogramLabel}
                 </Text>
-              </TouchableOpacity>
+              </BouncyButton>
             </View>
 
             {/* SNS Card Preview */}
@@ -316,7 +327,7 @@ export default function ExportModal({
                 options={{ format: 'png', quality: 1.0 }}
                 style={[styles.snsCard, styles.snsCardTwitter]}
               >
-                <View style={[styles.snsCardBackground, { backgroundColor: processedColors[0] || '#1a1a24' }]} />
+                <View style={[styles.snsCardBackground, { backgroundColor: processedColors[0] || theme.background }]} />
                 <View style={styles.snsCardOverlay} />
                 <View style={[styles.snsCardContent, styles.snsCardContentTwitter]}>
                   {/* Top: Image + Palette side by side */}
@@ -407,7 +418,7 @@ export default function ExportModal({
                 options={{ format: 'png', quality: 1.0 }}
                 style={[styles.snsCard, styles.snsCardInstagram]}
               >
-                <View style={[styles.snsCardBackground, { backgroundColor: processedColors[0] || '#1a1a24' }]} />
+                <View style={[styles.snsCardBackground, { backgroundColor: processedColors[0] || theme.background }]} />
                 <View style={styles.snsCardOverlay} />
                 <View style={styles.snsCardContent}>
                   {currentImageUri && (
@@ -488,8 +499,10 @@ export default function ExportModal({
               <Text style={[styles.formatSectionTitle, { color: theme.textSecondary }]}>{formatSectionTitle}</Text>
               <View style={styles.formatOptions}>
                 {EXPORT_FORMAT_OPTIONS.map((format) => (
-                  <TouchableOpacity
+                  <BouncyButton
                     key={format.id}
+                    pressedScale={0.93}
+                    hapticFeedback
                     style={[
                       styles.formatOption,
                       {
@@ -503,61 +516,69 @@ export default function ExportModal({
                     <Ionicons
                       name={format.icon}
                       size={18}
-                      color={exportFormat === format.id ? '#fff' : theme.textSecondary}
+                      color={exportFormat === format.id ? theme.textOnAccent : theme.textSecondary}
                     />
                     <Text
                       style={[
                         styles.formatOptionText,
-                        { color: exportFormat === format.id ? '#fff' : theme.textSecondary },
+                        { color: exportFormat === format.id ? theme.textOnAccent : theme.textSecondary },
                       ]}
                     >
                       {format.label}
                     </Text>
-                  </TouchableOpacity>
+                  </BouncyButton>
                 ))}
               </View>
             </View>
 
             {/* Share Button */}
-            <TouchableOpacity
+            <BouncyButton
+              pressedScale={0.93}
+              hapticFeedback
               style={styles.exportConfirmButton}
               onPress={onExportConfirm}
               disabled={isExporting}
             >
               {isExporting ? (
-                <ActivityIndicator color="#fff" size="small" />
+                <ActivityIndicator color={theme.textOnAccent} size="small" />
               ) : (
                 <>
-                  <Ionicons name="share-outline" size={20} color="#fff" />
+                  <Ionicons name="share-outline" size={20} color={theme.textOnAccent} />
                   <Text style={styles.exportConfirmButtonText}>
                     {shareButtonText}
                   </Text>
                 </>
               )}
-            </TouchableOpacity>
+            </BouncyButton>
 
             {/* Quick Copy Options */}
             <View style={styles.quickCopySection}>
               <Text style={[styles.quickCopyTitle, { color: theme.textSecondary }]}>{quickCopyTitle}</Text>
               <View style={styles.quickCopyButtons}>
-                <TouchableOpacity
+                <BouncyButton
+                  pressedScale={0.93}
+                  hapticFeedback
                   style={[styles.quickCopyButton, { backgroundColor: theme.backgroundTertiary }]}
                   onPress={() => onCopyToClipboard('text')}
                 >
                   <Text style={[styles.quickCopyButtonText, { color: theme.textPrimary }]}>HEX</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                </BouncyButton>
+                <BouncyButton
+                  pressedScale={0.93}
+                  hapticFeedback
                   style={[styles.quickCopyButton, { backgroundColor: theme.backgroundTertiary }]}
                   onPress={() => onCopyToClipboard('json')}
                 >
                   <Text style={[styles.quickCopyButtonText, { color: theme.textPrimary }]}>JSON</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                </BouncyButton>
+                <BouncyButton
+                  pressedScale={0.93}
+                  hapticFeedback
                   style={[styles.quickCopyButton, { backgroundColor: theme.backgroundTertiary }]}
                   onPress={() => onCopyToClipboard('css')}
                 >
                   <Text style={[styles.quickCopyButtonText, { color: theme.textPrimary }]}>CSS</Text>
-                </TouchableOpacity>
+                </BouncyButton>
               </View>
             </View>
 

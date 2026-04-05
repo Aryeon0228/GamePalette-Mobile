@@ -8,7 +8,7 @@ import { BouncyButton } from '../../components/BouncyButton';
 import { styles } from './HomeScreen.styles';
 import { ThemeColors } from '../../store/themeStore';
 import { type AppLanguage } from '../../lib/colorUtils';
-import { OVERLAY_TOKENS, BLUR_INTENSITY } from '../../constants/designTokens';
+import { BLUR_INTENSITY, getOverlayTokens } from '../../constants/designTokens';
 
 interface ActionBarProps {
   theme: ThemeColors;
@@ -26,11 +26,12 @@ function ActionBar({
   onExport,
 }: ActionBarProps) {
   const isKorean = language === 'ko';
+  const overlayTokens = getOverlayTokens(theme.isDark);
   return (
     <BlurView
       intensity={40}
       tint={theme.isDark ? "dark" : "light"}
-      style={[styles.actionBar, { backgroundColor: theme.isDark ? 'rgba(30, 33, 48, 0.8)' : 'rgba(255, 255, 255, 0.1)' }]}
+      style={[styles.actionBar, { backgroundColor: overlayTokens.actionBarBg }]}
     >
       {/* 상단 하이라이트 */}
       <LinearGradient
@@ -61,7 +62,7 @@ function ActionBar({
         pressedScale={0.93}
         hapticFeedback
       >
-        <Ionicons name="download-outline" size={20} color="#fff" />
+        <Ionicons name="download-outline" size={20} color={theme.textOnAccent} />
         <Text style={styles.saveButtonText}>{isKorean ? '저장' : 'Save'}</Text>
       </BouncyButton>
 

@@ -340,17 +340,6 @@ export function adjustColor(
 }
 
 /**
- * Shift hue by given degrees (wraps around 360)
- */
-export function shiftHue(hex: string, shift: number): string {
-  const rgb = hexToRgb(hex);
-  const { h, s, l } = rgbToHsl(rgb.r, rgb.g, rgb.b);
-  const newH = (h + shift + 360) % 360;
-  const newRgb = hslToRgb(newH, s, l);
-  return rgbToHex(newRgb.r, newRgb.g, newRgb.b);
-}
-
-/**
  * Generate value (lightness) variations of a color
  */
 export function generateValueVariations(hex: string, steps: number = 5): string[] {

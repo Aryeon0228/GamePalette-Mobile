@@ -23,7 +23,7 @@ import { usePaletteStore, SavedPalette } from '../store/paletteStore';
 import { useThemeStore } from '../store/themeStore';
 import ExportModal from './home/modals/ExportModal';
 import { type AppLanguage } from '../lib/colorUtils';
-import { COLOR_TOKENS, SHADOW_TOKENS, RADIUS_TOKENS, OVERLAY_TOKENS, BLUR_INTENSITY } from '../constants/designTokens';
+import { COLOR_TOKENS, SHADOW_TOKENS, RADIUS_TOKENS, OVERLAY_TOKENS, BLUR_INTENSITY, FONT_FAMILY } from '../constants/designTokens';
 
 const C = COLOR_TOKENS;
 
@@ -654,7 +654,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 19,
-    fontFamily: 'Pretendard-SemiBold',
+    fontFamily: FONT_FAMILY.semiBold,
     fontWeight: '600',
     color: C.textPrimary,
   },
@@ -679,7 +679,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    fontFamily: 'Pretendard-Regular',
+    fontFamily: FONT_FAMILY.regular,
     color: C.textPrimary,
     padding: 0,
   },
@@ -692,13 +692,13 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 22,
-    fontFamily: 'Pretendard-Bold',
+    fontFamily: FONT_FAMILY.bold,
     fontWeight: '700',
     color: C.textPrimary,
   },
   sectionCount: {
     fontSize: 15,
-    fontFamily: 'Pretendard-Regular',
+    fontFamily: FONT_FAMILY.regular,
     color: C.textMuted,
   },
   list: {
@@ -772,14 +772,14 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 17,
-    fontFamily: 'Pretendard-SemiBold',
+    fontFamily: FONT_FAMILY.semiBold,
     fontWeight: '600',
     color: C.textPrimary,
     flex: 1,
   },
   paletteLabel: {
     fontSize: 11,
-    fontFamily: 'Pretendard-SemiBold',
+    fontFamily: FONT_FAMILY.semiBold,
     fontWeight: '600',
     color: C.textMuted,
     letterSpacing: 0.5,
@@ -800,12 +800,12 @@ const styles = StyleSheet.create({
   tagText: {
     fontSize: 12,
     color: C.textSecondary,
-    fontFamily: 'Pretendard-Medium',
+    fontFamily: FONT_FAMILY.medium,
     fontWeight: '500',
   },
   dateText: {
     fontSize: 12,
-    fontFamily: 'Pretendard-Regular',
+    fontFamily: FONT_FAMILY.regular,
     color: C.textSubtle,
     marginLeft: 'auto',
   },
@@ -821,7 +821,7 @@ const styles = StyleSheet.create({
   },
   exportButtonText: {
     fontSize: 14,
-    fontFamily: 'Pretendard-SemiBold',
+    fontFamily: FONT_FAMILY.semiBold,
     fontWeight: '600',
     color: C.textPrimary,
   },
@@ -843,14 +843,14 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 19,
-    fontFamily: 'Pretendard-SemiBold',
+    fontFamily: FONT_FAMILY.semiBold,
     fontWeight: '600',
     color: C.textPrimary,
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 15,
-    fontFamily: 'Pretendard-Regular',
+    fontFamily: FONT_FAMILY.regular,
     color: C.textMuted,
     textAlign: 'center',
     lineHeight: 20,
@@ -871,7 +871,7 @@ const styles = StyleSheet.create({
   },
   menuTitle: {
     fontSize: 17,
-    fontFamily: 'Pretendard-SemiBold',
+    fontFamily: FONT_FAMILY.semiBold,
     fontWeight: '600',
     color: C.textPrimary,
     textAlign: 'center',
@@ -888,7 +888,7 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     fontSize: 17,
-    fontFamily: 'Pretendard-Regular',
+    fontFamily: FONT_FAMILY.regular,
     color: C.textPrimary,
   },
   menuItemDanger: {
@@ -920,7 +920,7 @@ const styles = StyleSheet.create({
   },
   exportTitle: {
     fontSize: 19,
-    fontFamily: 'Pretendard-SemiBold',
+    fontFamily: FONT_FAMILY.semiBold,
     fontWeight: '600',
     color: C.textPrimary,
     textAlign: 'center',
@@ -947,14 +947,14 @@ const styles = StyleSheet.create({
   },
   exportIconText: {
     fontSize: 17,
-    fontFamily: 'Pretendard-Bold',
+    fontFamily: FONT_FAMILY.bold,
     fontWeight: '700',
     color: '#fff',
   },
   exportOptionText: {
     fontSize: 13,
     color: C.textSecondary,
-    fontFamily: 'Pretendard-Medium',
+    fontFamily: FONT_FAMILY.medium,
     fontWeight: '500',
   },
 });

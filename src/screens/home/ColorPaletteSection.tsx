@@ -151,7 +151,7 @@ const ColorCard = React.memo(function ColorCard({
       hapticFeedback
     >
       <View style={[styles.colorSwatchOuterLight,
-        theme.isDark && { backgroundColor: '#535678' }
+        theme.isDark && { backgroundColor: theme.backgroundTertiary }
       ]}>
         <View style={[
           styles.colorSwatchOuter,

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { COLOR_TOKENS } from '../constants/designTokens';
+import { COLOR_TOKENS, FONT_FAMILY } from '../constants/designTokens';
 
 const C = COLOR_TOKENS;
 
@@ -95,6 +95,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: C.textSecondary,
     textAlign: 'right',
-    fontFamily: 'monospace',
+    fontFamily: FONT_FAMILY.mono,
   },
 });
