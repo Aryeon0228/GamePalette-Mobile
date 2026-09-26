@@ -8,12 +8,14 @@ import HomeScreen from './src/screens/HomeScreen';
 import LibraryScreen from './src/screens/LibraryScreen';
 import { type AppLanguage } from './src/lib/colorUtils';
 import { installRuntimeErrorLogger } from './src/lib/runtimeErrorLogger';
+import { useThemeStore } from './src/store/themeStore';
 
 type Screen = 'splash' | 'home' | 'library';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('splash');
   const [appLanguage, setAppLanguage] = useState<AppLanguage>('ko');
+  const isDark = useThemeStore((state) => state.isDark);
   useEffect(() => {
     installRuntimeErrorLogger();
   }, []);
@@ -56,7 +58,8 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
-        <StatusBar style="light" />
+        {/* The splash is always dark; the other screens follow the theme toggle. */}
+        <StatusBar style={currentScreen === 'splash' || isDark ? 'light' : 'dark'} />
         {renderScreen()}
       </View>
     </GestureHandlerRootView>
