@@ -453,9 +453,10 @@ export default function ImageCropModal({
       onRequestClose={onCancel}
       presentationStyle="fullScreen"
     >
-      <View style={[styles.container, { backgroundColor: theme.isDark ? theme.background : theme.backgroundTertiary }]}>
-        <View style={[styles.header, { borderBottomColor: theme.border }]}> 
+      <View testID="crop-modal" style={[styles.container, { backgroundColor: theme.isDark ? theme.background : theme.backgroundTertiary }]}>
+        <View style={[styles.header, { borderBottomColor: theme.border }]}>
           <TouchableOpacity
+            testID="crop-cancel-button"
             style={[styles.headerButton, { backgroundColor: theme.backgroundTertiary }]}
             onPress={() => {
               onHapticLight();
@@ -472,6 +473,7 @@ export default function ImageCropModal({
             <Text style={[styles.subtitle, { color: theme.textMuted }]}>{subtitle}</Text>
           </View>
           <TouchableOpacity
+            testID="crop-apply-button"
             style={[
               styles.headerButton,
               styles.applyButton,
@@ -496,6 +498,7 @@ export default function ImageCropModal({
 
         <View style={[styles.modeRow, { borderBottomColor: theme.border }]}> 
           <TouchableOpacity
+            testID="crop-mode-lasso"
             style={[
               styles.modeButton,
               {
@@ -514,6 +517,7 @@ export default function ImageCropModal({
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
+            testID="crop-mode-rect"
             style={[
               styles.modeButton,
               {

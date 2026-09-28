@@ -42,3 +42,6 @@ coverage/
 # Test/development images
 *.jpg
 !assets/**/*.jpg
+
+# App Store screenshot inputs/outputs (scripts/capture-screenshots.mjs)
+/screenshots/

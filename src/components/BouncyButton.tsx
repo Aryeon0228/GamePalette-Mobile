@@ -52,11 +52,13 @@ export interface BouncyButtonProps {
     onPressIn?: () => void;
     onPressOut?: () => void;
     onPress?: () => void;
+    testID?: string;
 }
 
 export function BouncyButton({
     children,
     style,
+    testID,
     pressedScale = 0.94,
     restScale = 1,
     hapticFeedback = false,
@@ -151,6 +153,7 @@ export function BouncyButton({
 
     return (
         <Pressable
+            testID={testID}
             style={outer}
             onPressIn={handlePressIn}
             onPressOut={handlePressOut}

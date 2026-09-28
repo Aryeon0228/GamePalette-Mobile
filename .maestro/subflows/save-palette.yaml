@@ -1,0 +1,45 @@
+# Saves the current palette under PALETTE_NAME and dismisses the "Saved!" alert.
+appId: com.studioaryeon.pixelpaw
+---
+- tapOn:
+    id: action-save-button
+- extendedWaitUntil:
+    visible:
+      id: save-palette-name-input
+    timeout: 5000
+- tapOn:
+    id: save-palette-name-input
+- inputText: ${PALETTE_NAME}
+# Fallback for the keyboard's first-run "slide to type" intro.
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+- runFlow:
+    when:
+      visible:
+        id: save-palette-confirm-button
+    commands:
+      - tapOn:
+          id: save-palette-confirm-button
+# In 1.2.0 (25) the dialog buttons collapse to zero height (modalButton has
+# flex: 1 but no height), so they are missing from the hierarchy. The visible
+# part of the confirm button still takes taps (iPhone 17 Pro Max position).
+- runFlow:
+    when:
+      visible:
+        id: save-palette-name-input
+      notVisible:
+        id: save-palette-confirm-button
+    commands:
+      - tapOn:
+          point: 67%, 57%
+- extendedWaitUntil:
+    visible: "OK|확인"
+    timeout: 5000
+- tapOn: "OK|확인"
+- extendedWaitUntil:
+    notVisible:
+      id: save-palette-name-input
+    timeout: 5000

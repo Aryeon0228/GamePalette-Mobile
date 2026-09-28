@@ -45,6 +45,7 @@ function ActionBar({
       />
 
       <BouncyButton
+        testID="action-library-button"
         style={styles.actionButton}
         onPress={onNavigateToLibrary}
         pressedScale={0.93}
@@ -57,6 +58,7 @@ function ActionBar({
       </BouncyButton>
 
       <BouncyButton
+        testID="action-save-button"
         style={styles.saveButton}
         onPress={onSave}
         pressedScale={0.93}
@@ -67,6 +69,7 @@ function ActionBar({
       </BouncyButton>
 
       <BouncyButton
+        testID="action-export-button"
         style={styles.actionButton}
         onPress={onExport}
         pressedScale={0.93}

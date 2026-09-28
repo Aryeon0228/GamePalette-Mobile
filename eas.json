@@ -26,6 +26,14 @@
       "extends": "base",
       "distribution": "internal"
     },
+    "screenshots": {
+      "extends": "base",
+      "developmentClient": false,
+      "ios": {
+        "simulator": true,
+        "buildConfiguration": "Release"
+      }
+    },
     "production": {
       "extends": "base"
     }

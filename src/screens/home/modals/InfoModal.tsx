@@ -108,6 +108,7 @@ export default function InfoModal({
             </Text>
             <View style={styles.infoModalLanguageToggleRow}>
               <BouncyButton
+                testID="info-language-ko"
                 pressedScale={0.93}
                 hapticFeedback
                 style={[
@@ -131,6 +132,7 @@ export default function InfoModal({
                 </Text>
               </BouncyButton>
               <BouncyButton
+                testID="info-language-en"
                 pressedScale={0.93}
                 hapticFeedback
                 style={[
@@ -161,6 +163,7 @@ export default function InfoModal({
           </Text>
 
           <BouncyButton
+            testID="info-close-button"
             pressedScale={0.93}
             hapticFeedback
             style={[styles.infoModalCloseButton, { backgroundColor: theme.accent }]}

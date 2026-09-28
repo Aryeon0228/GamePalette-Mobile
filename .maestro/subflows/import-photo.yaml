@@ -1,0 +1,52 @@
+# Picks a photo from the library (no camera on the simulator), applies the
+# full-image crop and waits until the palette and histogram are ready.
+#
+# PHOTO_INDEX: position in the iOS photo picker grid. The picker lists the
+# newest photo first, so 0 is the photo the capture script added last.
+appId: com.studioaryeon.pixelpaw
+---
+# An image is already loaded: "Change" opens an action sheet.
+- runFlow:
+    when:
+      visible:
+        id: image-change-button
+    commands:
+      - tapOn:
+          id: image-change-button
+      - tapOn: "앨범에서 선택|Choose from Library"
+# Empty state: the gallery card opens the picker directly.
+- runFlow:
+    when:
+      visible:
+        id: image-source-gallery
+    commands:
+      - tapOn:
+          id: image-source-gallery
+
+- extendedWaitUntil:
+    visible:
+      id: PXGGridLayout-Info
+    timeout: 15000
+- tapOn:
+    id: PXGGridLayout-Info
+    index: ${PHOTO_INDEX}
+
+- extendedWaitUntil:
+    visible:
+      id: crop-apply-button
+      enabled: true
+    timeout: 15000
+- tapOn:
+    id: crop-apply-button
+- extendedWaitUntil:
+    notVisible:
+      id: crop-modal
+    timeout: 20000
+- extendedWaitUntil:
+    notVisible:
+      id: image-extracting-overlay
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: histogram-section
+    timeout: 30000

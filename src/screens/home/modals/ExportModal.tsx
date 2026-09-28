@@ -191,12 +191,12 @@ export default function ExportModal({
           style={styles.exportModalBackground}
           onPress={onClose}
         />
-        <View style={[styles.exportModalContent, { backgroundColor: theme.backgroundSecondary }]}
+        <View testID="export-modal" style={[styles.exportModalContent, { backgroundColor: theme.backgroundSecondary }]}
         >
           <View style={[styles.exportModalHandle, { backgroundColor: theme.border }]} />
           <View style={styles.exportModalHeader}>
             <Text style={[styles.exportModalTitle, { color: theme.textPrimary }]}>{exportTitle}</Text>
-            <TouchableOpacity onPress={onClose}>
+            <TouchableOpacity testID="export-close-button" onPress={onClose}>
               <Ionicons name="close" size={24} color={theme.textSecondary} />
             </TouchableOpacity>
           </View>
@@ -208,6 +208,7 @@ export default function ExportModal({
             {/* SNS Card Type Selector */}
             <View style={styles.snsTypeSelector}>
               <BouncyButton
+                testID="export-card-instagram"
                 pressedScale={0.93}
                 hapticFeedback
                 style={[
@@ -242,6 +243,7 @@ export default function ExportModal({
                 </Text>
               </BouncyButton>
               <BouncyButton
+                testID="export-card-twitter"
                 pressedScale={0.93}
                 hapticFeedback
                 style={[

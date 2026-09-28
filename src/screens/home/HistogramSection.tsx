@@ -29,7 +29,7 @@ function HistogramSection({
   histogramAverageLabel,
 }: HistogramSectionProps) {
   return (
-    <View style={styles.histogramCard}>
+    <View style={styles.histogramCard} testID="histogram-section">
       <View style={styles.histogramHeader}>
         <View style={styles.histogramTitleRow}>
           <Ionicons name="analytics-outline" size={14} color={theme.textMuted} />

@@ -1,0 +1,13 @@
+# The app always starts in Korean; switch to English from the info modal.
+appId: com.studioaryeon.pixelpaw
+---
+- tapOn:
+    id: header-info-button
+- tapOn:
+    id: info-language-en
+- tapOn:
+    id: info-close-button
+- extendedWaitUntil:
+    notVisible:
+      id: info-close-button
+    timeout: 5000

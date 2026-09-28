@@ -142,6 +142,7 @@ const ColorCard = React.memo(function ColorCard({
 }: ColorCardProps) {
   return (
     <BouncyButton
+      testID={`palette-swatch-${index}`}
       style={[
         styles.colorCard,
         isSelected && styles.colorCardSelected,
