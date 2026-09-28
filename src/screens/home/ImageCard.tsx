@@ -89,7 +89,7 @@ function ImageCard({
 
   if (currentImageUri) {
     return (
-      <View style={styles.imageCard}>
+      <View style={styles.imageCard} testID="image-card">
         <GestureDetector gesture={panGesture}>
           <Animated.View style={{ width: '100%', height: '100%' }}>
             <View style={{ width: '100%', height: '100%' }}>
@@ -118,6 +118,7 @@ function ImageCard({
         </GestureDetector>
 
         <BouncyButton
+          testID="image-change-button"
           style={styles.sourceImageBadge}
           onPress={onImagePress}
           pressedScale={0.9}
@@ -128,6 +129,7 @@ function ImageCard({
         </BouncyButton>
 
         <BouncyButton
+          testID="image-reextract-button"
           style={styles.reExtractIconButton}
           onPress={onReExtractPress}
           pressedScale={0.9}
@@ -139,7 +141,7 @@ function ImageCard({
 
 
         {isExtracting && (
-          <View style={styles.loadingOverlay}>
+          <View style={styles.loadingOverlay} testID="image-extracting-overlay">
             <ActivityIndicator size="large" color={theme.textOnAccent} />
             <Text style={styles.loadingText}>
               {isKorean ? '색상을 추출하는 중...' : 'Extracting colors...'}
@@ -202,6 +204,7 @@ function ImageCard({
         <View style={styles.imageSourceButtons}>
         <View style={styles.imageSourceCardGlow}>
           <BouncyButton
+            testID="image-source-camera"
             style={[styles.imageSourceCard, {
               backgroundColor: theme.isDark ? theme.backgroundTertiary + '99' : 'rgb(245, 245, 252)',
               borderWidth: 1.5,
@@ -236,6 +239,7 @@ function ImageCard({
         </View>
         <View style={styles.imageSourceCardGlow}>
           <BouncyButton
+            testID="image-source-gallery"
             style={[styles.imageSourceCard, {
               backgroundColor: theme.isDark ? theme.backgroundTertiary + '99' : 'rgb(243, 245, 252)',
               borderWidth: 1.5,

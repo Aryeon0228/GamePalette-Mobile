@@ -124,7 +124,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
   });
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="splash-screen">
       <Animated.View
         style={[
           styles.coverLayer,

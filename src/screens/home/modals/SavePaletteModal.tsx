@@ -42,6 +42,7 @@ export default function SavePaletteModal({
             {isKorean ? '팔레트 저장' : 'Save Palette'}
           </Text>
           <TextInput
+            testID="save-palette-name-input"
             style={[
               styles.modalInput,
               { backgroundColor: theme.backgroundTertiary, color: theme.textPrimary, borderColor: theme.border },
@@ -54,6 +55,7 @@ export default function SavePaletteModal({
           />
           <View style={styles.modalButtons}>
             <BouncyButton
+              testID="save-palette-cancel-button"
               pressedScale={0.93}
               hapticFeedback
               style={[styles.modalButton, { backgroundColor: theme.buttonBg }]}
@@ -64,6 +66,7 @@ export default function SavePaletteModal({
               </Text>
             </BouncyButton>
             <BouncyButton
+              testID="save-palette-confirm-button"
               pressedScale={0.93}
               hapticFeedback
               style={[styles.modalButton, styles.modalButtonPrimary]}

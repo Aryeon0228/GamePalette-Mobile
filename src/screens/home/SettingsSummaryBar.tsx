@@ -40,6 +40,7 @@ interface SlotReelProps {
   isDark: boolean;
   textColor?: string;
   glowColors?: string[];
+  testID?: string;
 }
 
 const SlotReel = React.memo(function SlotReel({
@@ -49,6 +50,7 @@ const SlotReel = React.memo(function SlotReel({
   isDark,
   textColor,
   glowColors,
+  testID,
 }: SlotReelProps) {
   const translateY = useSharedValue(0);
   const prevValueRef = useRef(currentValue);
@@ -119,7 +121,7 @@ const SlotReel = React.memo(function SlotReel({
   }, []);
 
   return (
-    <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={onPress} style={{ flex: 1 }}>
+    <Pressable testID={testID} onPressIn={handlePressIn} onPressOut={handlePressOut} onPress={onPress} style={{ flex: 1 }}>
       <Animated.View
         style={[
           reelStyles.reel,
@@ -315,6 +317,7 @@ function SettingsSummaryBar({
         {/* Slot reels row */}
         <View style={barStyles.reelRow}>
           <SlotReel
+            testID="settings-style-reel"
             currentValue={stylePresetChipLabel}
             isActive={styleFilter !== 'original'}
             onPress={handleStylePress}
@@ -322,6 +325,7 @@ function SettingsSummaryBar({
             textColor={styleFilter === 'original' ? (isDark ? 'rgba(210, 215, 230, 0.35)' : 'rgba(60, 60, 67, 0.3)') : undefined}
           />
           <SlotReel
+            testID="settings-method-reel"
             currentValue={methodLabel}
             isActive={true}
             onPress={handleMethodPress}
@@ -332,6 +336,7 @@ function SettingsSummaryBar({
             glowColors={extractionMethod === 'kmeans' ? [COLOR_TOKENS.methodKmeansLight] : [COLOR_TOKENS.methodHistogramLight]}
           />
           <SlotReel
+            testID="settings-cvd-reel"
             currentValue={cvdLabel}
             isActive={colorBlindMode !== 'none'}
             onPress={handleCvdPress}
@@ -340,6 +345,7 @@ function SettingsSummaryBar({
             glowColors={CVD_GLOW_COLORS[colorBlindMode]}
           />
           <SlotReel
+            testID="settings-bw-reel"
             currentValue={showGrayscale ? 'ON' : 'OFF'}
             isActive={showGrayscale}
             onPress={onToggleGrayscale}

@@ -302,8 +302,8 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
     Alert.alert(t.copiedTitle, t.copiedFormat(format));
   };
 
-  const renderPaletteCard = ({ item }: { item: SavedPalette }) => (
-    <View style={styles.card}>
+  const renderPaletteCard = ({ item, index }: { item: SavedPalette; index: number }) => (
+    <View style={styles.card} testID={`library-palette-card-${index}`}>
       <BlurView intensity={BLUR_INTENSITY.heavy} tint="light" style={StyleSheet.absoluteFillObject} />
       {/* Header with thumbnail and menu */}
       <View style={styles.cardHeader}>
@@ -379,10 +379,10 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
   );
 
   return (
-    <View style={[styles.container, dynamicStyles.container]}>
+    <View style={[styles.container, dynamicStyles.container]} testID="library-screen">
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={[styles.backButton, { backgroundColor: theme.backgroundSecondary }]} onPress={onNavigateBack}>
+        <TouchableOpacity testID="library-back-button" style={[styles.backButton, { backgroundColor: theme.backgroundSecondary }]} onPress={onNavigateBack}>
           <Ionicons name="chevron-back" size={24} color={theme.textPrimary} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.textPrimary }]}>{t.title}</Text>
@@ -437,6 +437,7 @@ export default function LibraryScreen({ onNavigateBack, language }: LibraryScree
         </View>
       ) : (
         <FlatList
+          testID="library-list"
           data={filteredPalettes}
           renderItem={renderPaletteCard}
           keyExtractor={(item) => item.id}

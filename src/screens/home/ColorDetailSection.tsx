@@ -188,7 +188,7 @@ function ColorDetailSection({
   );
 
   return (
-    <View style={styles.inlineColorDetailOuter}>
+    <View style={styles.inlineColorDetailOuter} testID="color-detail-section">
     <BlurView
       intensity={theme.isDark ? 10 : 15}
       tint={theme.isDark ? 'dark' : 'light'}
@@ -362,6 +362,7 @@ function ColorDetailSection({
         {FORMAT_OPTIONS.map((fmt) => (
           <BouncyButton
             key={fmt}
+            testID={`color-format-${fmt}`}
             style={[
               styles.formatSegmentButton,
               colorFormat === fmt && { backgroundColor: FORMAT_ACCENT_COLORS[fmt] },
@@ -386,6 +387,7 @@ function ColorDetailSection({
           <Text style={[styles.variationsSectionTitle, { color: theme.textPrimary }]}>{variationsLabel}</Text>
           <View style={[styles.hueShiftToggle, { backgroundColor: theme.backgroundSecondary }]}>
             <BouncyButton
+              testID="variation-mode-lightness"
               style={[
                 styles.hueShiftOption,
                 !variationHueShift && { backgroundColor: VARIATION_TOGGLE_COLORS.lightness },
@@ -404,6 +406,7 @@ function ColorDetailSection({
               </Text>
             </BouncyButton>
             <BouncyButton
+              testID="variation-mode-hue-shift"
               style={[
                 styles.hueShiftOption,
                 variationHueShift && { backgroundColor: VARIATION_TOGGLE_COLORS.hueShift },
@@ -451,6 +454,7 @@ function ColorDetailSection({
       {/* Inline Harmony */}
       {currentHarmony && (
         <View
+          testID="color-harmony-section"
           style={[
             styles.harmonySection,
             {
@@ -472,6 +476,7 @@ function ColorDetailSection({
               {colorHarmonies.map((harmony) => (
                 <BouncyButton
                   key={harmony.type}
+                  testID={`harmony-type-${harmony.type}`}
                   style={[
                     styles.harmonyTypeButton,
                     {

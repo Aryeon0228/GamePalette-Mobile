@@ -39,6 +39,7 @@ function HomeHeader({
             isDark && { shadowColor: colors.shadowDrop, shadowOpacity: 0.5 }
           ]}>
             <BouncyButton
+              testID="header-theme-toggle"
               style={styles.headerButtonPill}
               onPress={toggleTheme}
               pressedScale={0.9}
@@ -83,6 +84,7 @@ function HomeHeader({
             isDark && { shadowColor: colors.shadowDrop, shadowOpacity: 0.5 }
           ]}>
             <BouncyButton
+              testID="header-info-button"
               style={styles.headerButtonPill}
               onPress={onShowInfo}
               pressedScale={0.9}

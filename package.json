@@ -14,7 +14,8 @@
     "check:ios-release": "node scripts/check-ios-release.mjs",
     "check:localization": "node scripts/check-localization-keys.mjs",
     "check:release": "node scripts/check-release.mjs",
-    "clean:artifacts": "node scripts/clean-artifacts.mjs"
+    "clean:artifacts": "node scripts/clean-artifacts.mjs",
+    "screenshots": "node scripts/capture-screenshots.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

@@ -1,0 +1,167 @@
+# App Store screenshots for Pixel Paw (6.9" iPhone, 1320x2868).
+#
+# Run it through `npm run screenshots` (scripts/capture-screenshots.mjs): the
+# script erases and boots the simulator, fixes the status bar at 9:41, adds the
+# photos to the library, installs the app and runs this flow once per language
+# with -e APP_LANG=ko|en (default ko). Swipe coordinates are in points for the
+# iPhone 17 Pro Max.
+#
+# The simulator has no camera, so every image comes from the photo picker. The
+# picker lists the newest photo first, so PHOTO_INDEX 0 is the photo the capture
+# script added last (see PHOTO_SLOTS there).
+appId: com.studioaryeon.pixelpaw
+name: Pixel Paw App Store screenshots
+---
+- runScript: scripts/palette-names.js
+- launchApp:
+    clearState: true
+    permissions:
+      photos: allow
+- extendedWaitUntil:
+    visible:
+      id: image-source-gallery
+    timeout: 20000
+- runFlow:
+    when:
+      true: ${output.lang == 'en'}
+    file: subflows/set-language-en.yaml
+
+# Library contents: the library lists the newest palette first, so these are
+# saved in reverse order and the hero photo is saved last (before 05).
+- runFlow:
+    file: subflows/import-photo.yaml
+    env:
+      PHOTO_INDEX: 0
+- runFlow:
+    file: subflows/save-palette.yaml
+    env:
+      PALETTE_NAME: ${output.names.library4}
+- runFlow:
+    file: subflows/import-photo.yaml
+    env:
+      PHOTO_INDEX: 1
+- runFlow:
+    file: subflows/save-palette.yaml
+    env:
+      PALETTE_NAME: ${output.names.library3}
+- runFlow:
+    file: subflows/import-photo.yaml
+    env:
+      PHOTO_INDEX: 2
+- runFlow:
+    file: subflows/save-palette.yaml
+    env:
+      PALETTE_NAME: ${output.names.library2}
+- runFlow:
+    file: subflows/import-photo.yaml
+    env:
+      PHOTO_INDEX: 3
+- runFlow:
+    file: subflows/save-palette.yaml
+    env:
+      PALETTE_NAME: ${output.names.library1}
+
+# 01 - Palette extracted from a photo (hero shot)
+- runFlow:
+    file: subflows/import-photo.yaml
+    env:
+      PHOTO_INDEX: 4
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: 01-palette
+
+# 02 - Color detail, variations and harmony
+- tapOn:
+    id: palette-swatch-2
+- extendedWaitUntil:
+    visible:
+      id: color-harmony-section
+    timeout: 5000
+- tapOn:
+    id: color-format-HSL
+# Scroll ~240pt so the whole detail card sits above the action bar.
+- swipe:
+    start: 220, 700
+    end: 220, 450
+    duration: 1500
+- tapOn:
+    id: harmony-type-triadic
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: 02-color-detail
+
+# 03 - Style preset + color vision simulation with the luminosity histogram
+- swipe:
+    start: 220, 300
+    end: 220, 800
+    duration: 400
+- extendedWaitUntil:
+    visible:
+      id: header-info-button
+    timeout: 5000
+- tapOn:
+    id: palette-swatch-2
+- extendedWaitUntil:
+    notVisible:
+      id: color-detail-section
+    timeout: 5000
+- tapOn:
+    id: settings-style-reel
+- tapOn:
+    id: settings-cvd-reel
+- tapOn:
+    id: settings-cvd-reel
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: 03-style-vision
+
+# 03b - Alternate: grayscale value check (style and color vision back to default)
+- repeat:
+    times: 3
+    commands:
+      - tapOn:
+          id: settings-style-reel
+- repeat:
+    times: 2
+    commands:
+      - tapOn:
+          id: settings-cvd-reel
+- tapOn:
+    id: settings-bw-reel
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: 03b-value-check
+- tapOn:
+    id: settings-bw-reel
+
+# 04 - Export card
+- tapOn:
+    id: action-export-button
+- extendedWaitUntil:
+    visible:
+      id: export-modal
+    timeout: 5000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: 04-export-card
+- tapOn:
+    id: export-close-button
+- extendedWaitUntil:
+    notVisible:
+      id: export-modal
+    timeout: 5000
+
+# 05 - Library
+- runFlow:
+    file: subflows/save-palette.yaml
+    env:
+      PALETTE_NAME: ${output.names.hero}
+- tapOn:
+    id: action-library-button
+- extendedWaitUntil:
+    visible:
+      id: library-palette-card-0
+    timeout: 5000
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: 05-library

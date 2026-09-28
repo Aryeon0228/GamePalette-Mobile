@@ -394,7 +394,7 @@ export default function HomeScreen({
   // ============================================
 
   return (
-    <Animated.View style={[styles.container]}>
+    <Animated.View style={[styles.container]} testID="home-screen">
       <LinearGradient
         colors={[theme.gradientStart, theme.gradientEnd]}
         start={{ x: 0.5, y: 0 }}
@@ -402,6 +402,7 @@ export default function HomeScreen({
         style={StyleSheet.absoluteFillObject}
       />
       <ScrollView
+        testID="home-scroll"
         style={styles.content}
         showsVerticalScrollIndicator={false}
         scrollEnabled={true}
